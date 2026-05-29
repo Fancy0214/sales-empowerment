@@ -1,831 +1,34 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>销售赋能平台 | B2B留学顾问</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.js">
-
-//事件绑定
-document.addEventListener('DOMContentLoaded', function(){
-    // Nav items
-    document.querySelectorAll('.nav-item[data-page]').forEach(function(btn){
-        btn.addEventListener('click', function(){
-            switchPage(this.getAttribute('data-page'));
-        });
-    });
-    // Action buttons
-    var btnAdd = document.getElementById('btnAdd');
-    if(btnAdd) btnAdd.onclick = openAddModal;
-    var btnDim = document.getElementById('btnDim');
-    if(btnDim) btnDim.onclick = openDimensionModal;
-    var btnExport = document.getElementById('btnExport');
-    if(btnExport) btnExport.onclick = exportCompetitors;
-    var btnClear = document.getElementById('btnClear');
-    if(btnClear) btnClear.onclick = clearAllData;
-    var btnStart = document.getElementById('btnStartTest');
-    if(btnStart) btnStart.onclick = startTest;
-    var btnPrev = document.getElementById('btnPrevQ');
-    if(btnPrev) btnPrev.onclick = prevQ;
-    var btnNext = document.getElementById('btnNextQ');
-    if(btnNext) btnNext.onclick = nextQ;
-});
-</script>
-    <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-:root{--primary:#2b6cb0;--primary-light:#ebf8ff;--primary-dark:#2c5282;--gray-50:#f7fafc;--gray-100:#edf2f7;--gray-200:#e2e8f0;--gray-300:#cbd5e0;--gray-400:#a0aec0;--gray-500:#718096;--gray-600:#4a5568;--gray-700:#2d3748;--gray-800:#1a202c;--green-100:#c6f6d5;--green-500:#38a169;--red-100:#fed7d7;--red-500:#e53e3e;--orange-100:#feebcb;--orange-500:#ed8936;--purple-100:#e9d8fd;--purple-500:#805ad5;--shadow:0 4px 12px rgba(0,0,0,0.08);--shadow-lg:0 10px 30px rgba(0,0,0,0.15);}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--gray-50);color:var(--gray-700);line-height:1.6;display:flex;min-height:100vh;}
-.sidebar{width:260px;background:linear-gradient(180deg,var(--primary-dark) 0%,#1a365d 100%);color:white;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;}
-.sidebar-header{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
-.sidebar-logo{font-size:20px;font-weight:700;display:flex;align-items:center;gap:10px;}
-.sidebar-subtitle{font-size:12px;opacity:0.7;margin-top:4px;}
-.sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto;}
-.nav-section{margin-bottom:24px;}
-.nav-section-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:0.5;padding:0 12px;margin-bottom:8px;}
-.nav-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;font-weight:500;transition:all .2s;cursor:pointer;margin-bottom:4px;border:none;background:none;width:100%;text-align:left;font-family:inherit;}
-.nav-item:hover{background:rgba(255,255,255,0.1);color:white;}
-.nav-item.active{background:rgba(255,255,255,0.15);color:white;box-shadow:0 2px 8px rgba(0,0,0,0.2);}
-.nav-item .icon{font-size:20px;width:24px;text-align:center;}
-.sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.1);font-size:12px;opacity:0.6;}
-.main{flex:1;margin-left:260px;padding:32px;min-height:100vh;}
-.page-header{margin-bottom:32px;}
-.page-title{font-size:28px;font-weight:700;color:var(--gray-800);margin-bottom:8px;display:flex;align-items:center;gap:12px;}
-.page-desc{color:var(--gray-500);font-size:15px;}
-.card{background:white;border-radius:16px;box-shadow:var(--shadow);margin-bottom:24px;overflow:hidden;}
-.card-header{padding:20px 24px;border-bottom:1px solid var(--gray-200);display:flex;justify-content:space-between;align-items:center;}
-.card-title{font-size:18px;font-weight:600;display:flex;align-items:center;gap:10px;}
-.card-body{padding:24px;}
-.btn{padding:10px 20px;border-radius:8px;border:none;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px;font-family:inherit;}
-.btn-primary{background:var(--primary);color:white;}
-.btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px);}
-.btn-secondary{background:var(--gray-100);color:var(--gray-600);}
-.btn-secondary:hover{background:var(--gray-200);}
-.btn-success{background:var(--green-500);color:white;}
-.btn-danger{background:var(--red-500);color:white;}
-.actions-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;}
-.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;}
-.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
-.page-section{display:none;}
-.page-section.active{display:block;}
-.competitor-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
-.competitor-card{background:var(--gray-50);border-radius:12px;padding:20px;border:2px solid var(--gray-200);transition:all .2s;}
-.competitor-card:hover{border-color:var(--primary);box-shadow:0 4px 12px rgba(43,108,176,0.15);}
-.chart-container{max-width:600px;margin:0 auto;}
-.comparison-table-wrapper{overflow-x:auto;}
-.comparison-table{width:100%;border-collapse:collapse;}
-.comparison-table th{background:var(--gray-100);padding:14px 16px;text-align:left;font-weight:600;color:var(--gray-600);font-size:13px;border-bottom:2px solid var(--gray-200);white-space:nowrap;}
-.comparison-table td{padding:12px 16px;border-bottom:1px solid var(--gray-200);font-size:14px;}
-.comparison-table tr:hover td{background:var(--gray-50);}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;}
-.modal-overlay.active{display:flex;}
-.modal{background:white;border-radius:16px;width:100%;max-width:700px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);}
-.modal-header{padding:20px 24px;border-bottom:1px solid var(--gray-200);display:flex;justify-content:space-between;align-items:center;}
-.modal-title{font-size:20px;font-weight:600;}
-.modal-close{background:none;border:none;font-size:24px;cursor:pointer;color:var(--gray-400);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:inherit;}
-.modal-close:hover{background:var(--gray-100);color:var(--gray-600);}
-.modal-body{padding:24px;}
-.modal-footer{padding:16px 24px;border-top:1px solid var(--gray-200);display:flex;justify-content:flex-end;gap:12px;}
-.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;}
-.form-group{display:flex;flex-direction:column;}
-.form-group.full{grid-column:1/-1;}
-.form-label{font-size:13px;font-weight:500;color:var(--gray-600);margin-bottom:6px;}
-.form-input,.form-textarea,.form-select{padding:10px 14px;border:2px solid var(--gray-200);border-radius:8px;font-size:14px;transition:border-color .2s;font-family:inherit;}
-.form-input:focus,.form-textarea:focus,.form-select:focus{outline:none;border-color:var(--primary);background:var(--gray-50);}
-.form-textarea{min-height:80px;resize:vertical;}
-.score-input-group{display:flex;align-items:center;gap:12px;}
-.score-slider{flex:1;height:6px;border-radius:3px;background:var(--gray-200);outline:none;-webkit-appearance:none;}
-.score-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--primary);cursor:pointer;box-shadow:0 2px 6px rgba(43,108,176,0.4);}
-.score-value{min-width:40px;text-align:center;font-weight:600;font-size:16px;color:var(--primary);}
-.script-category-title{font-size:16px;font-weight:600;color:var(--gray-700);margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--primary);display:flex;align-items:center;gap:8px;}
-.script-item{background:white;border:1px solid var(--gray-200);border-radius:10px;padding:16px;margin-bottom:12px;transition:all .2s;}
-.script-item:hover{border-color:var(--primary);box-shadow:0 2px 8px rgba(43,108,176,0.1);}
-.script-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px;}
-.script-title{font-weight:600;color:var(--gray-800);}
-.script-tag{padding:2px 10px;border-radius:12px;font-size:11px;font-weight:500;}
-.tag-touch{background:#ebf8ff;color:var(--primary);}
-.tag-need{background:#fefcbf;color:#975a16;}
-.tag-objection{background:#fed7d7;color:#c53030;}
-.tag-close{background:#c6f6d5;color:var(--green-500);}
-.tag-maintain{background:var(--gray-100);color:var(--gray-600);}
-.script-content{font-size:14px;color:var(--gray-600);line-height:1.8;padding:8px 12px;background:var(--gray-50);border-radius:8px;}
-.script-actions{margin-top:10px;display:flex;gap:8px;}
-.tool-card{background:white;border-radius:12px;padding:20px;border:2px solid var(--gray-200);transition:all .2s;cursor:pointer;}
-.tool-card:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:0 4px 12px rgba(43,108,176,0.15);}
-.tool-icon{font-size:32px;margin-bottom:12px;}
-.tool-name{font-size:16px;font-weight:600;color:var(--gray-800);margin-bottom:6px;}
-.tool-desc{font-size:13px;color:var(--gray-500);}
-.tool-tag{display:inline-block;padding:2px 8px;border-radius:8px;font-size:11px;background:var(--gray-100);color:var(--gray-500);margin-top:8px;}
-.question-card{background:white;border-radius:12px;padding:24px;margin-bottom:16px;border:2px solid var(--gray-200);}
-.question-text{font-size:16px;font-weight:500;color:var(--gray-800);margin-bottom:16px;}
-.option-item{padding:12px 16px;background:var(--gray-50);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all .2s;border:2px solid transparent;}
-.option-item:hover{background:var(--primary-light);border-color:var(--primary);}
-.option-item.selected{background:var(--primary-light);border-color:var(--primary);}
-.progress-bar{width:100%;height:8px;background:var(--gray-200);border-radius:4px;overflow:hidden;}
-.progress-fill{height:100%;background:var(--primary);transition:width .3s;}
-.result-card{background:white;border-radius:16px;padding:32px;text-align:center;box-shadow:var(--shadow);}
-.toast{position:fixed;bottom:24px;right:24px;background:var(--gray-800);color:white;padding:14px 24px;border-radius:10px;font-size:14px;box-shadow:var(--shadow-lg);opacity:0;transition:opacity .3s;z-index:1001;}
-.toast.show{opacity:1;}
-.empty-state{text-align:center;padding:60px 20px;color:var(--gray-400);}
-.empty-state .icon{font-size:48px;margin-bottom:16px;}
-.fade-in{animation:fadeIn .3s ease;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-.ref-table-wrapper{overflow-x:auto;background:white;border-radius:16px;border:1px solid var(--gray-200);}
-.ref-table{width:100%;border-collapse:collapse;min-width:800px;font-size:13px;}
-.ref-table th{background:var(--gray-800);color:white;padding:12px 16px;text-align:left;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;}
-.ref-table td{padding:10px 16px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
-.ref-table tr:last-child td{border-bottom:none;}
-.ref-table tr:hover td{background:var(--gray-50);}
-.type-dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
-.type-section{margin-bottom:24px;background:white;border-radius:12px;border:1px solid var(--gray-200);overflow:hidden;}
-.type-header{display:flex;align-items:center;gap:16px;padding:16px 20px;cursor:pointer;transition:background .2s;}
-.type-header:hover{background:var(--gray-50);}
-.type-body{display:none;padding:0 20px 20px;}
-.type-body.open{display:block;}
-@media(max-width:768px){.sidebar{transform:translateX(-100%);}.main{margin-left:0;padding:16px;}.grid-2,.grid-3{grid-template-columns:1fr;}}
-    </style>
-</head>
-<body>
-
-
-<div class="sidebar">
-    <div class="sidebar-header">
-        <div class="sidebar-logo"><span>🚀</span> 销售赋能平台</div>
-        <div class="sidebar-subtitle">B2B留学顾问专业工具箱</div>
-    </div>
-    <nav class="sidebar-nav">
-        <div class="nav-section">
-            <div class="nav-section-title">核心工具</div>
-            <button class="nav-item active" id="nav-competitor" data-page="competitor"><span class="icon">📊</span> 竞品分析</button>
-            <button class="nav-item" id="nav-scripts" data-page="scripts"><span class="icon">💬</span> 话术库</button>
-            <button class="nav-item" id="nav-tools" data-page="tools"><span class="icon">🛠️</span> 工具库</button>
-        </div>
-        <div class="nav-section">
-            <div class="nav-section-title">自我提升</div>
-            <button class="nav-item" id="nav-enneagram" data-page="enneagram"><span class="icon">🧩</span> 九型测试</button>
-        </div>
-    </nav>
-    <div class="sidebar-footer">妮妮 · 成长守护 🐾</div>
-</div>
-
-
-<div class="main">
-    <div class="page-section active" id="page-competitor">
-        <div class="page-header">
-            <h1 class="page-title"><span>📊</span> 竞品分析</h1>
-            <p class="page-desc">系统化对比竞品的产品、价格、服务、政策等维度，制定差异化竞争策略</p>
-        </div>
-        <div class="actions-bar">
-            <button class="btn btn-primary" id="btnAdd">➕ 添加竞品</button>
-            <button class="btn btn-secondary" id="btnDim">📐 设置维度</button>
-            <button class="btn btn-success" id="btnExport">📤 导出数据</button>
-            <button class="btn btn-danger" id="btnClear">🗑️ 清除数据</button>
-        </div>
-        <div class="grid-2">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">📋 竞品列表</div>
-                    <span id="competitorCount" style="font-size:13px;color:var(--gray-500);">0 个竞品</span>
-                </div>
-                <div class="card-body"><div id="competitorList" class="competitor-list"></div></div>
-            </div>
-            <div class="card">
-                <div class="card-header"><div class="card-title">📊 雷达图分析</div></div>
-                <div class="card-body"><div class="chart-container"><canvas id="radarChart"></canvas></div></div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header"><div class="card-title">📈 对比表格</div></div>
-            <div class="card-body">
-                <div class="comparison-table-wrapper">
-                    <table class="comparison-table" id="comparisonTable">
-                        <thead><tr id="comparisonHead"></tr></thead>
-                        <tbody id="comparisonBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="page-section" id="page-scripts">
-        <div class="page-header">
-            <h1 class="page-title"><span>💬</span> 话术库</h1>
-            <p class="page-desc">B2B机构触达全场景话术，融合Tony梁老师同城自媒体获客方法论，可持续迭代更新</p>
-        </div>
-        <div id="scriptsContainer"></div>
-    </div>
-
-
-    <div class="page-section" id="page-tools">
-        <div class="page-header">
-            <h1 class="page-title"><span>🛠️</span> 工具库</h1>
-            <p class="page-desc">5A模型各节点工具资料，助力销售全流程，持续更新中</p>
-        </div>
-        <div class="grid-3" id="toolsGrid"></div>
-    </div>
-
-
-    <div class="page-section" id="page-enneagram">
-        <div class="page-header">
-            <h1 class="page-title"><span>🧩</span> 九型人格测试</h1>
-            <p class="page-desc">了解自己的性格类型，发挥优势，补齐短板</p>
-        </div>
-        <div id="enneagramContainer"></div>
-    </div>
-</div>
-
-
-<div class="modal-overlay" id="addModal">
-    <div class="modal">
-        <div class="modal-header">
-            <div class="modal-title" id="modalTitle">添加竞品</div>
-            <button class="modal-close" onclick="closeAddModal()">×</button>
-        </div>
-        <div class="modal-body" id="addModalBody">
-            <input type="hidden" id="editId">
-            <div class="form-grid">
-                <div class="form-group full">
-                    <label class="form-label">竞品名称 *</label>
-                    <input type="text" class="form-input" id="name" placeholder="竞品机构名称">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">主营产品国家条线</label>
-                    <input type="text" class="form-input" id="priceRange" placeholder="如：英国、澳洲、加拿大">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">是否BC同做</label>
-                    <select class="form-select" id="targetMarket">
-                        <option value="">请选择</option>
-                        <option value="是">是</option>
-                        <option value="否">否</option>
-                        <option value="部分">部分项目</option>
-                    </select>
-                </div>
-                <div class="form-group full">
-                    <label class="form-label">国内优势地区</label>
-                    <input type="text" class="form-input" id="features" placeholder="如：北上广深、江浙沪">
-                </div>
-                <div class="form-group full">
-                    <label class="form-label">佣金政策</label>
-                    <textarea class="form-textarea" id="advantages" placeholder="描述佣金政策和结算方式"></textarea>
-                </div>
-                <div class="form-group full">
-                    <label class="form-label">服务支持</label>
-                    <textarea class="form-textarea" id="policies" placeholder="描述提供的服务和支持"></textarea>
-                </div>
-                <div class="form-group full">
-                    <label class="form-label">其他支持</label>
-                    <textarea class="form-textarea" id="notes" placeholder="其他支持内容"></textarea>
-                </div>
-            </div>
-            <div style="margin-top:24px;">
-                <h4 style="margin-bottom:16px;font-weight:600;">综合评分</h4>
-                <div class="form-grid" id="scoreFields"></div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-secondary" onclick="closeAddModal()">取消</button>
-            <button class="btn btn-primary" onclick="saveCompetitor()">保存</button>
-        </div>
-    </div>
-</div>
-
-<div class="modal-overlay" id="dimensionModal">
-    <div class="modal">
-        <div class="modal-header">
-            <div class="modal-title">设置维度</div>
-            <button class="modal-close" onclick="closeDimensionModal()">×</button>
-        </div>
-        <div class="modal-body">
-            <p style="color:var(--gray-500);margin-bottom:16px;">选择要在雷达图和对比表格中显示的维度：</p>
-            <div class="form-grid" id="dimensionGrid"></div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-secondary" onclick="closeDimensionModal()">取消</button>
-            <button class="btn btn-primary" onclick="saveDimensions()">保存</button>
-        </div>
-    </div>
-</div>
-
-<div class="toast" id="toast"><span id="toastMsg"></span></div>
-
-
-<script>
-var STORAGE_KEY = 'sales_empowerment_competitors';
-var DIMENSIONS_KEY = 'sales_empowerment_dimensions';
-var SCRIPTS_KEY = 'sales_empowerment_scripts';
-var TOOLS_KEY = 'sales_empowerment_tools';
-
-var DEFAULT_DIMENSIONS = [
-    {id:'scoreProduct',name:'产品力',enabled:true},
-    {id:'scorePrice',name:'佣金竞争力',enabled:true},
-    {id:'scoreService',name:'服务质量',enabled:true},
-    {id:'scoreBrand',name:'品牌影响力',enabled:true},
-    {id:'scoreExpertise',name:'专业度',enabled:true},
-    {id:'scoreSatisfaction',name:'客户满意度',enabled:true}
-];
-
-var COLORS = ['rgba(43,108,176,0.8)','rgba(56,161,105,0.8)','rgba(237,137,54,0.8)','rgba(128,90,213,0.8)','rgba(229,62,62,0.8)','rgba(56,178,172,0.8)'];
-var competitors = [];
-var dimensions = [];
-var radarChart = null;
-var currentQ = 0;
-var answers = [];
-var enneagramReady = false;
-
-var DEFAULT_SCRIPTS = [
-    {category:'首次触达话术（5种类型）',tag:'touch',tagName:'触达',items:[
-        {title:'问题型开场',content:'"X总您好，我是UKEC的妮妮，专注英国留学B2B合作。冒昧问一下，咱们机构目前送生去英国，最头疼的是哪个环节？是院校资源、返佣结算，还是学生转化率？"'},
-        {title:'判断型开场',content:'"X总，我判断咱们机构在英国方向应该已经做得很成熟了。想请教一下，目前合作的英国项目里，有没有遇到过院校反馈慢、Offer下来不及时的情况？"'},
-        {title:'对比型开场',content:'"X总，咱们机构现在合作的英国项目，是偏向百强院校还是保录取项目？我们UKEC这边有独特的招生官直连通道，想跟您对比看看哪种模式更适合。"'},
-        {title:'案例型开场',content:'"X总，跟您分享个案例——上个月我们帮西安某机构送了8个学生去利兹大学，从递交到拿Offer平均只用12天。咱们这边有没有遇到过Offer卡在招生办迟迟下不来的情况？"'},
-        {title:'避坑型开场',content:'"X总，最近英国这边有个坑得提醒您——好几个机构因为不清楚CAS保证金新政策，导致学生签证被卡。我们这边整理了最新避坑指南，能发您一份参考吗？"'}
-    ]},
-    {category:'深度挖需话术',tag:'need',tagName:'挖需',items:[
-        {title:'痛点挖掘',content:'"X总，咱们现在的英国项目中，学生拿到无条件Offer后，最容易出现什么问题？是语言班衔接不上，还是CAS迟迟下不来？我们这边的全程追踪服务正好能补上这个缺口。"'},
-        {title:'收益放大',content:'"如果咱们机构的英国项目转化率能提升10%，按每年100个学生算，那就是多10个成功案例，口碑和收益都会上一个台阶。我们UKEC的顾问团队可以帮您做免费的院校匹配分析。"'},
-        {title:'标杆对比',content:'"X总，咱们同城的XX机构去年通过优化院校梯队，英国方向转化率从28%提到了41%。我们帮您做个免费诊断，看看咱们现在的项目结构有哪些可提升空间？"'}
-    ]},
-    {category:'异议处理话术',tag:'objection',tagName:'异议',items:[
-        {title:'价格异议',content:'"X总，我完全理解您对价格的考量。不过咱们算笔账：如果我们的合作能让您的学生录取率从80%提升到92%，多出来的这12%的成功案例，带来的口碑和转介绍，是不是远超那点差价？"'},
-        {title:'信任异议',content:'"X总，您说没听过我们UKEC很正常，我们在英国本土深耕了28年，是英国大使馆文化教育处官方推荐的机构。我可以给您发几个最近做的同类型机构合作案例。"'},
-        {title:'流程异议',content:'"X总，您说现在合作方多不想再增加，我完全理解。其实我们最大的价值就是\'无感接入\'——您的顾问照常工作，我们做后台支持，不增加任何额外工作量，但多了一个强有力的英国资源后盾。"'}
-    ]},
-    {category:'临门一脚话术',tag:'close',tagName:'临门',items:[
-        {title:'假设成交法',content:'"X总，那我就按咱们的沟通，先准备一份英国TOP20院校的招生白皮书给您，外加我们的合作方案。您看是发您微信还是邮箱？对了，您这边平时对接英国项目的是哪位老师？我也一并加上。"'},
-        {title:'紧迫感法',content:'"X总，现在正好是英国院校的预录取季，我们有几个独家内推名额，本月底就截止。要不我先给您预留2个名额，您先挑几个合适的学生试试水？不成也没损失，成了就是个开门红。"'},
-        {title:'判例成交法',content:'"X总，上周长沙的李校长跟您情况类似，本来只打算先看看。后来我们给他做了个免费的学生申请方案诊断，发现能帮他们的学生多拿到3-5个G5的Offer。他当场就签了。"'}
-    ]},
-    {category:'日常维护话术',tag:'maintain',tagName:'维护',items:[
-        {title:'节日关怀',content:'"X总，中秋快乐！🥮 趁着节日问候一下，咱们机构最近英国方向送生还顺利吗？有需要我这边支持的随时说，祝咱们合作越来越顺！"'},
-        {title:'跟进激活',content:'"X总，好久没联系了！最近英国这边QS排名更新了，我们整理了一份对机构选校影响最大的5个变化，发您参考一下。顺便问问，咱们下半年英国项目有什么新计划吗？"'},
-        {title:'价值追加',content:'"X总，想到一个可能对咱们有用的信息——英国移民局刚更新了PSW签证政策，对咱们送生的就业竞争力有很大提升。我整理了一份政策解读和话术，发您备用。"'}
-    ]}
-];
-
-var DEFAULT_TOOLS = [
-    {icon:'📄',name:'英国院校白皮书',desc:'2026年英国TOP50院校招生要求汇总',tag:'Aware 认知'},
-    {icon:'📊',name:'竞品对比Excel',desc:'快速对比竞品优劣势的Excel工具',tag:'Appeal 吸引'},
-    {icon:'🎤',name:'话术速查手册',desc:'全场景话术分类速查PDF',tag:'Ask 询问'},
-    {icon:'📋',name:'机构需求评估表',desc:'B2B客户痛点挖掘问卷模板',tag:'Act 行动'},
-    {icon:'🤝',name:'合作方案生成器',desc:'一键生成定制化B2B合作方案',tag:'Act 行动'},
-    {icon:'⭐',name:'客户满意度调查',desc:'合作后满意度评估与改进工具',tag:'Advocate 拥护'}
-];
-
-var questions = const questions = [
-        { q: '在工作中，你最在意的是：', opts: [
-            {text: '事情是否做得正确、符合标准', types: [1]},
-            {text: '是否帮助到了别人，关系好不好', types: [2,9]},
-            {text: '目标是否达成，结果好不好', types: [3]},
-            {text: '是否有意义，是否忠于自己的感受', types: [4]}
-        ]},
-        {q: '面对一个新项目，你的第一反应是：', opts: [
-            {text: '先制定详细的计划和标准流程', types: [1]},
-            {text: '先了解团队需要我怎么配合', types: [2]},
-            {text: '快速确定目标和关键节点', types: [3]},
-            {text: '思考这个项目有没有深度和价值', types: [4,5]}
-        ]},
-        { q: '你最害怕的事情是：', opts: [
-            {text: '犯错误，被批评不够好', types: [1]},
-            {text: '被孤立，不被任何人需要', types: [2]},
-            {text: '失败，被人看不起', types: [3]},
-            {text: '被困住，没有自由', types: [7,4]}
-        ]},
-        { q: '同事来找你帮忙，你通常会：', opts: [
-            {text: '评估这事该不该帮，符不符合规范', types: [1,6]},
-            {text: '放下手中的事，优先帮助对方', types: [2]},
-            {text: '快速帮忙，因为这也算一次展示能力的机会', types: [3]},
-            {text: '看心情和关系远近再决定', types: [4,9]}
-        ]},
-        { q: '你在团队中的角色通常是：', opts: [
-            {text: '质量把关者，发现问题并纠正', types: [1]},
-            {text: '团队的暖心人，维护关系', types: [2]},
-            {text: '业绩担当，冲锋在前', types: [3,8]},
-            {text: '幕后的智囊，提供深度分析', types: [5]}
-        ]},
-        { q: '你的快乐主要来自于：', opts: [
-            {text: '把事情做到极致', types: [1]},
-            {text: '被感谢和认可', types: [2]},
-            {text: '完成挑战，取得成果', types: [3]},
-            {text: '探索新事物，发现新可能', types: [7]}
-        ]},
-        { q: '面对冲突，你倾向于：', opts: [
-            {text: '坚持原则，据理力争', types: [1,8]},
-            {text: '主动调和，寻找共识', types: [2,9]},
-            {text: '快速解决，不让事态扩大', types: [3]},
-            {text: '先退一步，观察分析', types: [5,6]}
-        ]},
-        { q: '被领导批评后，你最真实的反应是：', opts: [
-            {text: '反思哪里不对，马上改进', types: [1]},
-            {text: '有点受伤，怀疑是不是不被认可了', types: [2,4]},
-            {text: '快速调整，争取下次证明自己', types: [3]},
-            {text: '冷静分析批评是否合理', types: [5]}
-        ]},
-        { q: '你放松的方式是：', opts: [
-            {text: '整理环境、优化流程，让一切井井有条', types: [1]},
-            {text: '和朋友聊天、聚会', types: [2,7]},
-            {text: '运动或挑战某个目标', types: [3,8]},
-            {text: '独处、阅读、思考', types: [4,5]}
-        ]},
-        { q: '在做决策时，你最依赖的是：', opts: [
-            {text: '数据和标准', types: [1,5]},
-            {text: '对他人的影响和感受', types: [2,9]},
-            {text: '目标和结果', types: [3]},
-            {text: '直觉和内心感受', types: [4,7]}
-        ]},
-        { q: '以下哪种说法最能代表你：', opts: [
-            {text: '"没有规矩不成方圆"', types: [1]},
-            {text: '"大家好才是真的好"', types: [2,9]},
-            {text: '"不想当将军的士兵不是好士兵"', types: [3,8]},
-            {text: '"知识就是力量"', types: [5]}
-        ]},
-        { q: '你讨厌的工作环境是：', opts: [
-            {text: '混乱无序、没有标准', types: [1]},
-            {text: '冷漠疏离、没有人情味', types: [2]},
-            {text: '没有目标、看不到成长', types: [3]},
-            {text: '被限制、充满规则', types: [7,8]}
-        ]},
-        { q: '面对风险，你的态度是：', opts: [
-            {text: '评估风险，制定应对方案', types: [1,5]},
-            {text: '担心风险，倾向于谨慎行事', types: [6]},
-            {text: '风险越大机会越大', types: [3,7,8]},
-            {text: '随遇而安，车到山前必有路', types: [9]}
-        ]},
-        { q: '你最希望别人怎么评价你：', opts: [
-            {text: '专业、可靠、有原则', types: [1]},
-            {text: '温暖、善良、重要', types: [2]},
-            {text: '成功、有能力、值得信赖', types: [3]},
-            {text: '独特、有深度、有见解', types: [4,5]}
-        ]},
-        { q: '你管理/带人的风格是：', opts: [
-            {text: '高标准严要求，以身作则', types: [1]},
-            {text: '关心下属，注重团队氛围', types: [2,9]},
-            {text: '目标明确，结果导向', types: [3,8]},
-            {text: '授权信任，尊重专业边界', types: [5,7]}
-        ]},
-        { q: '你最珍惜的东西是：', opts: [
-            {text: '诚信和原则', types: [1]},
-            {text: '关系和情感', types: [2]},
-            {text: '成就和认可', types: [3]},
-            {text: '自由和独立', types: [7,4,5]}
-        ]},
-        { q: '压力大的时候你会：', opts: [
-            {text: '更加严格地执行计划', types: [1,3]},
-            {text: '找人倾诉，寻求支持', types: [2,6]},
-            {text: '转移注意力，寻找快乐', types: [7]},
-            {text: '退回到自己的空间里消化', types: [4,5,9]}
-        ]},
-        { q: '你觉得自己最大的优点是：', opts: [
-            {text: '靠谱、负责、有担当', types: [1,6]},
-            {text: '善解人意、有同理心', types: [2,9]},
-            {text: '行动力强、效率高', types: [3,8]},
-            {text: '有想法、有深度', types: [4,5,7]}
-        ]}
-    ];;
-
-var typeData = const typeData = [
-        {
-            num: 1, name: '完美型', subtitle: 'The Reformer · 原则驱动的理想主义者',
-            keywords: ['有原则','严谨','标准高','自律'],
-            attention: ['对错、标准、流程是否"正确"','哪里还能被改进'],
-            fear: ['害怕自己是"错的""不够好"','害怕失控、混乱、低标准'],
-            happy: ['把事情做"对"','被认可为专业、严谨、有原则'],
-            manage: ['标准升级、流程优化','不只夸结果，要夸"方法是对的"'],
-            tip: '用"标准升级""流程优化"来激发动机。不要只夸结果，要夸"方法是对的"。',
-            strengths: ['原则性强，做事严谨可靠','善于发现流程中的改进空间','自律性高，能以身作则','注重细节，品质意识强'],
-            weaknesses: ['容易过度追求完美导致效率降低','对自己和他人标准过高','不善于灵活变通','容易忽略情感和关系'],
-            goodWork: ['质量控制、流程管理','审计、合规管理','项目管理、标准化建设','需要高标准的专业岗位'],
-            badWork: ['需要快速试错的创新岗','高度不确定的灵活岗位','需要大量应酬的关系型岗位','强调灵活变通的创意执行'],
-            plan: [
-                {time: '第1阶段（1-3个月）', title: '认知与融入', detail: '帮助其理解团队文化和目标。安排明确职责，给予清晰的流程和标准。定期一对一沟通，认可其严谨的工作方法。'},
-                {time: '第2阶段（3-6个月）', title: '价值释放', detail: '分配需要精细化运作的项目。鼓励其主导流程优化或质量提升工作。给予专业认可和成长空间。'},
-                {time: '第3阶段（6-12个月）', title: '领导力培养', detail: '培养带教能力，将标准化经验传递给团队。适度挑战"非标准"场景，提升灵活性。引导关注团队情感和关系。'}
-            ]
-        },
-        {
-            num: 2, name: '助人型', subtitle: 'The Helper · 关系驱动的温暖担当',
-            keywords: ['热情','乐于助人','关系导向','善解人意'],
-            attention: ['别人需不需要我','关系是否被需要、被回应'],
-            fear: ['不被需要','被忽视、被冷落'],
-            happy: ['被感谢、被依赖','"我对你是有价值的"'],
-            manage: ['情感激励、价值肯定','避免冷冰冰的纯制度激励'],
-            tip: '用"你对团队很重要"来激发动机。冷冰冰的制度激励，对他们无效。',
-            strengths: ['善于建立和维护人际关系','同理心强，能感知他人需求','团队粘合剂，促进协作','乐于奉献，服务意识强'],
-            weaknesses: ['容易忽略自身需求','可能因讨好而模糊边界','在冲突面前容易回避','目标感相对较弱'],
-            goodWork: ['客户关系维护','团队文化建设','培训、带教','需要高度同理心的服务岗位'],
-            badWork: ['需要强硬谈判的岗位','高度数据驱动的分析岗','需要大量独立工作的岗位','强调冷冰冰KPI的纯结果岗'],
-            plan: [
-                {time: '第1阶段（1-3个月）', title: '价值认同', detail: '充分表达"你很重要"。让其感受到被需要和被认可。安排需要与人打交道的工作，发挥关系优势。'},
-                {time: '第2阶段（3-6个月）', title: '边界建立', detail: '帮助建立健康的个人边界。引导从"帮助他人"到"赋能他人"转变。设定清晰的个人业绩目标。'},
-                {time: '第3阶段（6-12个月）', title: '独立成长', detail: '培养独立决策和目标驱动的能力。减少对他人认可的依赖。引导成为能兼顾关系与结果的成熟管理者。'}
-            ]
-        },
-        {
-            num: 3, name: '成就型', subtitle: 'The Achiever · 目标驱动的效率先锋',
-            keywords: ['目标导向','高效','自驱力强','形象意识'],
-            attention: ['目标、结果、效率、排名','别人怎么看我成不成功'],
-            fear: ['失败','被看作没用、没价值'],
-            happy: ['赢','被认可、被看见、被表扬'],
-            manage: ['清晰目标 + 可见成果','避免模糊评价'],
-            tip: '用"清晰目标 + 可见成果"来激励。模糊评价 = 动机断电。',
-            strengths: ['目标感强，执行力出色','自驱力高，效率出众','善于展现和沟通成果','抗压力强，适应性好'],
-            weaknesses: ['可能为了结果忽视过程','在人际关系上可能不够真诚','过度追求形象','面对非目标驱动的工作容易倦怠'],
-            goodWork: ['销售（B2B/B2C）','项目管理、目标冲刺','需要高效产出的执行岗位','商业拓展与BD'],
-            badWork: ['需要长期等待的慢热型岗位','强调过程而非结果的文化研究岗','需要深度反思的内省型工作','高度情感支持的辅助性岗位'],
-            plan: [
-                {time: '第1阶段（1-3个月）', title: '目标设定', detail: '设定清晰、可量化的短期和中期目标。建立明确的评价标准和反馈机制。给予充分的表现舞台和认可。'},
-                {time: '第2阶段（3-6个月）', title: '深度拓展', detail: '挑战更高目标的同时引导关注过程和团队。培养带教能力，从个人目标转向团队目标。鼓励展现脆弱和真实。'},
-                {time: '第3阶段（6-12个月）', title: '格局提升', detail: '从"赢"升维到"长期价值"。培养战略思维和团队赋能能力。引导成为既高效又有温度的领导者。'}
-            ]
-        },
-        {
-            num: 4, name: '自我型', subtitle: 'The Individualist · 意义驱动的创意灵魂',
-            keywords: ['感性','独特','追求意义','创造力强'],
-            attention: ['自我感受是否真实','我是不是"不一样的我"'],
-            fear: ['平庸','被忽略个体价值'],
-            happy: ['被理解','被看见"独特性"'],
-            manage: ['表达空间 + 意义感','避免只用KPI压他们'],
-            tip: '给"表达空间"和"意义感"。不要只用KPI压他们。',
-            strengths: ['创造力强，审美独特','情感敏锐，洞察力深','善于发现差异化价值','真诚，不做作'],
-            weaknesses: ['情绪波动较大','容易陷入自我比较','对"常规"工作缺乏耐心','在团队合作中可能显得独立'],
-            goodWork: ['品牌策划、内容创作','设计、艺术相关','需要深度洞察的研究岗位','差异化定位与市场分析'],
-            badWork: ['高度标准化的流程型岗位','强调快速执行的销售冲刺岗','需要大量重复性工作的岗位','忽视个性表达的团队环境'],
-            plan: [
-                {time: '第1阶段（1-3个月）', title: '意义构建', detail: '帮助理解工作背后的意义和价值。给予创意发挥的空间。用"你的独特视角很重要"来肯定。'},
-                {time: '第2阶段（3-6个月）', title: '结构化引导', detail: '在自由创作的基础上适度引入结构化框架。帮助建立稳定的工作节奏。鼓励将创意转化为可落地的方案。'},
-                {time: '第3阶段（6-12个月）', title: '影响力扩展', detail: '引导将个人才华转化为团队资产。培养与其他类型协作的能力。鼓励从"独特"走向"不可替代"。'}
-            ]
-        },
-        {
-            num: 5, name: '思考型', subtitle: 'The Investigator · 知识驱动的深度思考者',
-            keywords: ['理性','善于分析','独立','边界感强'],
-            attention: ['信息、逻辑、知识是否足够','风险有没有被想清楚'],
-            fear: ['无能','被侵入、被打断、被掏空'],
-            happy: ['掌握知识','被尊重专业边界'],
-            manage: ['问题深度 + 专业授权','避免频繁催促'],
-            tip: '用"问题深度"和"专业授权"来激励。频繁催促 = 动机直接关闭。',
-            strengths: ['逻辑思维强，分析能力出众','独立思考，不被情绪左右','知识储备丰富，专业性强','能发现别人忽略的关键问题'],
-            weaknesses: ['社交主动性较弱','过度分析导致行动迟缓','边界感过强，协作性不足','不善于表达情感和认可'],
-            goodWork: ['数据分析、市场研究','策略规划、风控管理','需要深度专业知识的岗位','产品架构、系统设计'],
-            badWork: ['需要高频社交的销售岗','强调快速决策的快节奏岗位','需要大量情感表达的服务岗','频繁被打断的开放式办公环境'],
-            plan: [
-                {time: '第1阶段（1-3个月）', title: '专业空间', detail: '给予充足的独立思考时间。尊重专业边界，减少不必要的打扰。分配需要深度分析的工作。'},
-                {time: '第2阶段（3-6个月）', title: '协作桥梁', detail: '鼓励分享研究成果和观点。创造安全的表达环境。帮助将专业能力转化为团队影响力。'},
-                {time: '第3阶段（6-12个月）', title: '领导力拓展', detail: '培养跨领域沟通和协作能力。引导成为团队的"智慧中枢"而非"独立城堡"。在保持专业深度的同时拓展广度。'}
-            ]
-        },
-        {
-            num: 6, name: '忠诚型', subtitle: 'The Loyalist · 安全驱动的可靠伙伴',
-            keywords: ['忠诚','谨慎','责任感强','风险意识'],
-            attention: ['风险在哪里','人和系统靠不靠谱'],
-            fear: ['没有支持','被抛弃、被背叛'],
-            happy: ['安全感','有清晰规则、可靠团队'],
-            manage: ['确定性 + 承诺感','保持言行一致'],
-            tip: '给"确定性 + 承诺感"。说话前后不一致会严重伤动机。',
-            strengths: ['忠诚可靠，团队粘性高','风险意识强，提前预判问题','责任心强，承诺必达','善于建立稳定的合作关系'],
-            weaknesses: ['可能过度担忧和犹豫','在不确定性面前容易焦虑','过度依赖权威和系统','自主决策时可能缺乏信心'],
-            goodWork: ['风控管理、合规审查','客户维护、关系深耕','需要长期信任建设的岗位','质量监控、问题排查'],
-            badWork: ['高度不确定的创业型岗位','需要快速试错的创新探索岗','频繁变化策略的灵活型岗位','缺乏清晰规则的混沌环境'],
-            plan: [
-                {time: '第1阶段（1-3个月）', title: '安全感建立', detail: '给出清晰的规则、流程和期望。保持言行一致，建立信任。分配需要持续跟进和深入的工作。'},
-                {time: '第2阶段（3-6个月）', title: '信心培养', detail: '逐步给予自主决策的空间。通过小胜利积累信心。引导从"防范风险"到"管理风险"的转变。'},
-                {time: '第3阶段（6-12个月）', title: '自主领导', detail: '培养独立判断和行动的勇气。减少对外部确定性的依赖。引导成为既能预见风险又能果断行动的管理者。'}
-            ]
-        },
-        {
-            num: 7, name: '乐观型', subtitle: 'The Enthusiast · 可能性驱动的创意引擎',
-            keywords: ['活力','创意','多线程','追求新鲜'],
-            attention: ['有没有更好的选择','事情是不是有趣、有空间'],
-            fear: ['被限制','痛苦、无聊、被困住'],
-            happy: ['新鲜感','自由选择'],
-            manage: ['可能性 + 探索感','避免过度规训'],
-            tip: '用"可能性"和"探索感"来激励。过度规训 = 直接逃离。',
-            strengths: ['创意丰富，思维活跃','适应力强，学习速度快','能快速发现新机会','感染力强，带动团队氛围'],
-            weaknesses: ['容易三分钟热度，缺乏坚持','回避痛苦和困难','多线程并行导致精力分散','细节执行可能不到位'],
-            goodWork: ['新业务拓展、创意策划','活动运营、品牌推广','需要快速学习的灵活岗位','创新项目和探索性工作'],
-            badWork: ['需要长期重复执行的后勤岗','强调细节的审计合规类岗位','流程固化、变化少的管理岗','需要深度专注的单一任务'],
-            plan: [
-                {time: '第1阶段（1-3个月）', title: '自由探索', detail: '给予探索新方向的空间和资源。设定弹性目标而非僵化计划。利用其创意优势贡献新鲜想法。'},
-                {time: '第2阶段（3-6个月）', title: '聚焦引导', detail: '帮助识别最有价值的机会并聚焦。培养将创意落地的执行能力。引导体验"深耕一件事"的成就感。'},
-                {time: '第3阶段（6-12个月）', title: '深度领导', detail: '培养从"点子多"到"把一件事做透"的能力。引导成为既有创意又有执行力的领导者。在自由和纪律间找到平衡。'}
-            ]
-        },
-        {
-            num: 8, name: '挑战型', subtitle: 'The Challenger · 力量驱动的决策核心',
-            keywords: ['果断','掌控力','直接','保护欲'],
-            attention: ['谁在掌控','边界有没有被侵犯'],
-            fear: ['被控制','显得软弱'],
-            happy: ['掌控感','被尊重为强者'],
-            manage: ['授权 + 尊重','直接沟通，不绕弯子'],
-            tip: '用"掌控权"和"直接挑战"来激励。给他们空间，不要微观管理。',
-            strengths: ['决策果断，执行力强','在压力下表现出色','有保护团队的担当','敢于直面冲突和困难'],
-            weaknesses: ['可能过于强势忽视他人感受','控制欲强，授权不足','在需要柔软手段的场景中吃力','容易低估他人的能力'],
-            goodWork: ['团队负责人、项目总监','需要快速决策的管理岗','高压环境下的攻坚任务','需要强执行力的变革项目'],
-            badWork: ['需要高度协作的平级岗位','强调温和方式的服务型岗位','需要频繁妥协的外交型角色','下属能力很强不需要强管控的场景'],
-            plan: [
-                {time: '第1阶段（1-3个月）', title: '授权与信任', detail: '给予充分的决策权和掌控空间。直接沟通，不绕弯子。尊重其领导力和决策能力。'},
-                {time: '第2阶段（3-6个月）', title: '柔软力量', detail: '引导意识到"真正的力量也包括柔软"。培养倾听和共情能力。帮助学会通过他人来实现目标。'},
-                {time: '第3阶段（6-12个月）', title: '成熟领导力', detail: '从"力量型领导"进化为"智慧型领导"。培养战略耐心和长期视野。引导成为既果断又包容的成熟管理者。'}
-            ]
-        },
-        {
-            num: 9, name: '和平型', subtitle: 'The Peacemaker · 和谐驱动的团队粘合剂',
-            keywords: ['温和','包容','稳定','善于调和'],
-            attention: ['大家和不和','有没有被忽略的立场'],
-            fear: ['冲突','被分离、失去连接'],
-            happy: ['和谐与被接纳','"我的存在让团队更好"'],
-            manage: ['温和推动 + 肯定价值','避免强硬施压'],
-            tip: '用"温和推动"和"肯定价值"来激励。给足时间和空间，不要突然改变节奏。',
-            strengths: ['善于调解矛盾，维护和谐','包容性强，善于倾听','情绪稳定，给人安全感','能看见每个人的立场'],
-            weaknesses: ['回避冲突导致问题积累','主动性不足，容易被动','可能忽视自己的需求','决策速度较慢'],
-            goodWork: ['团队协调、HRBP','客户维护、客户成功','需要多方协调的项目管理','团队文化和氛围建设'],
-            badWork: ['需要快速强硬决策的岗位','高冲突环境下的谈判岗','需要激进推动的变革型角色','强调个人突出表现的竞争型环境'],
-            plan: [
-                {time: '第1阶段（1-3个月）', title: '价值确认', detail: '充分认可其在团队中的调和作用。给予安全的工作环境，避免突然施压。分配需要协调和倾听的工作。'},
-                {time: '第2阶段（3-6个月）', title: '主动激活', detail: '温和地推动表达个人观点和需求。帮助建立主动发声的习惯。在冲突场景中给予支持和安全网。'},
-                {time: '第3阶段（6-12个月）', title: '领导力觉醒', detail: '培养独立决策和推动变革的能力。引导从"维持和谐"到"建设性冲突"。鼓励成为有主张又有温度的领导者。'}
-            ]
-        }
-    ];
-
-    // ===== Test Questions =====
-    const questions = [
-        { q: '在工作中，你最在意的是：', opts: [
-            {text: '事情是否做得正确、符合标准', types: [1]},
-            {text: '是否帮助到了别人，关系好不好', types: [2,9]},
-            {text: '目标是否达成，结果好不好', types: [3]},
-            {text: '是否有意义，是否忠于自己的感受', types: [4]}
-        ]},
-        {q: '面对一个新项目，你的第一反应是：', opts: [
-            {text: '先制定详细的计划和标准流程', types: [1]},
-            {text: '先了解团队需要我怎么配合', types: [2]},
-            {text: '快速确定目标和关键节点', types: [3]},
-            {text: '思考这个项目有没有深度和价值', types: [4,5]}
-        ]},
-        { q: '你最害怕的事情是：', opts: [
-            {text: '犯错误，被批评不够好', types: [1]},
-            {text: '被孤立，不被任何人需要', types: [2]},
-            {text: '失败，被人看不起', types: [3]},
-            {text: '被困住，没有自由', types: [7,4]}
-        ]},
-        { q: '同事来找你帮忙，你通常会：', opts: [
-            {text: '评估这事该不该帮，符不符合规范', types: [1,6]},
-            {text: '放下手中的事，优先帮助对方', types: [2]},
-            {text: '快速帮忙，因为这也算一次展示能力的机会', types: [3]},
-            {text: '看心情和关系远近再决定', types: [4,9]}
-        ]},
-        { q: '你在团队中的角色通常是：', opts: [
-            {text: '质量把关者，发现问题并纠正', types: [1]},
-            {text: '团队的暖心人，维护关系', types: [2]},
-            {text: '业绩担当，冲锋在前', types: [3,8]},
-            {text: '幕后的智囊，提供深度分析', types: [5]}
-        ]},
-        { q: '你的快乐主要来自于：', opts: [
-            {text: '把事情做到极致', types: [1]},
-            {text: '被感谢和认可', types: [2]},
-            {text: '完成挑战，取得成果', types: [3]},
-            {text: '探索新事物，发现新可能', types: [7]}
-        ]},
-        { q: '面对冲突，你倾向于：', opts: [
-            {text: '坚持原则，据理力争', types: [1,8]},
-            {text: '主动调和，寻找共识', types: [2,9]},
-            {text: '快速解决，不让事态扩大', types: [3]},
-            {text: '先退一步，观察分析', types: [5,6]}
-        ]},
-        { q: '被领导批评后，你最真实的反应是：', opts: [
-            {text: '反思哪里不对，马上改进', types: [1]},
-            {text: '有点受伤，怀疑是不是不被认可了', types: [2,4]},
-            {text: '快速调整，争取下次证明自己', types: [3]},
-            {text: '冷静分析批评是否合理', types: [5]}
-        ]},
-        { q: '你放松的方式是：', opts: [
-            {text: '整理环境、优化流程，让一切井井有条', types: [1]},
-            {text: '和朋友聊天、聚会', types: [2,7]},
-            {text: '运动或挑战某个目标', types: [3,8]},
-            {text: '独处、阅读、思考', types: [4,5]}
-        ]},
-        { q: '在做决策时，你最依赖的是：', opts: [
-            {text: '数据和标准', types: [1,5]},
-            {text: '对他人的影响和感受', types: [2,9]},
-            {text: '目标和结果', types: [3]},
-            {text: '直觉和内心感受', types: [4,7]}
-        ]},
-        { q: '以下哪种说法最能代表你：', opts: [
-            {text: '"没有规矩不成方圆"', types: [1]},
-            {text: '"大家好才是真的好"', types: [2,9]},
-            {text: '"不想当将军的士兵不是好士兵"', types: [3,8]},
-            {text: '"知识就是力量"', types: [5]}
-        ]},
-        { q: '你讨厌的工作环境是：', opts: [
-            {text: '混乱无序、没有标准', types: [1]},
-            {text: '冷漠疏离、没有人情味', types: [2]},
-            {text: '没有目标、看不到成长', types: [3]},
-            {text: '被限制、充满规则', types: [7,8]}
-        ]},
-        { q: '面对风险，你的态度是：', opts: [
-            {text: '评估风险，制定应对方案', types: [1,5]},
-            {text: '担心风险，倾向于谨慎行事', types: [6]},
-            {text: '风险越大机会越大', types: [3,7,8]},
-            {text: '随遇而安，车到山前必有路', types: [9]}
-        ]},
-        { q: '你最希望别人怎么评价你：', opts: [
-            {text: '专业、可靠、有原则', types: [1]},
-            {text: '温暖、善良、重要', types: [2]},
-            {text: '成功、有能力、值得信赖', types: [3]},
-            {text: '独特、有深度、有见解', types: [4,5]}
-        ]},
-        { q: '你管理/带人的风格是：', opts: [
-            {text: '高标准严要求，以身作则', types: [1]},
-            {text: '关心下属，注重团队氛围', types: [2,9]},
-            {text: '目标明确，结果导向', types: [3,8]},
-            {text: '授权信任，尊重专业边界', types: [5,7]}
-        ]},
-        { q: '你最珍惜的东西是：', opts: [
-            {text: '诚信和原则', types: [1]},
-            {text: '关系和情感', types: [2]},
-            {text: '成就和认可', types: [3]},
-            {text: '自由和独立', types: [7,4,5]}
-        ]},
-        { q: '压力大的时候你会：', opts: [
-            {text: '更加严格地执行计划', types: [1,3]},
-            {text: '找人倾诉，寻求支持', types: [2,6]},
-            {text: '转移注意力，寻找快乐', types: [7]},
-            {text: '退回到自己的空间里消化', types: [4,5,9]}
-        ]},
-        { q: '你觉得自己最大的优点是：', opts: [
-            {text: '靠谱、负责、有担当', types: [1,6]},
-            {text: '善解人意、有同理心', types: [2,9]},
-            {text: '行动力强、效率高', types: [3,8]},
-            {text: '有想法、有深度', types: [4,5,7]}
-        ]}
-    ];;
-
-// ===== Init =====
-document.addEventListener('DOMContentLoaded', function() {
-    loadData();
-    renderCompetitorList();
-    renderComparisonTable();
-    initChart();
-    renderScripts();
-    renderTools();
-});
-
-function loadData() {
-    var d = localStorage.getItem(STORAGE_KEY);
-    if (d) { try { competitors = JSON.parse(d); } catch(e) {} }
-    var s = localStorage.getItem(DIMENSIONS_KEY);
-    if (s) { try { dimensions = JSON.parse(s); } catch(e) {} }
-    if (!dimensions.length) { dimensions = JSON.parse(JSON.stringify(DEFAULT_DIMENSIONS)); }
-    if (!s) saveData();
-}
-
-function saveData() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(competitors));
-    localStorage.setItem(DIMENSIONS_KEY, JSON.stringify(dimensions));
-}
-
-function switchPage(page) {
-    document.querySelectorAll('.page-section').forEach(function(p){p.classList.remove('active');});
-    document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
-    document.getElementById('page-'+page).classList.add('active');
-    document.getElementById('nav-'+page).classList.add('active');
-    if (page === 'enneagram' && !enneagramReady) { initEnneagram(); enneagramReady = true; }
-}
-
-function showToast(msg, type) {
-    var t = document.getElementById('toast');
-    document.getElementById('toastMsg').textContent = msg;
-    t.classList.add('show');
-    setTimeout(function(){t.classList.remove('show');}, 2500);
-}
-
-function updateScore(id) {
-    document.getElementById(id+'Val').textContent = document.getElementById(id).value;
-}
-
-// ===== Competitor CRUD =====
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>销售赋能平台 | B2B留学顾问</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.js">
+/* ===== Competitor CRUD ===== */
 function openAddModal(editId) {
     document.getElementById('modalTitle').textContent = editId ? '编辑竞品' : '添加竞品';
-    var fields = ['name','priceRange','targetMarket','features','advantages','policies','notes'];
-    fields.forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+    ['name','priceRange','targetMarket','features','advantages','policies','notes'].forEach(function(id){
+        var el = document.getElementById(id); if(el) el.value = '';
+    });
     document.getElementById('editId').value = editId || '';
-    
     var enabled = dimensions.filter(function(d){return d.enabled;});
     var container = document.getElementById('scoreFields');
     container.innerHTML = '';
     enabled.forEach(function(d){
         var div = document.createElement('div');
         div.className = 'form-group';
-        div.innerHTML = '<label class="form-label">'+d.name+'</label><div class="score-input-group">'
-            + '<input type="range" class="score-slider" id="'+d.id+'" min="0" max="10" value="5" oninput="updateScore(\''+d.id+'\')">'
-            + '<span class="score-value" id="'+d.id+'Val">5</span></div>';
+        div.innerHTML = '<label class="form-label">' + d.name + '</label><div class="score-input-group">' +
+            '<input type="range" class="score-slider" id="' + d.id + '" min="0" max="10" value="5" oninput="updateScore(\' + d.id + '')">' +
+            '<span class="score-value" id="' + d.id + 'Val">5</span></div>';
         container.appendChild(div);
     });
-
     if (editId) {
         var c = competitors.find(function(x){return x.id===editId;});
         if (c) {
-            fields.forEach(function(k){var el=document.getElementById(k);if(el)el.value=c[k]||'';});
+            ['name','priceRange','targetMarket','features','advantages','policies','notes'].forEach(function(k){
+                var el = document.getElementById(k); if(el) el.value = c[k] || '';
+            });
             enabled.forEach(function(d){
                 var el = document.getElementById(d.id);
                 if (el && c[d.id] !== undefined) { el.value = c[d.id]; updateScore(d.id); }
@@ -837,29 +40,24 @@ function openAddModal(editId) {
 
 function closeAddModal() { document.getElementById('addModal').classList.remove('active'); }
 
+function updateScore(id) {
+    var el = document.getElementById(id+'Val');
+    if(el) el.textContent = document.getElementById(id).value;
+}
+
 function saveCompetitor() {
     var name = document.getElementById('name').value.trim();
-    if (!name) { showToast('请输入竞品名称','error'); return; }
+    if (!name) { showToast('请输入竞品名称'); return; }
     var enabled = dimensions.filter(function(d){return d.enabled;});
-    var data = {
-        name: name,
-        priceRange: document.getElementById('priceRange').value,
-        targetMarket: document.getElementById('targetMarket').value,
-        features: document.getElementById('features').value,
-        advantages: document.getElementById('advantages').value,
-        policies: document.getElementById('policies').value,
-        notes: document.getElementById('notes').value
-    };
-    enabled.forEach(function(d){data[d.id] = parseInt(document.getElementById(d.id).value);});
+    var data = { name:name, priceRange:document.getElementById('priceRange').value, targetMarket:document.getElementById('targetMarket').value, features:document.getElementById('features').value, advantages:document.getElementById('advantages').value, policies:document.getElementById('policies').value, notes:document.getElementById('notes').value };
+    enabled.forEach(function(d){ data[d.id] = parseInt(document.getElementById(d.id).value); });
     var editId = document.getElementById('editId').value;
     if (editId) {
         var idx = competitors.findIndex(function(c){return c.id===editId;});
-        if (idx>-1) {
-            Object.keys(data).forEach(function(k){competitors[idx][k]=data[k];});
-        }
+        if (idx>-1) { Object.keys(data).forEach(function(k){competitors[idx][k]=data[k];}); }
         showToast('竞品已更新');
     } else {
-        data.id = 'comp_'+Date.now();
+        data.id = 'comp_' + Date.now();
         data.colorIndex = competitors.length % COLORS.length;
         competitors.push(data);
         showToast('竞品已添加');
@@ -879,8 +77,7 @@ function deleteCompetitor(id) {
 
 function clearAllData() {
     if (confirm('确定清空所有数据？此操作不可恢复。')) {
-        competitors = []; saveData();
-        renderCompetitorList(); renderComparisonTable(); updateChart();
+        competitors = []; saveData(); renderCompetitorList(); renderComparisonTable(); updateChart();
         showToast('数据已清空');
     }
 }
@@ -891,14 +88,14 @@ function exportCompetitors() {
     var blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
-    a.href = url; a.download = '竞品数据_'+new Date().toISOString().slice(0,10)+'.json';
+    a.href = url; a.download = '竞品数据_' + new Date().toISOString().slice(0,10) + '.json';
     a.click(); URL.revokeObjectURL(url);
     showToast('数据已导出，请妥善保存');
 }
 
 function renderCompetitorList() {
     var list = document.getElementById('competitorList');
-    document.getElementById('competitorCount').textContent = competitors.length+' 个竞品';
+    document.getElementById('competitorCount').textContent = competitors.length + ' 个竞品';
     if (!competitors.length) {
         list.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>暂无竞品数据</p><p style="font-size:12px;margin-top:8px;">点击"添加竞品"开始分析</p></div>';
         return;
@@ -907,13 +104,12 @@ function renderCompetitorList() {
     competitors.forEach(function(c){
         var div = document.createElement('div');
         div.className = 'competitor-card fade-in';
-        div.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:flex-start;">'
-            + '<div><strong style="font-size:16px;">'+escapeHtml(c.name)+'</strong></div>'
-            + '<span class="color-dot" style="background:'+COLORS[c.colorIndex]+';width:12px;height:12px;border-radius:50%;flex-shrink:0;"></span></div>'
-            + '<div style="margin-top:8px;font-size:13px;color:var(--gray-500);">📍 '+(c.priceRange||'未设置')+'<br>🔗 '+(c.targetMarket||'未设置')+'</div>'
-            + '<div style="margin-top:12px;display:flex;gap:8px;">'
-            + '<button class="btn btn-secondary" onclick="event.stopPropagation();editCompetitor(\''+c.id+'\')">编辑</button>'
-            + '<button class="btn btn-danger" onclick="event.stopPropagation();deleteCompetitor(\''+c.id+'\')">删除</button></div>';
+        div.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:flex-start;"><div><strong style="font-size:16px;">' + escapeHtml(c.name) + '</strong></div>' +
+            '<span class="color-dot" style="background:' + COLORS[c.colorIndex] + ';width:12px;height:12px;border-radius:50%;flex-shrink:0;"></span></div>' +
+            '<div style="margin-top:8px;font-size:13px;color:var(--gray-500);">📍 ' + (c.priceRange||'未设置') + '<br>🔗 ' + (c.targetMarket||'未设置') + '</div>' +
+            '<div style="margin-top:12px;display:flex;gap:8px;">' +
+            '<button class="btn btn-secondary" onclick="event.stopPropagation();editCompetitor(\' + c.id + '')">编辑</button>' +
+            '<button class="btn btn-danger" onclick="event.stopPropagation();deleteCompetitor(\' + c.id + '')">删除</button></div>';
         list.appendChild(div);
     });
 }
@@ -926,15 +122,13 @@ function escapeHtml(s) {
 function renderComparisonTable() {
     var enabled = dimensions.filter(function(d){return d.enabled;});
     var thead = document.getElementById('comparisonHead');
-    thead.innerHTML = '<th>竞品</th>';
-    enabled.forEach(function(d){thead.innerHTML += '<th>'+d.name+'</th>';});
+    thead.innerHTML = '<th>竞品</th>' + enabled.map(function(d){return '<th>' + d.name + '</th>';}).join('');
     var tbody = document.getElementById('comparisonBody');
     if (!competitors.length) { tbody.innerHTML = ''; return; }
     tbody.innerHTML = '';
     competitors.forEach(function(c){
         var tr = document.createElement('tr');
-        tr.innerHTML = '<td><strong>'+escapeHtml(c.name)+'</strong></td>';
-        enabled.forEach(function(d){tr.innerHTML += '<td>'+(c[d.id]||'-')+'</td>';});
+        tr.innerHTML = '<td><strong>' + escapeHtml(c.name) + '</strong></td>' + enabled.map(function(d){return '<td>' + (c[d.id]||'-') + '</td>';}).join('');
         tbody.appendChild(tr);
     });
 }
@@ -945,8 +139,7 @@ function openDimensionModal() {
     dimensions.forEach(function(d,i){
         var div = document.createElement('div');
         div.style.cssText = 'background:var(--gray-50);padding:12px;border-radius:8px;';
-        div.innerHTML = '<label style="display:flex;align-items:center;gap:8px;cursor:pointer;">'
-            + '<input type="checkbox" id="dim_'+i+'" '+(d.enabled?'checked':'')+'> '+d.name+'</label>';
+        div.innerHTML = '<label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="dim_' + i + '" ' + (d.enabled?'checked':'') + '> ' + d.name + '</label>';
         grid.appendChild(div);
     });
     document.getElementById('dimensionModal').classList.add('active');
@@ -955,7 +148,7 @@ function openDimensionModal() {
 function closeDimensionModal() { document.getElementById('dimensionModal').classList.remove('active'); }
 
 function saveDimensions() {
-    dimensions.forEach(function(d,i){d.enabled = document.getElementById('dim_'+i).checked;});
+    dimensions.forEach(function(d,i){ d.enabled = document.getElementById('dim_'+i).checked; });
     saveData(); closeDimensionModal(); renderComparisonTable(); updateChart();
     showToast('维度设置已保存');
 }
@@ -966,11 +159,9 @@ function initChart() {
     radarChart = new Chart(ctx, {
         type:'radar',
         data:{labels:enabled.map(function(d){return d.name;}), datasets:[]},
-        options:{
-            responsive:true, maintainAspectRatio:true,
-            scales:{r:{beginAtZero:true,max:10,ticks:{stepSize:2}}},
+        options:{ responsive:true, maintainAspectRatio:true,
+            scales:{r:{beginAtZero:true, max:10, ticks:{stepSize:2}}},
             plugins:{legend:{position:'bottom'}}
-        }
     });
     updateChart();
 }
@@ -992,33 +183,33 @@ function updateChart() {
     radarChart.update();
 }
 
-// ===== Scripts =====
+/* ===== Scripts ===== */
 function renderScripts() {
     var saved = null;
     try { saved = JSON.parse(localStorage.getItem(SCRIPTS_KEY)); } catch(e) {}
-    var data = saved && saved.length ? saved : DEFAULT_SCRIPTS;
+    var data = saved && saved.length ? saved : DEFAULT_SCRIPTS.map(function(x){return JSON.parse(JSON.stringify(x));});
     var container = document.getElementById('scriptsContainer');
     container.innerHTML = '';
     var tagStyles = {touch:'#ebf8ff;color:var(--primary)', need:'#fefcbf;color:#975a16', objection:'#fed7d7;color:#c53030', close:'#c6f6d5;color:var(--green-500)', maintain:'var(--gray-100);color:var(--gray-600)'};
     data.forEach(function(cat, ci) {
         var card = document.createElement('div');
         card.className = 'card';
-        card.innerHTML = '<div class="card-header"><div class="card-title">'+cat.category+'</div>'
-            + '<button class="btn btn-secondary" onclick="addScriptItem('+ci+')">＋ 添加话术</button></div>'
-            + '<div class="card-body" id="scriptCat'+ci+'"></div>';
+        card.innerHTML = '<div class="card-header"><div class="card-title">' + cat.category + '</div>' +
+            '<button class="btn btn-secondary" onclick="addScriptItem(' + ci + ')">＋ 添加话术</button></div>' +
+            '<div class="card-body" id="scriptCat' + ci + '"></div>';
         container.appendChild(card);
-        var body = document.getElementById('scriptCat'+ci);
+        var body = document.getElementById('scriptCat' + ci);
         cat.items.forEach(function(item, ii){
             var style = tagStyles[cat.tag] || 'var(--gray-100);color:var(--gray-600)';
             var div = document.createElement('div');
             div.className = 'script-item fade-in';
-            div.innerHTML = '<div class="script-header"><span class="script-title">'+escapeHtml(item.title)+'</span>'
-                + '<span style="display:flex;gap:4px;align-items:center;">'
-                + '<span class="script-tag" style="background:'+style+';">'+cat.tagName+'</span>'
-                + '<button class="btn btn-secondary" style="padding:2px 8px;font-size:11px;" onclick="editScriptItem('+ci+','+ii+')">✏️</button>'
-                + '<button class="btn btn-danger" style="padding:2px 8px;font-size:11px;" onclick="deleteScriptItem('+ci+','+ii+')">🗑️</button></span></div>'
-                + '<div class="script-content">'+escapeHtml(item.content)+'</div>'
-                + '<div class="script-actions"><button class="btn btn-secondary" onclick="copyScript(this)">📋 复制</button></div>';
+            div.innerHTML = '<div class="script-header"><span class="script-title">' + escapeHtml(item.title) + '</span>' +
+                '<span style="display:flex;gap:4px;align-items:center;">' +
+                '<span class="script-tag" style="background:' + style + '">' + cat.tagName + '</span>' +
+                '<button class="btn btn-secondary" style="padding:2px 8px;font-size:11px;" onclick="editScriptItem(' + ci + ',' + ii + ')">✏️</button>' +
+                '<button class="btn btn-danger" style="padding:2px 8px;font-size:11px;" onclick="deleteScriptItem(' + ci + ',' + ii + ')">🗑️</button></span></div>' +
+                '<div class="script-content">' + escapeHtml(item.content) + '</div>' +
+                '<div class="script-actions"><button class="btn btn-secondary" onclick="copyScript(this)">📋 复制</button></div>';
             body.appendChild(div);
         });
     });
@@ -1043,8 +234,7 @@ function addScriptItem(ci) {
     var data = getScriptsData();
     data[ci].items.push({title:title, content:content});
     localStorage.setItem(SCRIPTS_KEY, JSON.stringify(data));
-    renderScripts();
-    showToast('话术已添加');
+    renderScripts(); showToast('话术已添加');
 }
 
 function editScriptItem(ci, ii) {
@@ -1057,8 +247,7 @@ function editScriptItem(ci, ii) {
     if (!content) return;
     item.title = title; item.content = content;
     localStorage.setItem(SCRIPTS_KEY, JSON.stringify(data));
-    renderScripts();
-    showToast('话术已更新');
+    renderScripts(); showToast('话术已更新');
 }
 
 function deleteScriptItem(ci, ii) {
@@ -1066,11 +255,10 @@ function deleteScriptItem(ci, ii) {
     var data = getScriptsData();
     data[ci].items.splice(ii, 1);
     localStorage.setItem(SCRIPTS_KEY, JSON.stringify(data));
-    renderScripts();
-    showToast('话术已删除');
+    renderScripts(); showToast('话术已删除');
 }
 
-// ===== Tools =====
+/* ===== Tools ===== */
 function getToolsData() {
     var saved = null;
     try { saved = JSON.parse(localStorage.getItem(TOOLS_KEY)); } catch(e) {}
@@ -1080,22 +268,24 @@ function getToolsData() {
 function renderTools() {
     var data = getToolsData();
     var grid = document.getElementById('toolsGrid');
+    if (!grid) return;
     grid.innerHTML = '';
     data.forEach(function(t, i){
         var div = document.createElement('div');
         div.className = 'tool-card';
-        div.innerHTML = '<div class="tool-icon">'+t.icon+'</div><div class="tool-name">'+escapeHtml(t.name)+'</div>'
-            + '<div class="tool-desc">'+escapeHtml(t.desc)+'</div><span class="tool-tag">'+escapeHtml(t.tag)+'</span>'
-            + '<div style="margin-top:12px;display:flex;gap:4px;">'
-            + '<button class="btn btn-secondary" style="padding:4px 10px;font-size:12px;" onclick="event.stopPropagation();editTool('+i+')">✏️</button>'
-            + '<button class="btn btn-danger" style="padding:4px 10px;font-size:12px;" onclick="event.stopPropagation();deleteTool('+i+')">🗑️</button></div>';
+        div.innerHTML = '<div class="tool-icon">' + t.icon + '</div>' +
+            '<div class="tool-name">' + escapeHtml(t.name) + '</div>' +
+            '<div class="tool-desc">' + escapeHtml(t.desc) + '</div>' +
+            '<span class="tool-tag">' + escapeHtml(t.tag) + '</span>' +
+            '<div style="margin-top:12px;display:flex;gap:4px;">' +
+            '<button class="btn btn-secondary" style="padding:4px 10px;font-size:12px;" onclick="event.stopPropagation();editTool(' + i + ')">✏️</button>' +
+            '<button class="btn btn-danger" style="padding:4px 10px;font-size:12px;" onclick="event.stopPropagation();deleteTool(' + i + ')">🗑️</button></div>';
         grid.appendChild(div);
     });
-    // add button
     var addDiv = document.createElement('div');
     addDiv.className = 'tool-card';
     addDiv.style.cssText = 'display:flex;align-items:center;justify-content:center;border:2px dashed var(--gray-300);cursor:pointer;';
-    addDiv.onclick = function(){addTool();};
+    addDiv.onclick = addTool;
     addDiv.innerHTML = '<div style="text-align:center;"><div style="font-size:32px;margin-bottom:8px;">＋</div><div style="font-size:14px;color:var(--gray-500);">添加新工具</div></div>';
     grid.appendChild(addDiv);
 }
@@ -1108,8 +298,7 @@ function addTool() {
     var data = getToolsData();
     data.push({icon:'📎', name:name, desc:desc, tag:tag});
     localStorage.setItem(TOOLS_KEY, JSON.stringify(data));
-    renderTools();
-    showToast('工具已添加');
+    renderTools(); showToast('工具已添加');
 }
 
 function editTool(i) {
@@ -1121,8 +310,7 @@ function editTool(i) {
     var tag = prompt('标签：', t.tag) || '';
     t.name = name; t.desc = desc; t.tag = tag;
     localStorage.setItem(TOOLS_KEY, JSON.stringify(data));
-    renderTools();
-    showToast('工具已更新');
+    renderTools(); showToast('工具已更新');
 }
 
 function deleteTool(i) {
@@ -1130,48 +318,54 @@ function deleteTool(i) {
     var data = getToolsData();
     data.splice(i, 1);
     localStorage.setItem(TOOLS_KEY, JSON.stringify(data));
-    renderTools();
-    showToast('工具已删除');
+    renderTools(); showToast('工具已删除');
 }
 
-// ===== Enneagram =====
+/* ===== Enneagram ===== */
+var currentQ = 0;
+var answers = [];
+var enneagramReady = false;
+
 function initEnneagram() {
     var container = document.getElementById('enneagramContainer');
-    container.innerHTML = ''
-        + '<div class="card"><div class="card-body">'
-        + '<div id="testStart"><h3 style="margin-bottom:16px;">欢迎来到九型人格测试</h3>'
-        + '<p style="color:var(--gray-500);margin-bottom:20px;">本测试共'+questions.length+'题，每题选择最符合你直觉的选项。测试结果将帮助你了解自己的行为模式和沟通风格，更好地定位销售策略。</p>'
-        + '<button class="btn btn-primary" id="btnStartTest">开始测试</button></div>'
-        + '<div id="testContent" style="display:none;">'
-        + '<div class="progress-bar" style="margin-bottom:20px;"><div class="progress-fill" id="progressFill"></div></div>'
-        + '<div class="question-card"><div class="question-text" id="questionText"></div><div id="optionsContainer"></div></div>'
-        + '<div style="display:flex;justify-content:space-between;margin-top:16px;">'
-        + '<button class="btn btn-secondary" id="btnPrevQ" id="prevBtn" style="visibility:hidden;">← 上一题</button>'
-        + '<button class="btn btn-primary" id="btnNextQ" id="nextBtn">下一题 →</button></div></div>'
-        + '<div id="testResult" style="display:none;"></div></div></div>'
-        + '<div id="typeReference" style="display:none;" class="card"><div class="card-header"><div class="card-title">📖 九型人格速查表</div></div>'
-        + '<div class="card-body"><div class="ref-table-wrapper"><table class="ref-table"><thead><tr>'
-        + '<th>类型</th><th>名称</th><th>注意力焦点</th><th>核心恐惧</th><th>沟通建议</th>'
-        + '</tr></thead><tbody id="typeTableBody"></tbody></table></div></div></div>';
-    
+    if (!container) return;
+    container.innerHTML = '<div class="card"><div class="card-body">' +
+        '<div id="testStart"><h3 style="margin-bottom:16px;">欢迎来到九型人格测试</h3>' +
+        '<p style="color:var(--gray-500);margin-bottom:20px;">本测试共' + questions.length + '题，每题选择最符合你直觉的选项。测试结果将帮助你了解自己的行为模式和沟通风格，更好地定位销售策略。</p>' +
+        '<button class="btn btn-primary" id="btnStartTest">开始测试</button></div>' +
+        '<div id="testContent" style="display:none;">' +
+        '<div class="progress-bar" style="margin-bottom:20px;"><div class="progress-fill" id="progressFill"></div></div>' +
+        '<div class="question-card"><div class="question-text" id="questionText"></div><div id="optionsContainer"></div></div>' +
+        '<div style="display:flex;justify-content:space-between;margin-top:16px;">' +
+        '<button class="btn btn-secondary" id="btnPrevQ" style="visibility:hidden;">← 上一题</button>' +
+        '<button class="btn btn-primary" id="btnNextQ">下一题 →</button></div></div>' +
+        '<div id="testResult" style="display:none;"></div></div></div>' +
+        '<div id="typeReference" style="display:none;" class="card"><div class="card-header"><div class="card-title">📖 九型人格速查表</div></div>' +
+        '<div class="card-body"><div class="ref-table-wrapper"><table class="ref-table"><thead><tr>' +
+        '<th>类型</th><th>名称</th><th>注意力焦点</th><th>核心恐惧</th><th>沟通建议</th></tr></thead>' +
+        '<tbody id="typeTableBody"></tbody></table></div></div></div>';
+    document.getElementById('btnStartTest').addEventListener('click', startTest);
+    document.getElementById('btnPrevQ').addEventListener('click', prevQ);
+    document.getElementById('btnNextQ').addEventListener('click', nextQ);
+    // Fill type table
     var tbody = document.getElementById('typeTableBody');
     if (tbody) {
         tbody.innerHTML = '';
         typeData.forEach(function(t){
             var tr = document.createElement('tr');
-            tr.innerHTML = '<td><span class="type-dot" style="background:'+t.color+'"></span> '+t.num+'</td>'
-                + '<td><strong>'+t.name+'</strong></td>'
-                + '<td>'+t.attention.join('、')+'</td>'
-                + '<td>'+t.fear.join('、')+'</td>'
-                + '<td style="font-size:12px;">'+(t.sellAdvice||'').substring(0,40)+'...</td>';
+            tr.innerHTML = '<td><span class="type-dot" style="background:' + t.color + '"></span> ' + t.num + '</td>' +
+                '<td><strong>' + t.name + '</strong></td>' +
+                '<td>' + t.attention.join('、') + '</td>' +
+                '<td>' + t.fear.join('、') + '</td>' +
+                '<td style="font-size:12px;">' + (t.sellAdvice||'').substring(0,40) + '...</td>';
             tbody.appendChild(tr);
         });
     }
+    enneagramReady = true;
 }
 
 function startTest() {
-    currentQ = 0;
-    answers = Array(questions.length).fill(-1);
+    currentQ = 0; answers = Array(questions.length).fill(-1);
     document.getElementById('testStart').style.display = 'none';
     document.getElementById('testContent').style.display = 'block';
     document.getElementById('testResult').style.display = 'none';
@@ -1179,7 +373,7 @@ function startTest() {
 }
 
 function showQ() {
-    document.getElementById('progressFill').style.width = ((currentQ/questions.length)*100)+'%';
+    document.getElementById('progressFill').style.width = ((currentQ/questions.length)*100) + '%';
     document.getElementById('questionText').textContent = questions[currentQ].q;
     var container = document.getElementById('optionsContainer');
     container.innerHTML = '';
@@ -1187,14 +381,12 @@ function showQ() {
         var div = document.createElement('div');
         div.className = 'option-item' + (answers[currentQ]===i?' selected':'');
         div.textContent = o.text;
-        div.onclick = function(){selOpt(i);};
+        div.addEventListener('click', function(){ answers[currentQ]=i; showQ(); });
         container.appendChild(div);
     });
-    document.getElementById('prevBtn').style.visibility = currentQ>0?'visible':'hidden';
-    document.getElementById('nextBtn').textContent = currentQ<questions.length-1?'下一题 →':'查看结果';
+    document.getElementById('btnPrevQ').style.visibility = currentQ>0?'visible':'hidden';
+    document.getElementById('btnNextQ').textContent = currentQ<questions.length-1?'下一题 →':'查看结果';
 }
-
-function selOpt(i) { answers[currentQ]=i; showQ(); }
 
 function prevQ() { if (currentQ>0) { currentQ--; showQ(); } }
 
@@ -1219,24 +411,475 @@ function showResult() {
     resultDiv.style.display = 'block';
     var scoreBars = '';
     Object.keys(scores).sort(function(a,b){return b-a;}).forEach(function(k){
-        scoreBars += '<span style="background:var(--gray-100);padding:4px 12px;border-radius:12px;font-size:13px;margin:2px;">'+k+'型: '+scores[k]+'票</span>';
+        scoreBars += '<span style="background:var(--gray-100);padding:4px 12px;border-radius:12px;font-size:13px;margin:2px;">' + k + '型: ' + scores[k] + '票</span>';
     });
-    resultDiv.innerHTML = '<div class="result-card fade-in">'
-        + '<div style="font-size:64px;margin-bottom:16px;">'+t.icon+'</div>'
-        + '<h2 style="color:var(--primary);margin-bottom:4px;">'+t.name+'（'+t.num+'型）</h2>'
-        + '<p style="color:var(--gray-500);margin-bottom:16px;">'+t.subtitle+'</p>'
-        + '<div style="background:var(--gray-50);border-radius:12px;padding:20px;text-align:left;margin-bottom:16px;">'
-        + '<p><strong>核心优势：</strong>'+t.strength+'</p>'
-        + '<p style="margin-top:8px;"><strong>工作风格：</strong>'+t.workstyle+'</p>'
-        + '<p style="margin-top:8px;"><strong>注意力焦点：</strong>'+t.attention.join('、')+'</p>'
-        + '<p style="margin-top:8px;"><strong>核心恐惧：</strong>'+t.fear.join('、')+'</p>'
-        + '<p style="margin-top:12px;"><strong>💡 销售建议：</strong>'+t.sellAdvice+'</p></div>'
-        + '<div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin-bottom:20px;">'+scoreBars+'</div>'
-        + '<div style="display:flex;gap:12px;justify-content:center;">'
-        + '<button class="btn btn-primary" id="btnStartTest">重新测试</button>'
-        + '<button class="btn btn-secondary" onclick="document.getElementById(\'typeReference\').style.display=\'block\';this.scrollIntoView({behavior:\'smooth\'})">查看完整速查表</button></div>'
-        + '<p style="color:var(--gray-400);font-size:12px;margin-top:12px;">*本测试为简化版，仅供参考</p></div>';
+    resultDiv.innerHTML = '<div class="result-card fade-in">' +
+        '<div style="font-size:64px;margin-bottom:16px;">' + t.icon + '</div>' +
+        '<h2 style="color:var(--primary);margin-bottom:4px;">' + t.name + '（' + t.num + '型）</h2>' +
+        '<p style="color:var(--gray-500);margin-bottom:16px;">' + t.subtitle + '</p>' +
+        '<div style="background:var(--gray-50);border-radius:12px;padding:20px;text-align:left;margin-bottom:16px;">' +
+        '<p><strong>核心优势：</strong>' + t.strength + '</p>' +
+        '<p style="margin-top:8px;"><strong>工作风格：</strong>' + t.workstyle + '</p>' +
+        '<p style="margin-top:8px;"><strong>注意力焦点：</strong>' + t.attention.join('、') + '</p>' +
+        '<p style="margin-top:8px;"><strong>核心恐惧：</strong>' + t.fear.join('、') + '</p>' +
+        '<p style="margin-top:12px;"><strong>💡 销售建议：</strong>' + t.sellAdvice + '</p></div>' +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:20px;">' + scoreBars + '</div>' +
+        '<div style="display:flex;gap:12px;justify-content:center;">' +
+        '<button class="btn btn-primary" onclick="startTest()">重新测试</button>' +
+        '<button class="btn btn-secondary" onclick="document.getElementById('typeReference').style.display='block';this.scrollIntoView({behavior:'smooth'})">查看完整速查表</button></div>' +
+        '<p style="color:var(--gray-400);font-size:12px;margin-top:12px;">*本测试为简化版，仅供参考。完整版需专业九型人格分析师的引导。</p></div>';
 }
 </script>
 </body>
 </html>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#2b6cb0;--primary-light:#ebf8ff;--primary-dark:#2c5282;--gray-50:#f7fafc;--gray-100:#edf2f7;--gray-200:#e2e8f0;--gray-300:#cbd5e0;--gray-400:#a0aec0;--gray-500:#718096;--gray-600:#4a5568;--gray-700:#2d3748;--gray-800:#1a202c;--green-100:#c6f6d5;--green-500:#38a169;--red-100:#fed7d7;--red-500:#e53e3e;--orange-100:#feebcb;--orange-500:#ed8936;--purple-100:#e9d8fd;--purple-500:#805ad5;--shadow:0 4px 12px rgba(0,0,0,0.08);--shadow-lg:0 10px 30px rgba(0,0,0,0.1)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--gray-50);color:var(--gray-700);line-height:1.6;display:flex;min-height:100vh}
+.sidebar{width:260px;background:linear-gradient(180deg,var(--primary-dark) 0%,#1a365d 100%);color:white;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100}
+.sidebar-header{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,0.1)}
+.sidebar-logo{font-size:20px;font-weight:700;display:flex;align-items:center;gap:10px}
+.sidebar-subtitle{font-size:12px;opacity:0.7;margin-top:4px}
+.sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto}
+.nav-section{margin-bottom:24px}
+.nav-section-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:0.5;padding:0 12px;margin-bottom:8px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;font-weight:500;transition:all 0.2s;cursor:pointer;margin-bottom:4px;border:none;background:none;width:100%;text-align:left;font-family:inherit}
+.nav-item:hover{background:rgba(255,255,255,0.1);color:white}
+.nav-item.active{background:rgba(255,255,255,0.15);color:white;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+.nav-item .icon{font-size:20px;width:24px;text-align:center}
+.sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.1);font-size:12px;opacity:0.6}
+.main{flex:1;margin-left:260px;padding:32px;min-height:100vh}
+.page-header{margin-bottom:32px}
+.page-title{font-size:28px;font-weight:700;color:var(--gray-800);margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.page-desc{color:var(--gray-500);font-size:15px}
+.card{background:white;border-radius:16px;box-shadow:var(--shadow);margin-bottom:24px;overflow:hidden}
+.card-header{padding:20px 24px;border-bottom:1px solid var(--gray-200);display:flex;justify-content:space-between;align-items:center}
+.card-title{font-size:18px;font-weight:600;display:flex;align-items:center;gap:10px}
+.card-body{padding:24px}
+.btn{padding:10px 20px;border-radius:8px;border:none;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:8px;font-family:inherit}
+.btn-primary{background:var(--primary);color:white}
+.btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px)}
+.btn-secondary{background:var(--gray-100);color:var(--gray-600)}
+.btn-secondary:hover{background:var(--gray-200)}
+.btn-success{background:var(--green-500);color:white}
+.btn-danger{background:var(--red-500);color:white}
+.actions-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.page-section{display:none}
+.page-section.active{display:block}
+.competitor-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.competitor-card{background:var(--gray-50);border-radius:12px;padding:20px;border:2px solid var(--gray-200);transition:all 0.2s}
+.competitor-card:hover{border-color:var(--primary);box-shadow:0 4px 12px rgba(43,108,176,0.15);cursor:pointer}
+.chart-container{max-width:600px;margin:0 auto}
+.comparison-table-wrapper{overflow-x:auto}
+.comparison-table{width:100%;border-collapse:collapse}
+.comparison-table th{background:var(--gray-100);padding:14px 16px;text-align:left;font-weight:600;color:var(--gray-600);font-size:13px;border-bottom:2px solid var(--gray-200);white-space:nowrap}
+.comparison-table td{padding:12px 16px;border-bottom:1px solid var(--gray-200);font-size:14px}
+.comparison-table tr:hover td{background:var(--gray-50)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.modal-overlay.active{display:flex}
+.modal{background:white;border-radius:16px;width:100%;max-width:700px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--gray-200);display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-size:20px;font-weight:600}
+.modal-close{background:none;border:none;font-size:24px;cursor:pointer;color:var(--gray-400);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:inherit}
+.modal-close:hover{background:var(--gray-100);color:var(--gray-600)}
+.modal-body{padding:24px}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--gray-200);display:flex;justify-content:flex-end;gap:12px}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.form-group{display:flex;flex-direction:column}
+.form-group.full{grid-column:1 / -1}
+.form-label{font-size:13px;font-weight:500;color:var(--gray-600);margin-bottom:6px}
+.form-input,.form-textarea,.form-select{padding:10px 14px;border:2px solid var(--gray-200);border-radius:8px;font-size:14px;transition:border-color 0.2s;font-family:inherit}
+.form-input:focus,.form-textarea:focus,.form-select:focus{outline:none;border-color:var(--primary);background:var(--gray-50)}
+.form-textarea{min-height:80px;resize:vertical}
+.score-input-group{display:flex;align-items:center;gap:12px}
+.score-slider{flex:1;height:6px;border-radius:3px;background:var(--gray-200);outline:none;-webkit-appearance:none}
+.score-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--primary);cursor:pointer;box-shadow:0 2px 6px rgba(43,108,176,0.4)}
+.score-value{min-width:40px;text-align:center;font-weight:600;font-size:16px;color:var(--primary)}
+.script-item{background:white;border:1px solid var(--gray-200);border-radius:10px;padding:16px;margin-bottom:12px;transition:all 0.2s}
+.script-item:hover{border-color:var(--primary);box-shadow:0 2px 8px rgba(43,108,176,0.1)}
+.script-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px}
+.script-title{font-weight:600;color:var(--gray-800)}
+.script-tag{padding:2px 10px;border-radius:12px;font-size:11px;font-weight:500}
+.tag-touch{background:#ebf8ff;color:var(--primary)}
+.tag-need{background:#fefcbf;color:#975a16}
+.tag-objection{background:#fed7d7;color:#c53030}
+.tag-close{background:#c6f6d5;color:var(--green-500)}
+.tag-maintain{background:var(--gray-100);color:var(--gray-600)}
+.script-content{font-size:14px;color:var(--gray-600);line-height:1.8;padding:8px 12px;background:var(--gray-50);border-radius:8px}
+.script-actions{margin-top:10px;display:flex;gap:8px}
+.tool-card{background:white;border-radius:12px;padding:20px;border:2px solid var(--gray-200);transition:all 0.2s;cursor:pointer}
+.tool-card:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:0 4px 12px rgba(43,108,176,0.15)}
+.tool-icon{font-size:32px;margin-bottom:12px}
+.tool-name{font-size:16px;font-weight:600;color:var(--gray-800);margin-bottom:6px}
+.tool-desc{font-size:13px;color:var(--gray-500)}
+.tool-tag{display:inline-block;padding:2px 8px;border-radius:8px;font-size:11px;background:var(--gray-100);color:var(--gray-500);margin-top:8px}
+.question-card{background:white;border-radius:12px;padding:24px;margin-bottom:16px;border:2px solid var(--gray-200)}
+.question-text{font-size:16px;font-weight:500;color:var(--gray-800);margin-bottom:16px}
+.option-item{padding:12px 16px;background:var(--gray-50);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;border:2px solid transparent}
+.option-item:hover{background:var(--primary-light);border-color:var(--primary)}
+.option-item.selected{background:var(--primary-light);border-color:var(--primary)}
+.progress-bar{width:100%;height:8px;background:var(--gray-200);border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;background:var(--primary);transition:width 0.3s}
+.result-card{background:white;border-radius:16px;padding:32px;text-align:center;box-shadow:var(--shadow)}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--gray-800);color:white;padding:14px 24px;border-radius:10px;font-size:14px;box-shadow:var(--shadow-lg);opacity:0;transition:opacity 0.3s;z-index:1001}
+.toast.show{opacity:1}
+.empty-state{text-align:center;padding:60px 20px;color:var(--gray-400)}
+.empty-state .icon{font-size:48px;margin-bottom:16px}
+.fade-in{animation:fadeIn 0.3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.ref-table-wrapper{overflow-x:auto;background:white;border-radius:16px;border:1px solid var(--gray-200)}
+.ref-table{width:100%;border-collapse:collapse;min-width:800px;font-size:13px}
+.ref-table th{background:var(--gray-800);color:white;padding:12px 16px;text-align:left;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px}
+.ref-table td{padding:10px 16px;border-bottom:1px solid var(--gray-100);vertical-align:top}
+.ref-table tr:last-child td{border-bottom:none}
+.ref-table tr:hover td{background:var(--gray-50)}
+.type-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+@media(max-width:768px){.sidebar{transform:translateX(-100%)}.main{margin-left:0;padding:16px}.grid-2,.grid-3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo"><span>🚀</span> 销售赋能平台</div>
+    <div class="sidebar-subtitle">B2B留学顾问专业工具箱</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">
+      <div class="nav-section-title">核心工具</div>
+      <button class="nav-item" data-page="competitor" id="nav-competitor"><span class="icon">📊</span> 竞品分析</button>
+      <button class="nav-item" data-page="scripts" id="nav-scripts"><span class="icon">💬</span> 话术库</button>
+      <button class="nav-item" data-page="tools" id="nav-tools"><span class="icon">🛠️</span> 工具库</button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">自我提升</div>
+      <button class="nav-item" data-page="enneagram" id="nav-enneagram"><span class="icon">🧩</span> 九型测试</button>
+    </div>
+  </nav>
+  <div class="sidebar-footer">妮妮 · 成长守护 🐾</div>
+</div>
+
+<div class="main">
+
+  <!-- 竞品分析 -->
+  <div class="page-section active" id="page-competitor">
+    <div class="page-header">
+      <h1 class="page-title"><span>📊</span> 竞品分析</h1>
+      <p class="page-desc">系统化对比竞品的产品、价格、服务、政策等维度，制定差异化竞争策略</p>
+    </div>
+    <div class="actions-bar">
+      <button class="btn btn-primary" id="btnAdd">➕ 添加竞品</button>
+      <button class="btn btn-secondary" id="btnDim">📐 设置维度</button>
+      <button class="btn btn-success" id="btnExport">📤 导出数据</button>
+      <button class="btn btn-danger" id="btnClear">🗑️ 清除数据</button>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📋 竞品列表</div>
+          <span id="competitorCount" style="font-size:13px;color:var(--gray-500);">0 个竞品</span>
+        </div>
+        <div class="card-body"><div id="competitorList" class="competitor-list"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">📊 雷达图分析</div></div>
+        <div class="card-body"><div class="chart-container"><canvas id="radarChart"></canvas></div></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:24px;">
+      <div class="card-header"><div class="card-title">📈 对比表格</div></div>
+      <div class="card-body">
+        <div class="comparison-table-wrapper">
+          <table class="comparison-table" id="comparisonTable">
+            <thead><tr id="comparisonHead"></tr></thead>
+            <tbody id="comparisonBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 话术库 -->
+  <div class="page-section" id="page-scripts">
+    <div class="page-header">
+      <h1 class="page-title"><span>💬</span> 话术库</h1>
+      <p class="page-desc">B2B机构触达全场景话术，融合Tony梁老师同城自媒体获客方法论，可持续迭代更新</p>
+    </div>
+    <div id="scriptsContainer"></div>
+  </div>
+
+  <!-- 工具库 -->
+  <div class="page-section" id="page-tools">
+    <div class="page-header">
+      <h1 class="page-title"><span>🛠️</span> 工具库</h1>
+      <p class="page-desc">5A模型各节点工具资料，助力销售全流程，持续更新中</p>
+    </div>
+    <div class="grid-3" id="toolsGrid"></div>
+  </div>
+
+  <!-- 九型测试 -->
+  <div class="page-section" id="page-enneagram">
+    <div class="page-header">
+      <h1 class="page-title"><span>🧩</span> 九型测试</h1>
+      <p class="page-desc">了解自己的性格类型，发挥优势，补齐短板</p>
+    </div>
+    <div id="enneagramContainer"></div>
+  </div>
+
+</div>
+
+<!-- Add Modal -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">添加竞品</div>
+      <button class="modal-close" id="closeAdd">×</button>
+    </div>
+    <div class="modal-body" id="addModalBody">
+      <input type="hidden" id="editId">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label class="form-label">竞品名称 *</label>
+          <input type="text" class="form-input" id="name" placeholder="竞品机构名称">
+        </div>
+        <div class="form-group">
+          <label class="form-label">主营产品国家条线</label>
+          <input type="text" class="form-input" id="priceRange" placeholder="如：英国、澳洲、加拿大">
+        </div>
+        <div class="form-group">
+          <label class="form-label">是否BC同做</label>
+          <select class="form-select" id="targetMarket">
+            <option value="">请选择</option>
+            <option value="是">是</option>
+            <option value="否">否</option>
+            <option value="部分">部分项目</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">国内优势地区</label>
+          <input type="text" class="form-input" id="features" placeholder="如：北上广深、江浙沪">
+        </div>
+        <div class="form-group full">
+          <label class="form-label">佣金政策</label>
+          <textarea class="form-textarea" id="advantages" placeholder="描述佣金政策和结算方式"></textarea>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">服务支持</label>
+          <textarea class="form-textarea" id="policies" placeholder="描述提供的服务和支持"></textarea>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">其他支持</label>
+          <textarea class="form-textarea" id="notes" placeholder="其他支持内容"></textarea>
+        </div>
+      </div>
+      <div style="margin-top:24px;">
+        <h4 style="margin-bottom:16px;font-weight:600;">综合评分</h4>
+        <div class="form-grid" id="scoreFields"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancelAdd">取消</button>
+      <button class="btn btn-primary" id="saveCompetitor">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Dimension Modal -->
+<div class="modal-overlay" id="dimensionModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">设置维度</div>
+      <button class="modal-close" id="closeDim">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--gray-500);margin-bottom:16px;">选择要在雷达图和对比表格中显示的维度：</p>
+      <div class="form-grid" id="dimensionGrid"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancelDim">取消</button>
+      <button class="btn btn-primary" id="saveDim">保存</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script>
+/* ===== Data ===== */
+var STORAGE_KEY = 'sales_empowerment_competitors';
+var DIMENSIONS_KEY = 'sales_empowerment_dimensions';
+var SCRIPTS_KEY = 'sales_empowerment_scripts';
+var TOOLS_KEY = 'sales_empowerment_tools';
+
+var DEFAULT_DIMENSIONS = [
+  {id:'scoreProduct',name:'产品力',enabled:true},
+  {id:'scorePrice',name:'佣金竞争力',enabled:true},
+  {id:'scoreService',name:'服务质量',enabled:true},
+  {id:'scoreBrand',name:'品牌影响力',enabled:true},
+  {id:'scoreExpertise',name:'专业度',enabled:true},
+  {id:'scoreSatisfaction',name:'客户满意度',enabled:true}
+];
+
+var COLORS = [
+  'rgba(43,108,176,0.8)','rgba(56,161,105,0.8)','rgba(237,137,54,0.8)',
+  'rgba(128,90,213,0.8)','rgba(229,62,62,0.8)','rgba(56,178,172,0.8)'
+];
+
+var competitors = [];
+var dimensions = [];
+var radarChart = null;
+
+var DEFAULT_SCRIPTS = [
+  {category:'首次触达话术（5种类型）',tag:'touch',tagName:'触达',items:[
+    {title:'问题型开场',content:'X总您好，我是UKEC的妮妮，专注英国留学B2B合作。冒昧问一下，咱们机构目前送生去英国，最头疼的是哪个环节？是院校资源、返佣结算，还是学生转化率？'},
+    {title:'判断型开场',content:'X总，我判断咱们机构在英国方向应该已经做得很成熟了。想请教一下，目前合作的英国项目里，有没有遇到过院校反馈慢、Offer下来不及时的情况？'},
+    {title:'对比型开场',content:'X总，咱们机构现在合作的英国项目，是偏向百强院校还是保录取项目？我们UKEC这边有独特的招生官直连通道，想跟您对比看看哪种模式更适合咱们的学生群体。'},
+    {title:'案例型开场',content:'X总，跟您分享个案例——上个月我们帮西安某机构送了8个学生去利兹大学，从递交到拿Offer平均只用12天。咱们这边有没有遇到过Offer卡在招生办迟迟下不来的情况？'},
+    {title:'避坑型开场',content:'X总，最近英国这边有个坑得提醒您——好几个机构因为不清楚CAS保证金新政策，导致学生签证被卡。我们这边整理了最新避坑指南，能发您一份参考吗？'}
+  ]},
+  {category:'深度挖需话术',tag:'need',tagName:'挖需',items:[
+    {title:'痛点挖掘',content:'X总，咱们现在的英国项目中，学生拿到无条件Offer后，最容易出现什么问题？是语言班衔接不上，还是CAS迟迟下不来？我们这边的全程追踪服务正好能补上这个缺口。'},
+    {title:'收益放大',content:'如果咱们机构的英国项目转化率能提升10%，按每年100个学生算，那就是多10个成功案例，口碑和收益都会上一个台阶。我们UKEC的顾问团队可以帮您做免费的院校匹配分析，让学生录取率更高。'},
+    {title:'标杆对比',content:'X总，咱们同城的XX机构去年通过优化院校梯队，英国方向转化率从28%提到了41%。我们帮您做个免费诊断，看看咱们现在的项目结构有哪些可提升空间？'}
+  ]},
+  {category:'异议处理话术',tag:'objection',tagName:'异议',items:[
+    {title:'价格异议',content:'X总，我完全理解您对价格的考量。不过咱们算笔账：如果我们的合作能让您的学生录取率从80%提升到92%，多出来的这12%的成功案例，带来的口碑和转介绍，是不是远超那点差价？'},
+    {title:'信任异议',content:'X总，您说没听过我们UKEC很正常，我们在英国本土深耕了28年，是英国大使馆文化教育处官方推荐的机构。我可以给您发几个我们最近做的同类型机构合作案例，您看看效果再做决定。'},
+    {title:'流程异议',content:'X总，您说现在合作方多不想再增加，我完全理解。其实我们最大的价值就是\\'无感接入\\'——您的顾问照常工作，我们做后台支持，不增加任何额外工作量，但多了一个强有力的英国资源后盾。'}
+  ]},
+  {category:'临门一脚话术',tag:'close',tagName:'临门',items:[
+    {title:'假设成交法',content:'X总，那我就按咱们的沟通，先准备一份英国TOP20院校的招生白皮书给您，外加我们的合作方案。您看是发您微信还是邮箱？对了，您这边平时对接英国项目的是哪位老师？我也一并加上。'},
+    {title:'紧迫感法',content:'X总，现在正好是英国院校的预录取季，我们有几个独家内推名额，本月底就截止。要不我先给您预留2个名额，您先挑几个合适的学生试试水？不成也没损失，成了就是个开门红。'},
+    {title:'判例成交法',content:'X总，上周长沙的李校长跟您情况类似，本来只打算先看看。后来我们给他做了个免费的学生申请方案诊断，发现能帮他们的学生多拿到3-5个G5的Offer。他当场就签了，现在第一批学生已经递交了。'}
+  ]},
+  {category:'日常维护话术',tag:'maintain',tagName:'维护',items:[
+    {title:'节日关怀',content:'X总，中秋快乐！🥮 趁着节日问候一下，咱们机构最近英国方向送生还顺利吗？有需要我这边支持的随时说，祝咱们合作越来越顺！'},
+    {title:'跟进激活',content:'X总，好久没联系了！最近英国这边QS排名更新了，我们整理了一份对机构选校影响最大的5个变化，发您参考一下。顺便问问，咱们下半年英国项目有什么新计划吗？'},
+    {title:'价值追加',content:'X总，想到一个可能对咱们有用的信息——英国移民局刚更新了PSW签证政策，对咱们送生的就业竞争力有很大提升。我整理了一份政策解读和话术，发您备用。'}
+  ]}
+];
+
+var DEFAULT_TOOLS = [
+  {icon:'📄',name:'英国院校白皮书',desc:'2026年英国TOP50院校招生要求汇总',tag:'Aware 认知'},
+  {icon:'📊',name:'竞品对比Excel',desc:'快速对比竞品优劣势的Excel工具',tag:'Appeal 吸引'},
+  {icon:'🎤',name:'话术速查手册',desc:'全场景话术分类速查PDF',tag:'Ask 询问'},
+  {icon:'📋',name:'机构需求评估表',desc:'B2B客户痛点挖掘问卷模板',tag:'Act 行动'},
+  {icon:'🤝',name:'合作方案生成器',desc:'一键生成定制化B2B合作方案',tag:'Act 行动'},
+  {icon:'⭐',name:'客户满意度调查',desc:'合作后满意度评估与改进工具',tag:'Advocate 拥护'}
+];
+
+/* ===== Enneagram Data ===== */
+var questions = [
+  {q:'在工作中，你最在意的是：',opts:[{text:'事情是否做得正确、符合标准',types:[1]},{text:'是否帮助到了别人，关系好不好',types:[2,9]},{text:'目标是否达成，结果好不好',types:[3]},{text:'是否有意义，是否忠于自己的感受',types:[4]}]},
+  {q:'面对一个新项目，你的第一反应是：',opts:[{text:'先制定详细的计划和标准流程',types:[1]},{text:'先了解团队需要我怎么配合',types:[2]},{text:'快速确定目标和关键节点',types:[3]},{text:'思考这个项目有没有深度和价值',types:[4,5]}]},
+  {q:'你最害怕的事情是：',opts:[{text:'犯错误，被批评不够好',types:[1]},{text:'被孤立，不被任何人需要',types:[2]},{text:'失败，被人看不起',types:[3]},{text:'被困住，没有自由',types:[7,4]}]},
+  {q:'同事来找你帮忙，你通常会：',opts:[{text:'评估这事该不该帮，符不符合规范',types:[1,6]},{text:'放下手中的事，优先帮助对方',types:[2]},{text:'快速帮忙，因为这也算一次展示能力的机会',types:[3]},{text:'看心情和关系远近再决定',types:[4,9]}]},
+  {q:'你在团队中的角色通常是：',opts:[{text:'质量把关者，发现问题并纠正',types:[1]},{text:'团队的暖心人，维护关系',types:[2]},{text:'业绩担当，冲锋在前',types:[3,8]},{text:'幕后的智囊，提供深度分析',types:[5]}]},
+  {q:'你的快乐主要来自于：',opts:[{text:'把事情做到极致',types:[1]},{text:'被感谢和认可',types:[2]},{text:'完成挑战，取得成果',types:[3]},{text:'探索新事物，发现新可能',types:[7]}]},
+  {q:'面对冲突，你倾向于：',opts:[{text:'坚持原则，据理力争',types:[1,8]},{text:'主动调和，寻找共识',types:[2,9]},{text:'快速解决，不让事态扩大',types:[3]},{text:'先退一步，观察分析',types:[5,6]}]},
+  {q:'被领导批评后，你最真实的反应是：',opts:[{text:'反思哪里不对，马上改进',types:[1]},{text:'有点受伤，怀疑是不是不被认可了',types:[2,4]},{text:'快速调整，争取下次证明自己',types:[3]},{text:'冷静分析批评是否合理',types:[5]}]},
+  {q:'你放松的方式是：',opts:[{text:'整理环境、优化流程，让一切井井有条',types:[1]},{text:'和朋友聊天、聚会',types:[2,7]},{text:'运动或挑战某个目标',types:[3,8]},{text:'独处、阅读、思考',types:[4,5]}]},
+  {q:'在做决策时，你最依赖的是：',opts:[{text:'数据和标准',types:[1,5]},{text:'对他人的影响和感受',types:[2,9]},{text:'目标和结果',types:[3]},{text:'直觉和内心感受',types:[4,7]}]},
+  {q:'以下哪种说法最能代表你：',opts:[{text:'"没有规矩不成方圆"',types:[1]},{text:'"大家好才是真的好"',types:[2,9]},{text:'"不想当将军的士兵不是好士兵"',types:[3,8]},{text:'"知识就是力量"',types:[5]}]},
+  {q:'你讨厌的工作环境是：',opts:[{text:'混乱无序、没有标准',types:[1]},{text:'冷漠疏离、没有人情味',types:[2]},{text:'没有目标、看不到成长',types:[3]},{text:'被限制、充满规则',types:[7,8]}]},
+  {q:'面对风险，你的态度是：',opts:[{text:'评估风险，制定应对方案',types:[1,5]},{text:'担心风险，倾向于谨慎行事',types:[6]},{text:'风险越大机会越大',types:[3,7,8]},{text:'随遇而安，车到山前必有路',types:[9]}]},
+  {q:'你最希望别人怎么评价你：',opts:[{text:'专业、可靠、有原则',types:[1]},{text:'温暖、善良、重要',types:[2]},{text:'成功、有能力、值得信赖',types:[3]},{text:'独特、有深度、有见解',types:[4,5]}]},
+  {q:'你管理/带人的风格是：',opts:[{text:'高标准严要求，以身作则',types:[1]},{text:'关心下属，注重团队氛围',types:[2,9]},{text:'目标明确，结果导向',types:[3,8]},{text:'授权信任，尊重专业边界',types:[5,7]}]},
+  {q:'你最珍惜的东西是：',opts:[{text:'诚信和原则',types:[1]},{text:'关系和情感',types:[2]},{text:'成就和认可',types:[3]},{text:'自由和独立',types:[7,4,5]}]},
+  {q:'压力大的时候你会：',opts:[{text:'更加严格地执行计划',types:[1,3]},{text:'找人倾诉，寻求支持',types:[2,6]},{text:'转移注意力，寻找快乐',{text:'转移注意力，寻找快乐',types:[7]},{text:'退回到自己的空间里消化',types:[4,5,9]}]},
+    {q:'你觉得自己最大的优点是：',opts:[{text:'靠谱、负责、有担当',types:[1,6]},{text:'善解人意、有同理心',types:[2,9]},{text:'行动力强、效率高',types:[3,8]},{text:'有想法、有深度',types:[4,5,7]}]}
+];
+
+var typeData = [
+    {num:1,name:'改革者',subtitle:'完美主义者·秩序者·标准制定者·追求卓越',icon:'👑',color:'#E53E3E',
+     attention:['秩序和规则','对错是非','完美和改进空间'],fear:['犯错误、不完美','被批评指责','失去控制'],
+     happy:['事情做得精准完美','被认可和肯定','环境井然有序'],strength:'追求卓越、高标准、责任心强',workstyle:'计划周密、注重细节、以身作则',
+     sellAdvice:'重视数据和案例支撑，逻辑清晰。不随意承诺，一次失约永久拉黑。谈话不要发散，给明确的结构和标很。'},
+    {num:2,name:'助人者',subtitle:'给予者·连接者·关系维护者·善解人意',icon:'💖',color:'#38A169',
+     attention:['他人的需求和感受','关系和互动','被需要和重视'],fear:['不被需要、被排斥','被忽视、被拒绝','关系破裂'],
+     happy:['帮助别人得到认可','关系融洽、被感谢','团队氛围和谐'],strength:'同理心强、善解人意、团队粘合剂',workstyle:'乐于助人、注重关系、支持型',
+     sellAdvice:'先表达关心和尊重，建立情感链接。多说"感谢您的信任""有您这样的伙伴真幸运"。不要冷冰冰谈业务。'},
+    {num:3,name:'成就者',subtitle:'实干家·目标追逐者·绩效达人·展现魅力',icon:'🏆',color:'#ED8936',
+     attention:['目标和成果','成功和表现','效率和速度'],fear:['失败、被看不起','没有成就感','平庸、被超越'],
+     happy:['达成目标、获得认可','展现能力','被赞赏和崇拜'],strength:'执行力强、目标感强、善于展现',workstyle:'结果导向、高效进取、行动派',
+     sellAdvice:'说"这个方案能帮您快速拿到结果"。引用成功数据，强调效率。尊重他们的时间，直奔主题。'},
+    {num:4,name:'浪漫者',subtitle:'独特性·自我探寻者·深度感受·真诚表达',icon:'🎭',color:'#805AD5',
+     attention:['独特性、意义和深度','情感体验','美感和品质'],fear:['普通、没有特色','被误解、不被接纳','失去自我'],
+     happy:['表达自我、被理解','发现美和意义','独特价值的实现'],strength:'创意丰富、感受力强、有深度',workstyle:'注重品味、善于表达、创意导向',
+     sellAdvice:'强调"专属定制""独特优势"。展现品味和专业深度。不要用模板化话术，展现真诚和个性。'},
+    {num:5,name:'观察者',subtitle:'理智者·思考者·知识探索者·理性分析',icon:'🔍',color:'#319795',
+     attention:['知识和信息','逻辑和规律','时间和空间'],fear:['无知、被入侵','被要求快速决策','情绪化的场景'],
+     happy:['学到新知识、精通某事','独处的思考时间','问题的逻辑解答'],strength:'分析力强、知识渊博、思考深度',workstyle:'冷静理性、专业分析、独立工作',
+     sellAdvice:'提供详细数据和完整资料。不要催促快速决策。专业认可对他们最重要。留足思考时间。'},
+    {num:6,name:'忠诚者',subtitle:'谨慎者·忧患者·笃信可靠·预见风险',icon:'🛡️',color:'#2B6CB0',
+     attention:['风险和危险','安全和可靠','权威和信任'],fear:['不确定性、被背叛','没有依靠','做出错误决定'],
+     happy:['确定性和安全感','找到可靠的依靠','被信任和需要'],strength:'责任心强、预判风险、忠诚可靠',workstyle:'谨慎细致、遵守规则、注重安全',
+     sellAdvice:'强调保障和可靠性。提供第三方证据和背书。不要过度承诺，说到做到。给足够的时间做决定。'},
+    {num:7,name:'活跃者',subtitle:'狂热者·体验者·快乐追寻者·无限可能',icon:'🌈',color:'#ED8936',
+     attention:['乐趣和可能性','新鲜和刺激','选择和自由'],fear:['被困住、无聊','失去自由选择','痛苦和负面'],
+     happy:['体验新事物、探索可能','获得乐趣和快乐','自由自在'],strength:'积极乐观、创意无限、善于社交',workstyle:'充满活力、多任务处理、创意发散',
+     sellAdvice:'强调"新机会""不一样的玩法"。建议充满热情。不要按部就班的流程。保持节奏明快。'},
+    {num:8,name:'挑战者',subtitle:'掌控者·保护者·力量展现者·果断决策',icon:'🦁',color:'#E53E3E',
+     attention:['权力和控制','力量和公平','自主和独立'],fear:['被控制、被操纵','示弱、显得软弱','被背叛'],
+     happy:['掌控局面、实现目标','保护他人、伸张正义','自由决策'],strength:'魄力足、决策快、保护力强',workstyle:'果敢强势、直接高效、掌控型',
+     sellAdvice:'直接了当、不要绕弯子。尊重他们的权威，不要在公开场合挑战。强调"能帮您掌控局面"。快速切入正题。'},
+    {num:9,name:'和平者',subtitle:'调停者·和谐维护者·随和包容·稳健踏实',icon:'☮️',color:'#38A169',
+     attention:['和谐和舒适','他人的需求','平静的环境'],fear:['冲突和纷争','被压力逼迫','失去平静和平衡'],
+     happy:['环境和谐、没有冲突','轻松自在、被接纳','自然融合'],strength:'包容力强、善于调和、稳定可靠',workstyle:'低调谦和、配合度高、稳健踏实',
+     sellAdvice:'创造轻松舒适的交流氛围。不要施压。给他们足够的时间消化信息。"您舒服就好"。减少对抗性表达。'}
+];
+
+/* ===== Init ===== */
+document.addEventListener('DOMContentLoaded', function() {
+    loadData();
+    renderCompetitorList();
+    renderComparisonTable();
+    initChart();
+    renderScripts();
+    renderTools();
+    bindEvents();
+});
+
+function bindEvents() {
+    // Nav
+    document.querySelectorAll('.nav-item[data-page]').forEach(function(btn){
+        btn.addEventListener('click', function(){ switchPage(this.getAttribute('data-page')); });
+    });
+    // Action buttons
+    document.getElementById('btnAdd').addEventListener('click', openAddModal);
+    document.getElementById('btnDim').addEventListener('click', openDimensionModal);
+    document.getElementById('btnExport').addEventListener('click', exportCompetitors);
+    document.getElementById('btnClear').addEventListener('click', clearAllData);
+}
+
+function loadData() {
+    var d = localStorage.getItem(STORAGE_KEY);
+    if (d) { try { competitors = JSON.parse(d); } catch(e) {} }
+    var s = localStorage.getItem(DIMENSIONS_KEY);
+    if (s) { try { dimensions = JSON.parse(s); } catch(e) {} }
+    if (!dimensions.length) { dimensions = JSON.parse(JSON.stringify(DEFAULT_DIMENSIONS)); }
+    if (!s) saveData();
+}
+
+function saveData() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(competitors));
+    localStorage.setItem(DIMENSIONS_KEY, JSON.stringify(dimensions));
+}
+
+function switchPage(page) {
+    document.querySelectorAll('.page-section').forEach(function(p){ p.classList.remove('active'); });
+    document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
+    document.getElementById('page-'+page).classList.add('active');
+    document.getElementById('nav-'+page).classList.add('active');
+}
+
+function showToast(msg) {
+    var t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
