@@ -321,115 +321,7 @@ function deleteTool(i) {
     renderTools(); showToast('工具已删除');
 }
 
-/* ===== Enneagram ===== */
-var currentQ = 0;
-var answers = [];
-var enneagramReady = false;
 
-function initEnneagram() {
-    var container = document.getElementById('enneagramContainer');
-    if (!container) return;
-    container.innerHTML = '<div class="card"><div class="card-body">' +
-        '<div id="testStart"><h3 style="margin-bottom:16px;">欢迎来到九型人格测试</h3>' +
-        '<p style="color:var(--gray-500);margin-bottom:20px;">本测试共' + questions.length + '题，每题选择最符合你直觉的选项。测试结果将帮助你了解自己的行为模式和沟通风格，更好地定位销售策略。</p>' +
-        '<button class="btn btn-primary" id="btnStartTest">开始测试</button></div>' +
-        '<div id="testContent" style="display:none;">' +
-        '<div class="progress-bar" style="margin-bottom:20px;"><div class="progress-fill" id="progressFill"></div></div>' +
-        '<div class="question-card"><div class="question-text" id="questionText"></div><div id="optionsContainer"></div></div>' +
-        '<div style="display:flex;justify-content:space-between;margin-top:16px;">' +
-        '<button class="btn btn-secondary" id="btnPrevQ" style="visibility:hidden;">← 上一题</button>' +
-        '<button class="btn btn-primary" id="btnNextQ">下一题 →</button></div></div>' +
-        '<div id="testResult" style="display:none;"></div></div></div>' +
-        '<div id="typeReference" style="display:none;" class="card"><div class="card-header"><div class="card-title">📖 九型人格速查表</div></div>' +
-        '<div class="card-body"><div class="ref-table-wrapper"><table class="ref-table"><thead><tr>' +
-        '<th>类型</th><th>名称</th><th>注意力焦点</th><th>核心恐惧</th><th>沟通建议</th></tr></thead>' +
-        '<tbody id="typeTableBody"></tbody></table></div></div></div>';
-    document.getElementById('btnStartTest').addEventListener('click', startTest);
-    document.getElementById('btnPrevQ').addEventListener('click', prevQ);
-    document.getElementById('btnNextQ').addEventListener('click', nextQ);
-    // Fill type table
-    var tbody = document.getElementById('typeTableBody');
-    if (tbody) {
-        tbody.innerHTML = '';
-        typeData.forEach(function(t){
-            var tr = document.createElement('tr');
-            tr.innerHTML = '<td><span class="type-dot" style="background:' + t.color + '"></span> ' + t.num + '</td>' +
-                '<td><strong>' + t.name + '</strong></td>' +
-                '<td>' + t.attention.join('、') + '</td>' +
-                '<td>' + t.fear.join('、') + '</td>' +
-                '<td style="font-size:12px;">' + (t.sellAdvice||'').substring(0,40) + '...</td>';
-            tbody.appendChild(tr);
-        });
-    }
-    enneagramReady = true;
-}
-
-function startTest() {
-    currentQ = 0; answers = Array(questions.length).fill(-1);
-    document.getElementById('testStart').style.display = 'none';
-    document.getElementById('testContent').style.display = 'block';
-    document.getElementById('testResult').style.display = 'none';
-    showQ();
-}
-
-function showQ() {
-    document.getElementById('progressFill').style.width = ((currentQ/questions.length)*100) + '%';
-    document.getElementById('questionText').textContent = questions[currentQ].q;
-    var container = document.getElementById('optionsContainer');
-    container.innerHTML = '';
-    questions[currentQ].opts.forEach(function(o, i){
-        var div = document.createElement('div');
-        div.className = 'option-item' + (answers[currentQ]===i?' selected':'');
-        div.textContent = o.text;
-        div.addEventListener('click', function(){ answers[currentQ]=i; showQ(); });
-        container.appendChild(div);
-    });
-    document.getElementById('btnPrevQ').style.visibility = currentQ>0?'visible':'hidden';
-    document.getElementById('btnNextQ').textContent = currentQ<questions.length-1?'下一题 →':'查看结果';
-}
-
-function prevQ() { if (currentQ>0) { currentQ--; showQ(); } }
-
-function nextQ() {
-    if (answers[currentQ]===-1) { showToast('请选择一个选项'); return; }
-    if (currentQ < questions.length-1) { currentQ++; showQ(); }
-    else showResult();
-}
-
-function showResult() {
-    document.getElementById('testContent').style.display = 'none';
-    var scores = {};
-    answers.forEach(function(optIdx, qIdx){
-        if (optIdx === -1) return;
-        questions[qIdx].opts[optIdx].types.forEach(function(t){ scores[t] = (scores[t]||0)+1; });
-    });
-    var maxType = 1, maxScore = 0;
-    for (var i=1; i<=9; i++) { if ((scores[i]||0) > maxScore) { maxScore = scores[i]; maxType = i; } }
-    var t = typeData.find(function(x){return x.num===maxType;});
-    if (!t) return;
-    var resultDiv = document.getElementById('testResult');
-    resultDiv.style.display = 'block';
-    var scoreBars = '';
-    Object.keys(scores).sort(function(a,b){return b-a;}).forEach(function(k){
-        scoreBars += '<span style="background:var(--gray-100);padding:4px 12px;border-radius:12px;font-size:13px;margin:2px;">' + k + '型: ' + scores[k] + '票</span>';
-    });
-    resultDiv.innerHTML = '<div class="result-card fade-in">' +
-        '<div style="font-size:64px;margin-bottom:16px;">' + t.icon + '</div>' +
-        '<h2 style="color:var(--primary);margin-bottom:4px;">' + t.name + '（' + t.num + '型）</h2>' +
-        '<p style="color:var(--gray-500);margin-bottom:16px;">' + t.subtitle + '</p>' +
-        '<div style="background:var(--gray-50);border-radius:12px;padding:20px;text-align:left;margin-bottom:16px;">' +
-        '<p><strong>核心优势：</strong>' + t.strength + '</p>' +
-        '<p style="margin-top:8px;"><strong>工作风格：</strong>' + t.workstyle + '</p>' +
-        '<p style="margin-top:8px;"><strong>注意力焦点：</strong>' + t.attention.join('、') + '</p>' +
-        '<p style="margin-top:8px;"><strong>核心恐惧：</strong>' + t.fear.join('、') + '</p>' +
-        '<p style="margin-top:12px;"><strong>💡 销售建议：</strong>' + t.sellAdvice + '</p></div>' +
-        '<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:20px;">' + scoreBars + '</div>' +
-        '<div style="display:flex;gap:12px;justify-content:center;">' +
-        '<button class="btn btn-primary" onclick="startTest()">重新测试</button>' +
-        '<button class="btn btn-secondary" onclick="document.getElementById('typeReference').style.display='block';this.scrollIntoView({behavior:'smooth'})">查看完整速查表</button></div>' +
-        '<p style="color:var(--gray-400);font-size:12px;margin-top:12px;">*本测试为简化版，仅供参考。完整版需专业九型人格分析师的引导。</p></div>';
-}
-</script>
 </body>
 </html>
 
@@ -627,7 +519,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <h1 class="page-title"><span>🧩</span> 九型测试</h1>
       <p class="page-desc">了解自己的性格类型，发挥优势，补齐短板</p>
     </div>
-    <div id="enneagramContainer"></div>
+    <div style="text-align:center; padding: 60px 24px;">
+      <div style="font-size:64px; margin-bottom:20px;">🎭</div>
+      <h2 style="font-size:24px; color:var(--gray-800); margin-bottom:12px;">九型人格测试已迁移至独立页面</h2>
+      <p style="color:var(--gray-400); margin-bottom:24px;">包含完整18题测试、9型人格详解、速查对比表等全部功能</p>
+      <a href="enneagram.html" style="display:inline-block; padding:14px 48px; background:linear-gradient(135deg, var(--primary), var(--purple)); color:white; border-radius:var(--radius-sm); text-decoration:none; font-weight:600;">进入九型测试页面 →</a>
+    </div>
   </div>
 
 </div>
