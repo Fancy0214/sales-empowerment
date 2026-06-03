@@ -1,877 +1,1138 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>九型人格测试 | 销售赋能平台</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --primary: #2B6CB0; --primary-light: #63B3ED; --primary-lighter: #EBF8FF;
-      --accent: #38A169; --accent-light: #C6F6D5;
-      --warm: #ED8936; --warm-light: #FEFCBF;
-      --purple: #805AD5; --purple-light: #E9D8FD;
-      --red: #E53E3E; --red-light: #FED7D7;
-      --teal: #319795; --teal-light: #B2F5EA;
-      --gray-50: #F7FAFC; --gray-100: #EDF2F7; --gray-200: #E2E8F0;
-      --gray-300: #CBD5E0; --gray-400: #A0AEC0; --gray-500: #718096;
-      --gray-600: #4A5568; --gray-700: #2D3748; --gray-800: #1A202C;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-      --shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
-      --radius: 16px; --radius-sm: 12px;
-    }
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--gray-50); color: var(--gray-700); line-height: 1.6; min-height: 100vh;
-    }
-    nav {
-      position: fixed; top: 0; left: 0; right: 0;
-      background: rgba(255,255,255,0.85); backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--gray-200); z-index: 100;
-    }
-    .nav-inner {
-      max-width: 1200px; margin: 0 auto; padding: 0 24px;
-      height: 64px; display: flex; align-items: center; justify-content: space-between;
-    }
-    .nav-back {
-      text-decoration: none; color: var(--gray-500); font-size: 14px; font-weight: 500;
-      display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px;
-      transition: all 0.2s ease;
-    }
-    .nav-back:hover { color: var(--primary); background: var(--primary-lighter); }
-    .nav-title { font-size: 16px; font-weight: 600; color: var(--gray-700); }
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>九型人格分析 | 销售赋能平台</title>
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+ <style>
+ * { margin: 0; padding: 0; box-sizing: border-box; }
+ :root {
+ --primary: #2B6CB0; --primary-light: #63B3ED; --primary-lighter: #EBF8FF;
+ --accent: #38A169; --accent-light: #C6F6D5;
+ --warm: #ED8936; --warm-light: #FEFCBF;
+ --purple: #805AD5; --purple-light: #E9D8FD;
+ --red: #E53E3E; --red-light: #FED7D7;
+ --teal: #319795; --teal-light: #B2F5EA;
+ --gray-50: #F7FAFC; --gray-100: #EDF2F7; --gray-200: #E2E8F0;
+ --gray-300: #CBD5E0; --gray-400: #A0AEC0; --gray-500: #718096;
+ --gray-600: #4A5568; --gray-700: #2D3748; --gray-800: #1A202C;
+ --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+ --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+ --shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
+ --radius: 16px; --radius-sm: 12px;
+ }
+ body {
+ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+ background: var(--gray-50); color: var(--gray-700); line-height: 1.6; min-height: 100vh;
+ }
+ nav {
+ position: fixed; top: 0; left: 0; right: 0;
+ background: rgba(255,255,255,0.85); backdrop-filter: blur(20px);
+ border-bottom: 1px solid var(--gray-200); z-index: 100;
+ }
+ .nav-inner {
+ max-width: 1200px; margin: 0 auto; padding: 0 24px;
+ height: 64px; display: flex; align-items: center; justify-content: space-between;
+ }
+ .nav-back {
+ text-decoration: none; color: var(--gray-500); font-size: 14px; font-weight: 500;
+ display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px;
+ transition: all 0.2s ease;
+ }
+ .nav-back:hover { color: var(--primary); background: var(--primary-lighter); }
+ .nav-title { font-size: 16px; font-weight: 600; color: var(--gray-700); }
 
-    .hero {
-      padding: 120px 24px 48px; text-align: center; position: relative; overflow: hidden;
-    }
-    .hero::before {
-      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-      background: radial-gradient(ellipse at 30% 20%, rgba(128,90,213,0.12) 0%, transparent 50%),
-                  radial-gradient(ellipse at 70% 80%, rgba(99,179,237,0.08) 0%, transparent 50%);
-    }
-    .hero-content { position: relative; max-width: 680px; margin: 0 auto; }
-    .hero-emoji { font-size: 56px; margin-bottom: 16px; }
-    .hero h1 { font-size: 32px; font-weight: 700; color: var(--gray-800); margin-bottom: 12px; }
-    .hero p { font-size: 16px; color: var(--gray-500); line-height: 1.8; }
+ .hero {
+ padding: 120px 24px 48px; text-align: center; position: relative; overflow: hidden;
+ }
+ .hero::before {
+ content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+ background: radial-gradient(ellipse at 30% 20%, rgba(128,90,213,0.12) 0%, transparent 50%),
+ radial-gradient(ellipse at 70% 80%, rgba(99,179,237,0.08) 0%, transparent 50%);
+ }
+ .hero-content { position: relative; max-width: 680px; margin: 0 auto; }
+ .hero-emoji { font-size: 56px; margin-bottom: 16px; }
+ .hero h1 { font-size: 32px; font-weight: 700; color: var(--gray-800); margin-bottom: 12px; }
+ .hero p { font-size: 16px; color: var(--gray-500); line-height: 1.8; }
 
-    .tab-nav {
-      max-width: 900px; margin: 0 auto 40px; padding: 0 24px;
-    }
-    .tab-nav-inner {
-      display: flex; gap: 4px; background: white; padding: 6px;
-      border-radius: var(--radius); border: 1px solid var(--gray-200);
-    }
-    .tab-btn {
-      flex: 1; padding: 12px 16px; border: none; border-radius: var(--radius-sm);
-      background: transparent; cursor: pointer; font-size: 14px; font-weight: 500;
-      color: var(--gray-500); transition: all 0.2s ease; font-family: inherit;
-    }
-    .tab-btn:hover { background: var(--gray-50); color: var(--gray-700); }
-    .tab-btn.active { background: var(--primary); color: white; box-shadow: var(--shadow-sm); }
+ /* Tab Navigation */
+ .tab-nav {
+ max-width: 900px; margin: 0 auto 40px; padding: 0 24px;
+ }
+ .tab-nav-inner {
+ display: flex; gap: 4px; background: white; padding: 6px;
+ border-radius: var(--radius); border: 1px solid var(--gray-200);
+ }
+ .tab-btn {
+ flex: 1; padding: 12px 16px; border: none; border-radius: var(--radius-sm);
+ background: transparent; cursor: pointer; font-size: 14px; font-weight: 500;
+ color: var(--gray-500); transition: all 0.2s ease; font-family: inherit;
+ }
+ .tab-btn:hover { background: var(--gray-50); color: var(--gray-700); }
+ .tab-btn.active { background: var(--primary); color: white; box-shadow: var(--shadow-sm); }
 
-    .content { max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
+ .content { max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
+ .tab-content { display: none; }
+ .tab-content.active { display: block; }
 
-    .ref-table-wrapper {
-      overflow-x: auto; background: white; border-radius: var(--radius);
-      border: 1px solid var(--gray-200); box-shadow: var(--shadow-sm);
-    }
-    .ref-table {
-      width: 100%; border-collapse: collapse; min-width: 900px; font-size: 13px;
-    }
-    .ref-table th {
-      background: var(--gray-800); color: white; padding: 14px 16px;
-      text-align: left; font-weight: 600; font-size: 12px;
-      text-transform: uppercase; letter-spacing: 0.5px;
-    }
-    .ref-table td {
-      padding: 12px 16px; border-bottom: 1px solid var(--gray-100); vertical-align: top;
-    }
-    .ref-table tr:last-child td { border-bottom: none; }
-    .ref-table tr:hover td { background: var(--gray-50); }
-    .ref-table .type-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-weight: 600; color: var(--gray-800);
-    }
-    .ref-table .type-badge span {
-      width: 28px; height: 28px; border-radius: 8px; display: flex;
-      align-items: center; justify-content: center; color: white;
-      font-size: 13px; font-weight: 700;
-    }
-    .ref-tag {
-      display: inline-block; padding: 2px 8px; border-radius: 10px;
-      font-size: 11px; font-weight: 500; margin: 2px 0;
-    }
-    .tag-blue { background: #EBF8FF; color: #2B6CB0; }
-    .tag-red { background: #FED7D7; color: #C53030; }
-    .tag-green { background: #C6F6D5; color: #276749; }
-    .tag-orange { background: #FEFCBF; color: #975A16; }
-    .tag-purple { background: #E9D8FD; color: #6B46C1; }
+ /* ===== Quick Reference Table ===== */
+ .ref-table-wrapper {
+ overflow-x: auto; background: white; border-radius: var(--radius);
+ border: 1px solid var(--gray-200); box-shadow: var(--shadow-sm);
+ }
+ .ref-table {
+ width: 100%; border-collapse: collapse; min-width: 900px; font-size: 13px;
+ }
+ .ref-table th {
+ background: var(--gray-800); color: white; padding: 14px 16px;
+ text-align: left; font-weight: 600; font-size: 12px;
+ text-transform: uppercase; letter-spacing: 0.5px;
+ }
+ .ref-table td {
+ padding: 12px 16px; border-bottom: 1px solid var(--gray-100); vertical-align: top;
+ }
+ .ref-table tr:last-child td { border-bottom: none; }
+ .ref-table tr:hover td { background: var(--gray-50); }
+ .ref-table .type-badge {
+ display: inline-flex; align-items: center; gap: 6px;
+ font-weight: 600; color: var(--gray-800);
+ }
+ .ref-table .type-badge span {
+ width: 28px; height: 28px; border-radius: 8px; display: flex;
+ align-items: center; justify-content: center; color: white;
+ font-size: 13px; font-weight: 700;
+ }
+ .ref-tag {
+ display: inline-block; padding: 2px 8px; border-radius: 10px;
+ font-size: 11px; font-weight: 500; margin: 2px 0;
+ }
+ .tag-blue { background: #EBF8FF; color: #2B6CB0; }
+ .tag-red { background: #FED7D7; color: #C53030; }
+ .tag-green { background: #C6F6D5; color: #276749; }
+ .tag-orange { background: #FEFCBF; color: #975A16; }
+ .tag-purple { background: #E9D8FD; color: #6B46C1; }
 
-    .test-container { max-width: 720px; margin: 0 auto; }
-    .test-progress {
-      background: white; border-radius: var(--radius); padding: 24px;
-      border: 1px solid var(--gray-200); margin-bottom: 24px;
-    }
-    .progress-bar-wrapper {
-      background: var(--gray-100); border-radius: 8px; height: 8px; overflow: hidden; margin-top: 12px;
-    }
-    .progress-bar-fill {
-      height: 100%; background: linear-gradient(90deg, var(--primary), var(--purple));
-      border-radius: 8px; transition: width 0.4s ease;
-    }
-    .progress-text { font-size: 14px; color: var(--gray-500); font-weight: 500; }
+ /* ===== Test Section ===== */
+ .test-container {
+ max-width: 720px; margin: 0 auto;
+ }
+ .test-progress {
+ background: white; border-radius: var(--radius); padding: 24px;
+ border: 1px solid var(--gray-200); margin-bottom: 24px;
+ }
+ .progress-bar-wrapper {
+ background: var(--gray-100); border-radius: 8px; height: 8px; overflow: hidden; margin-top: 12px;
+ }
+ .progress-bar-fill {
+ height: 100%; background: linear-gradient(90deg, var(--primary), var(--purple));
+ border-radius: 8px; transition: width 0.4s ease;
+ }
+ .progress-text { font-size: 14px; color: var(--gray-500); font-weight: 500; }
 
-    .test-question {
-      background: white; border-radius: var(--radius); padding: 32px;
-      border: 1px solid var(--gray-200); box-shadow: var(--shadow-md); margin-bottom: 24px;
-      animation: fadeSlide 0.4s ease;
-    }
-    @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .test-question h3 {
-      font-size: 17px; font-weight: 600; color: var(--gray-800);
-      margin-bottom: 20px; line-height: 1.5;
-    }
-    .test-question .q-number {
-      display: inline-block; background: var(--primary); color: white;
-      padding: 2px 10px; border-radius: 10px; font-size: 12px;
-      font-weight: 600; margin-right: 8px; margin-bottom: 8px;
-    }
-    .option-list { display: flex; flex-direction: column; gap: 10px; }
-    .option-btn {
-      padding: 14px 18px; border: 2px solid var(--gray-200); border-radius: var(--radius-sm);
-      background: white; cursor: pointer; font-size: 14px; color: var(--gray-600);
-      transition: all 0.2s ease; text-align: left; font-family: inherit; line-height: 1.5;
-    }
-    .option-btn:hover {
-      border-color: var(--primary-light); background: var(--primary-lighter);
-      color: var(--primary); transform: translateX(4px);
-    }
-    .option-btn.selected {
-      border-color: var(--primary); background: var(--primary-lighter); color: var(--primary);
-      font-weight: 500;
-    }
-    .test-nav {
-      display: flex; justify-content: space-between; margin-top: 20px;
-    }
-    .test-nav button {
-      padding: 12px 28px; border-radius: var(--radius-sm); border: none;
-      font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;
-      transition: all 0.2s ease;
-    }
-    .btn-prev { background: var(--gray-100); color: var(--gray-500); }
-    .btn-prev:hover { background: var(--gray-200); }
-    .btn-next { background: var(--primary); color: white; box-shadow: var(--shadow-sm); }
-    .btn-next:hover { background: #2c5282; transform: translateY(-1px); }
-    .btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+ .test-question {
+ background: white; border-radius: var(--radius); padding: 32px;
+ border: 1px solid var(--gray-200); box-shadow: var(--shadow-md); margin-bottom: 24px;
+ animation: fadeSlide 0.4s ease;
+ }
+ @keyframes fadeSlide {
+ from { opacity: 0; transform: translateY(16px); }
+ to { opacity: 1; transform: translateY(0); }
+ }
+ .test-question h3 {
+ font-size: 17px; font-weight: 600; color: var(--gray-800);
+ margin-bottom: 20px; line-height: 1.5;
+ }
+ .test-question .q-number {
+ display: inline-block; background: var(--primary); color: white;
+ padding: 2px 10px; border-radius: 10px; font-size: 12px;
+ font-weight: 600; margin-right: 8px; margin-bottom: 8px;
+ }
+ .option-list { display: flex; flex-direction: column; gap: 10px; }
+ .option-btn {
+ padding: 14px 18px; border: 2px solid var(--gray-200); border-radius: var(--radius-sm);
+ background: white; cursor: pointer; font-size: 14px; color: var(--gray-600);
+ transition: all 0.2s ease; text-align: left; font-family: inherit; line-height: 1.5;
+ }
+ .option-btn:hover {
+ border-color: var(--primary-light); background: var(--primary-lighter);
+ color: var(--primary); transform: translateX(4px);
+ }
+ .option-btn.selected {
+ border-color: var(--primary); background: var(--primary-lighter); color: var(--primary);
+ font-weight: 500;
+ }
+ .test-nav {
+ display: flex; justify-content: space-between; margin-top: 20px;
+ }
+ .test-nav button {
+ padding: 12px 28px; border-radius: var(--radius-sm); border: none;
+ font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;
+ transition: all 0.2s ease;
+ }
+ .btn-prev { background: var(--gray-100); color: var(--gray-500); }
+ .btn-prev:hover { background: var(--gray-200); }
+ .btn-next { background: var(--primary); color: white; box-shadow: var(--shadow-sm); }
+ .btn-next:hover { background: #2c5282; transform: translateY(-1px); }
+ .btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
-    .test-start {
-      background: white; border-radius: var(--radius); padding: 48px;
-      border: 1px solid var(--gray-200); box-shadow: var(--shadow-md); text-align: center;
-    }
-    .test-start h2 { font-size: 24px; font-weight: 700; color: var(--gray-800); margin-bottom: 12px; }
-    .test-start p { font-size: 14px; color: var(--gray-400); line-height: 1.8; margin-bottom: 24px; }
-    .btn-start {
-      padding: 14px 48px; border: none; border-radius: var(--radius-sm);
-      background: linear-gradient(135deg, var(--primary), var(--purple));
-      color: white; font-size: 16px; font-weight: 600; cursor: pointer;
-      font-family: inherit; box-shadow: 0 4px 15px rgba(43,108,176,0.3);
-      transition: all 0.2s ease;
-    }
-    .btn-start:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(43,108,176,0.4); }
+ /* Start Screen */
+ .test-start {
+ background: white; border-radius: var(--radius); padding: 48px;
+ border: 1px solid var(--gray-200); box-shadow: var(--shadow-md); text-align: center;
+ }
+ .test-start h2 { font-size: 24px; font-weight: 700; color: var(--gray-800); margin-bottom: 12px; }
+ .test-start p { font-size: 14px; color: var(--gray-400); line-height: 1.8; margin-bottom: 24px; }
+ .btn-start {
+ padding: 14px 48px; border: none; border-radius: var(--radius-sm);
+ background: linear-gradient(135deg, var(--primary), var(--purple));
+ color: white; font-size: 16px; font-weight: 600; cursor: pointer;
+ font-family: inherit; box-shadow: 0 4px 15px rgba(43,108,176,0.3);
+ transition: all 0.2s ease;
+ }
+ .btn-start:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(43,108,176,0.4); }
 
-    .report-container { max-width: 800px; margin: 0 auto; }
-    .report-card {
-      background: white; border-radius: var(--radius); border: 1px solid var(--gray-200);
-      box-shadow: var(--shadow-md); overflow: hidden; margin-bottom: 24px;
-    }
-    .report-header {
-      padding: 40px; text-align: center;
-      background: linear-gradient(135deg, var(--primary-lighter), var(--purple-light));
-    }
-    .report-header .result-type {
-      font-size: 64px; font-weight: 800; margin-bottom: 8px;
-      background: linear-gradient(135deg, var(--primary), var(--purple));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .report-header h2 { font-size: 24px; font-weight: 700; color: var(--gray-800); margin-bottom: 4px; }
-    .report-header .type-subtitle { font-size: 16px; color: var(--gray-500); }
-    .report-body { padding: 32px; }
-    .report-section { margin-bottom: 32px; }
-    .report-section:last-child { margin-bottom: 0; }
-    .report-section h3 {
-      font-size: 18px; font-weight: 700; color: var(--gray-800);
-      margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
-    }
-    .report-section h3::before {
-      content: ''; width: 4px; height: 20px; border-radius: 2px;
-      background: linear-gradient(135deg, var(--primary), var(--purple));
-    }
-    .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .report-item {
-      padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--gray-100);
-    }
-    .report-item h4 {
-      font-size: 14px; font-weight: 600; color: var(--gray-700); margin-bottom: 8px;
-    }
-    .report-item ul { list-style: none; padding: 0; }
-    .report-item ul li {
-      font-size: 13px; color: var(--gray-500); padding: 3px 0 3px 16px;
-      position: relative; line-height: 1.7;
-    }
-    .report-item ul li::before {
-      content: ''; position: absolute; left: 0; top: 11px;
-      width: 6px; height: 6px; border-radius: 50%;
-    }
-    .item-strength { background: #F0FFF4; border-color: #C6F6D5; }
-    .item-strength ul li::before { background: #38A169; }
-    .item-weakness { background: #FFF5F5; border-color: #FED7D7; }
-    .item-weakness ul li::before { background: #E53E3E; }
-    .item-good-work { background: #EBF8FF; border-color: #BEE3F8; }
-    .item-good-work ul li::before { background: #2B6CB0; }
-    .item-bad-work { background: #FFFFF0; border-color: #FEFCBF; }
-    .item-bad-work ul li::before { background: #D69E2E; }
+ /* ===== Report ===== */
+ .report-container { max-width: 800px; margin: 0 auto; }
+ .report-card {
+ background: white; border-radius: var(--radius); border: 1px solid var(--gray-200);
+ box-shadow: var(--shadow-md); overflow: hidden; margin-bottom: 24px;
+ }
+ .report-header {
+ padding: 40px; text-align: center;
+ background: linear-gradient(135deg, var(--primary-lighter), var(--purple-light));
+ }
+ .report-header .result-type {
+ font-size: 64px; font-weight: 800; margin-bottom: 8px;
+ background: linear-gradient(135deg, var(--primary), var(--purple));
+ -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+ }
+ .report-header h2 { font-size: 24px; font-weight: 700; color: var(--gray-800); margin-bottom: 4px; }
+ .report-header .type-subtitle { font-size: 16px; color: var(--gray-500); }
+ .report-header .type-desc {
+ margin-top: 16px; padding: 16px 24px; background: rgba(255,255,255,0.7);
+ border-radius: var(--radius-sm); font-size: 14px; color: var(--gray-600);
+ line-height: 1.8; text-align: left;
+ }
+ .report-body { padding: 32px; }
+ .report-section { margin-bottom: 32px; }
+ .report-section:last-child { margin-bottom: 0; }
+ .report-section h3 {
+ font-size: 18px; font-weight: 700; color: var(--gray-800);
+ margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+ }
+ .report-section h3::before {
+ content: ''; width: 4px; height: 20px; border-radius: 2px;
+ background: linear-gradient(135deg, var(--primary), var(--purple));
+ }
+ .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+ .report-item {
+ padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--gray-100);
+ }
+ .report-item h4 {
+ font-size: 14px; font-weight: 600; color: var(--gray-700); margin-bottom: 8px;
+ }
+ .report-item ul { list-style: none; padding: 0; }
+ .report-item ul li {
+ font-size: 13px; color: var(--gray-500); padding: 3px 0 3px 16px;
+ position: relative; line-height: 1.7;
+ }
+ .report-item ul li::before {
+ content: ''; position: absolute; left: 0; top: 11px;
+ width: 6px; height: 6px; border-radius: 50%;
+ }
+ .item-strength { background: #F0FFF4; border-color: #C6F6D5; }
+ .item-strength ul li::before { background: #38A169; }
+ .item-weakness { background: #FFF5F5; border-color: #FED7D7; }
+ .item-weakness ul li::before { background: #E53E3E; }
+ .item-good-work { background: #EBF8FF; border-color: #BEE3F8; }
+ .item-good-work ul li::before { background: #2B6CB0; }
+ .item-bad-work { background: #FFFFF0; border-color: #FEFCBF; }
+ .item-bad-work ul li::before { background: #D69E2E; }
 
-    .plan-timeline { position: relative; padding-left: 28px; }
-    .plan-timeline::before {
-      content: ''; position: absolute; left: 8px; top: 0; bottom: 0;
-      width: 2px; background: linear-gradient(135deg, var(--primary), var(--accent));
-      border-radius: 2px;
-    }
-    .plan-item {
-      position: relative; margin-bottom: 24px; padding: 16px 20px;
-      background: var(--gray-50); border-radius: var(--radius-sm);
-    }
-    .plan-item::before {
-      content: ''; position: absolute; left: -24px; top: 20px;
-      width: 12px; height: 12px; border-radius: 50%;
-      background: var(--primary); border: 2px solid white;
-      box-shadow: var(--shadow-sm);
-    }
-    .plan-item .plan-time {
-      font-size: 12px; font-weight: 600; color: var(--primary);
-      margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;
-    }
-    .plan-item .plan-title {
-      font-size: 15px; font-weight: 600; color: var(--gray-800); margin-bottom: 6px;
-    }
-    .plan-item .plan-detail { font-size: 13px; color: var(--gray-500); line-height: 1.7; }
+ .plan-timeline { position: relative; padding-left: 28px; }
+ .plan-timeline::before {
+ content: ''; position: absolute; left: 8px; top: 0; bottom: 0;
+ width: 2px; background: linear-gradient(135deg, var(--primary), var(--accent));
+ border-radius: 2px;
+ }
+ .plan-item {
+ position: relative; margin-bottom: 24px; padding: 16px 20px;
+ background: var(--gray-50); border-radius: var(--radius-sm);
+ }
+ .plan-item::before {
+ content: ''; position: absolute; left: -24px; top: 20px;
+ width: 12px; height: 12px; border-radius: 50%;
+ background: var(--primary); border: 2px solid white;
+ box-shadow: var(--shadow-sm);
+ }
+ .plan-item .plan-time {
+ font-size: 12px; font-weight: 600; color: var(--primary);
+ margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;
+ }
+ .plan-item .plan-title {
+ font-size: 15px; font-weight: 600; color: var(--gray-800); margin-bottom: 6px;
+ }
+ .plan-item .plan-detail { font-size: 13px; color: var(--gray-500); line-height: 1.7; }
 
-    .report-footer {
-      padding: 24px 32px; border-top: 1px solid var(--gray-100);
-      display: flex; gap: 12px; justify-content: center;
-    }
-    .btn-secondary {
-      padding: 10px 24px; border: 1px solid var(--gray-200); border-radius: var(--radius-sm);
-      background: white; font-size: 13px; font-weight: 500; color: var(--gray-600);
-      cursor: pointer; font-family: inherit; transition: all 0.2s ease;
-    }
-    .btn-secondary:hover { border-color: var(--primary-light); color: var(--primary); }
-    .btn-primary {
-      padding: 10px 24px; border: none; border-radius: var(--radius-sm);
-      background: var(--primary); font-size: 13px; font-weight: 500; color: white;
-      cursor: pointer; font-family: inherit; transition: all 0.2s ease;
-    }
-    .btn-primary:hover { background: #2c5282; }
+ .report-footer {
+ padding: 24px 32px; border-top: 1px solid var(--gray-100);
+ display: flex; gap: 12px; justify-content: center;
+ }
+ .btn-secondary {
+ padding: 10px 24px; border: 1px solid var(--gray-200); border-radius: var(--radius-sm);
+ background: white; font-size: 13px; font-weight: 500; color: var(--gray-600);
+ cursor: pointer; font-family: inherit; transition: all 0.2s ease;
+ }
+ .btn-secondary:hover { border-color: var(--primary-light); color: var(--primary); }
+ .btn-primary {
+ padding: 10px 24px; border: none; border-radius: var(--radius-sm);
+ background: var(--primary); font-size: 13px; font-weight: 500; color: white;
+ cursor: pointer; font-family: inherit; transition: all 0.2s ease;
+ }
+ .btn-primary:hover { background: #2c5282; }
 
-    .type-nav {
-      max-width: 900px; margin: 0 auto 40px; padding: 0 24px;
-    }
-    .type-nav-inner {
-      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
-      background: white; padding: 16px; border-radius: var(--radius); border: 1px solid var(--gray-200);
-    }
-    .type-btn {
-      padding: 8px 16px; border: 1px solid var(--gray-200); border-radius: 8px;
-      background: white; cursor: pointer; font-size: 13px; font-weight: 500;
-      color: var(--gray-600); transition: all 0.2s ease; text-decoration: none;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .type-btn:hover, .type-btn.active { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
-    .type-btn[data-type="1"]:hover, .type-btn[data-type="1"].active { background: #EBF8FF; border-color: #63B3ED; color: #2B6CB0; }
-    .type-btn[data-type="2"]:hover, .type-btn[data-type="2"].active { background: #FED7D7; border-color: #FC8181; color: #C53030; }
-    .type-btn[data-type="3"]:hover, .type-btn[data-type="3"].active { background: #FEFCBF; border-color: #F6E05E; color: #975A16; }
-    .type-btn[data-type="4"]:hover, .type-btn[data-type="4"].active { background: #E9D8FD; border-color: #B794F4; color: #6B46C1; }
-    .type-btn[data-type="5"]:hover, .type-btn[data-type="5"].active { background: #B2F5EA; border-color: #4FD1C5; color: #285E61; }
-    .type-btn[data-type="6"]:hover, .type-btn[data-type="6"].active { background: #C3DAFE; border-color: #7F9CF5; color: #434190; }
-    .type-btn[data-type="7"]:hover, .type-btn[data-type="7"].active { background: #FEFCBF; border-color: #F6E05E; color: #C05621; }
-    .type-btn[data-type="8"]:hover, .type-btn[data-type="8"].active { background: #FED7D7; border-color: #FC8181; color: #9B2C2C; }
-    .type-btn[data-type="9"]:hover, .type-btn[data-type="9"].active { background: #C6F6D5; border-color: #68D391; color: #276749; }
+ /* ===== Detail Types ===== */
+ .type-nav {
+ max-width: 900px; margin: 0 auto 40px; padding: 0 24px;
+ }
+ .type-nav-inner {
+ display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+ background: white; padding: 16px; border-radius: var(--radius); border: 1px solid var(--gray-200);
+ }
+ .type-btn {
+ padding: 8px 16px; border: 1px solid var(--gray-200); border-radius: 8px;
+ background: white; cursor: pointer; font-size: 13px; font-weight: 500;
+ color: var(--gray-600); transition: all 0.2s ease; text-decoration: none;
+ display: flex; align-items: center; gap: 6px;
+ }
+ .type-btn:hover, .type-btn.active { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+ .type-btn[data-type="1"]:hover, .type-btn[data-type="1"].active { background: #EBF8FF; border-color: #63B3ED; color: #2B6CB0; }
+ .type-btn[data-type="2"]:hover, .type-btn[data-type="2"].active { background: #FED7D7; border-color: #FC8181; color: #C53030; }
+ .type-btn[data-type="3"]:hover, .type-btn[data-type="3"].active { background: #FEFCBF; border-color: #F6E05E; color: #975A16; }
+ .type-btn[data-type="4"]:hover, .type-btn[data-type="4"].active { background: #E9D8FD; border-color: #B794F4; color: #6B46C1; }
+ .type-btn[data-type="5"]:hover, .type-btn[data-type="5"].active { background: #B2F5EA; border-color: #4FD1C5; color: #285E61; }
+ .type-btn[data-type="6"]:hover, .type-btn[data-type="6"].active { background: #C3DAFE; border-color: #7F9CF5; color: #434190; }
+ .type-btn[data-type="7"]:hover, .type-btn[data-type="7"].active { background: #FEFCBF; border-color: #F6E05E; color: #C05621; }
+ .type-btn[data-type="8"]:hover, .type-btn[data-type="8"].active { background: #FED7D7; border-color: #FC8181; color: #9B2C2C; }
+ .type-btn[data-type="9"]:hover, .type-btn[data-type="9"].active { background: #C6F6D5; border-color: #68D391; color: #276749; }
 
-    .type-section {
-      background: white; border-radius: var(--radius); border: 1px solid var(--gray-200);
-      margin-bottom: 24px; overflow: hidden; transition: all 0.3s ease; scroll-margin-top: 80px;
-    }
-    .type-section:hover { box-shadow: var(--shadow-md); border-color: transparent; }
-    .type-header {
-      padding: 24px 28px; display: flex; align-items: center; gap: 16px;
-      cursor: pointer; user-select: none;
-    }
-    .type-number {
-      width: 48px; height: 48px; border-radius: 14px; display: flex;
-      align-items: center; justify-content: center; font-size: 20px;
-      font-weight: 700; flex-shrink: 0; color: white;
-    }
-    .type-1 .type-number { background: linear-gradient(135deg, #63B3ED, #2B6CB0); }
-    .type-2 .type-number { background: linear-gradient(135deg, #FC8181, #C53030); }
-    .type-3 .type-number { background: linear-gradient(135deg, #F6E05E, #D69E2E); }
-    .type-4 .type-number { background: linear-gradient(135deg, #B794F4, #6B46C1); }
-    .type-5 .type-number { background: linear-gradient(135deg, #4FD1C5, #285E61); }
-    .type-6 .type-number { background: linear-gradient(135deg, #7F9CF5, #434190); }
-    .type-7 .type-number { background: linear-gradient(135deg, #F6AD55, #C05621); }
-    .type-8 .type-number { background: linear-gradient(135deg, #FC8181, #9B2C2C); }
-    .type-9 .type-number { background: linear-gradient(135deg, #68D391, #276749); }
-    .type-info h3 { font-size: 17px; font-weight: 600; color: var(--gray-800); margin-bottom: 3px; }
-    .type-info .type-subtitle { font-size: 13px; color: var(--gray-400); }
-    .type-info .type-keywords { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
-    .type-info .type-keywords span {
-      font-size: 11px; padding: 2px 8px; border-radius: 10px;
-      background: var(--gray-100); color: var(--gray-500);
-    }
-    .type-toggle {
-      margin-left: auto; width: 30px; height: 30px; border-radius: 50%;
-      background: var(--gray-100); display: flex; align-items: center; justify-content: center;
-      transition: all 0.3s ease; flex-shrink: 0;
-    }
-    .type-toggle svg { width: 14px; height: 14px; color: var(--gray-400); transition: transform 0.3s ease; }
-    .type-section.open .type-toggle svg { transform: rotate(180deg); }
-    .type-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
-    .type-body-inner { padding: 0 28px 28px; }
-    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .detail-card { border-radius: var(--radius-sm); padding: 16px; border: 1px solid var(--gray-100); }
-    .detail-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-    .detail-card-icon { font-size: 16px; }
-    .detail-card h4 { font-size: 13px; font-weight: 600; color: var(--gray-800); }
-    .detail-card ul { list-style: none; padding: 0; }
-    .detail-card ul li {
-      font-size: 12px; color: var(--gray-600); padding: 3px 0 3px 14px;
-      position: relative; line-height: 1.7;
-    }
-    .detail-card ul li::before {
-      content: ''; position: absolute; left: 0; top: 11px;
-      width: 5px; height: 5px; border-radius: 50%;
-    }
-    .card-attention { background: #FFFFF0; border-color: #FEFCBF; }
-    .card-attention ul li::before { background: #D69E2E; }
-    .card-fear { background: #FFF5F5; border-color: #FED7D7; }
-    .card-fear ul li::before { background: #E53E3E; }
-    .card-happy { background: #F0FFF4; border-color: #C6F6D5; }
-    .card-happy ul li::before { background: #38A169; }
-    .card-manage { background: #EBF8FF; border-color: #BEE3F8; }
-    .card-manage ul li::before { background: #2B6CB0; }
-    .manage-tip {
-      margin-top: 14px; padding: 14px 18px;
-      background: linear-gradient(135deg, #EBF8FF, #E9D8FD);
-      border-radius: var(--radius-sm); border-left: 4px solid var(--purple);
-    }
-    .manage-tip-label {
-      font-size: 11px; font-weight: 600; color: var(--purple);
-      margin-bottom: 4px; letter-spacing: 0.5px;
-    }
-    .manage-tip p { font-size: 13px; color: var(--gray-700); line-height: 1.7; }
+ .type-section {
+ background: white; border-radius: var(--radius); border: 1px solid var(--gray-200);
+ margin-bottom: 24px; overflow: hidden; transition: all 0.3s ease; scroll-margin-top: 80px;
+ }
+ .type-section:hover { box-shadow: var(--shadow-md); border-color: transparent; }
+ .type-header {
+ padding: 24px 28px; display: flex; align-items: center; gap: 16px;
+ cursor: pointer; user-select: none;
+ }
+ .type-number {
+ width: 48px; height: 48px; border-radius: 14px; display: flex;
+ align-items: center; justify-content: center; font-size: 20px;
+ font-weight: 700; flex-shrink: 0; color: white;
+ }
+ .type-1 .type-number { background: linear-gradient(135deg, #63B3ED, #2B6CB0); }
+ .type-2 .type-number { background: linear-gradient(135deg, #FC8181, #C53030); }
+ .type-3 .type-number { background: linear-gradient(135deg, #F6E05E, #D69E2E); }
+ .type-4 .type-number { background: linear-gradient(135deg, #B794F4, #6B46C1); }
+ .type-5 .type-number { background: linear-gradient(135deg, #4FD1C5, #285E61); }
+ .type-6 .type-number { background: linear-gradient(135deg, #7F9CF5, #434190); }
+ .type-7 .type-number { background: linear-gradient(135deg, #F6AD55, #C05621); }
+ .type-8 .type-number { background: linear-gradient(135deg, #FC8181, #9B2C2C); }
+ .type-9 .type-number { background: linear-gradient(135deg, #68D391, #276749); }
+ .type-info h3 { font-size: 17px; font-weight: 600; color: var(--gray-800); margin-bottom: 3px; }
+ .type-info .type-subtitle { font-size: 13px; color: var(--gray-400); }
+ .type-info .type-keywords { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+ .type-info .type-keywords span {
+ font-size: 11px; padding: 2px 8px; border-radius: 10px;
+ background: var(--gray-100); color: var(--gray-500);
+ }
+ .type-toggle {
+ margin-left: auto; width: 30px; height: 30px; border-radius: 50%;
+ background: var(--gray-100); display: flex; align-items: center; justify-content: center;
+ transition: all 0.3s ease; flex-shrink: 0;
+ }
+ .type-toggle svg { width: 14px; height: 14px; color: var(--gray-400); transition: transform 0.3s ease; }
+ .type-section.open .type-toggle svg { transform: rotate(180deg); }
+ .type-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+ .type-body-inner { padding: 0 28px 28px; }
+ .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+ .detail-card { border-radius: var(--radius-sm); padding: 16px; border: 1px solid var(--gray-100); }
+ .detail-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+ .detail-card-icon { font-size: 16px; }
+ .detail-card h4 { font-size: 13px; font-weight: 600; color: var(--gray-800); }
+ .detail-card ul { list-style: none; padding: 0; }
+ .detail-card ul li {
+ font-size: 12px; color: var(--gray-600); padding: 3px 0 3px 14px;
+ position: relative; line-height: 1.7;
+ }
+ .detail-card ul li::before {
+ content: ''; position: absolute; left: 0; top: 11px;
+ width: 5px; height: 5px; border-radius: 50%;
+ }
+ .card-attention { background: #FFFFF0; border-color: #FEFCBF; }
+ .card-attention ul li::before { background: #D69E2E; }
+ .card-fear { background: #FFF5F5; border-color: #FED7D7; }
+ .card-fear ul li::before { background: #E53E3E; }
+ .card-happy { background: #F0FFF4; border-color: #C6F6D5; }
+ .card-happy ul li::before { background: #38A169; }
+ .card-manage { background: #EBF8FF; border-color: #BEE3F8; }
+ .card-manage ul li::before { background: #2B6CB0; }
+ .manage-tip {
+ margin-top: 14px; padding: 14px 18px;
+ background: linear-gradient(135deg, #EBF8FF, #E9D8FD);
+ border-radius: var(--radius-sm); border-left: 4px solid var(--purple);
+ }
+ .manage-tip-label {
+ font-size: 11px; font-weight: 600; color: var(--purple);
+ margin-bottom: 4px; letter-spacing: 0.5px;
+ }
+ .manage-tip p { font-size: 13px; color: var(--gray-700); line-height: 1.7; }
 
-    .matching-section { margin-top: 48px; }
-    .matching-section h2 { font-size: 22px; font-weight: 700; color: var(--gray-800); text-align: center; margin-bottom: 8px; }
-    .matching-section > p { text-align: center; color: var(--gray-400); font-size: 13px; margin-bottom: 28px; }
-    .matching-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
-    .match-card {
-      background: white; border-radius: var(--radius-sm); padding: 18px;
-      border: 1px solid var(--gray-200); transition: all 0.2s ease;
-    }
-    .match-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
-    .match-card h4 { font-size: 14px; font-weight: 600; color: var(--gray-800); margin-bottom: 8px; }
-    .match-card p { font-size: 12px; color: var(--gray-500); line-height: 1.7; }
-    .match-tag {
-      display: inline-block; margin-top: 6px; padding: 2px 8px;
-      border-radius: 10px; font-size: 11px; font-weight: 500;
-    }
+ .matching-section { margin-top: 48px; }
+ .matching-section h2 { font-size: 22px; font-weight: 700; color: var(--gray-800); text-align: center; margin-bottom: 8px; }
+ .matching-section > p { text-align: center; color: var(--gray-400); font-size: 13px; margin-bottom: 28px; }
+ .matching-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+ .match-card {
+ background: white; border-radius: var(--radius-sm); padding: 18px;
+ border: 1px solid var(--gray-200); transition: all 0.2s ease;
+ }
+ .match-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+ .match-card h4 { font-size: 14px; font-weight: 600; color: var(--gray-800); margin-bottom: 8px; }
+ .match-card p { font-size: 12px; color: var(--gray-500); line-height: 1.7; }
+ .match-tag {
+ display: inline-block; margin-top: 6px; padding: 2px 8px;
+ border-radius: 10px; font-size: 11px; font-weight: 500;
+ }
 
-    @media (max-width: 768px) {
-      .hero h1 { font-size: 24px; }
-      .type-header { padding: 16px; }
-      .type-body-inner { padding: 0 16px 16px; }
-      .detail-grid, .report-grid { grid-template-columns: 1fr; }
-      .matching-grid { grid-template-columns: 1fr; }
-      .tab-nav-inner { flex-wrap: wrap; }
-      .tab-btn { font-size: 12px; padding: 10px 8px; }
-      .test-question { padding: 24px; }
-      .report-header { padding: 28px; }
-    }
-    .type-section { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
-    .type-section.visible { opacity: 1; transform: translateY(0); }
+ @media (max-width: 768px) {
+ .hero h1 { font-size: 24px; }
+ .type-header { padding: 16px; }
+ .type-body-inner { padding: 0 16px 16px; }
+ .detail-grid, .report-grid { grid-template-columns: 1fr; }
+ .matching-grid { grid-template-columns: 1fr; }
+ .tab-nav-inner { flex-wrap: wrap; }
+ .tab-btn { font-size: 12px; padding: 10px 8px; }
+ .test-question { padding: 24px; }
+ .report-header { padding: 28px; }
+ }
+ .type-section { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+ .type-section.visible { opacity: 1; transform: translateY(0); }
 
-    .score-bars { margin-top: 24px; }
-    .score-bar-item { margin-bottom: 12px; }
-    .score-bar-label {
-      display: flex; justify-content: space-between; font-size: 13px;
-      font-weight: 500; margin-bottom: 4px;
-    }
-    .score-bar-label span:first-child { color: var(--gray-700); }
-    .score-bar-label span:last-child { color: var(--gray-400); }
-    .score-bar-track {
-      height: 8px; background: var(--gray-100); border-radius: 4px; overflow: hidden;
-    }
-    .score-bar-value {
-      height: 100%; border-radius: 4px; transition: width 1s ease;
-    }
-  </style>
+ /* Score bar */
+ .score-bars { margin-top: 24px; }
+ .score-bar-item { margin-bottom: 12px; }
+ .score-bar-label {
+ display: flex; justify-content: space-between; font-size: 13px;
+ font-weight: 500; margin-bottom: 4px;
+ }
+ .score-bar-label span:first-child { color: var(--gray-700); }
+ .score-bar-label span:last-child { color: var(--gray-400); }
+ .score-bar-track {
+ height: 8px; background: var(--gray-100); border-radius: 4px; overflow: hidden;
+ }
+ .score-bar-value {
+ height: 100%; border-radius: 4px; transition: width 1s ease;
+ }
+ </style>
 </head>
 <body>
-  <nav>
-    <div class="nav-inner">
-      <a href="index.html" class="nav-back">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        返回销售赋能平台
-      </a>
-      <span class="nav-title">🎭 九型人格测试</span>
-    </div>
-  </nav>
+ <nav>
+ <div class="nav-inner">
+ <a href="index.html" class="nav-back">
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+ 返回平台首页
+ </a>
+ <span class="nav-title">🎭 九型人格分析</span>
+ </div>
+ </nav>
 
-  <section class="hero">
-    <div class="hero-content">
-      <div class="hero-emoji">🎭</div>
-      <h1>九型人格 × B2B销售团队管理</h1>
-      <p>通过九型人格体系了解团队成员的性格特质与内在驱动力，<br>优化分工协作、沟通方式与管理策略，提升英国留学B2B销售团队效能。</p>
-    </div>
-  </section>
+ <section class="hero">
+ <div class="hero-content">
+ <div class="hero-emoji">🎭</div>
+ <h1>九型人格 × 团队管理</h1>
+ <p>通过九型人格体系了解团队成员的性格特质与内在驱动力，<br>优化分工协作、沟通方式与管理策略。</p>
+ </div>
+ </section>
 
-  <div class="tab-nav">
-    <div class="tab-nav-inner">
-      <button class="tab-btn active" onclick="switchTab('detail')">📖 人格详解</button>
-      <button class="tab-btn" onclick="switchTab('ref')">📋 速查对比</button>
-      <button class="tab-btn" onclick="switchTab('test')">🧪 九型测试</button>
-    </div>
-  </div>
+ <!-- Tab Navigation -->
+ <div class="tab-nav">
+ <div class="tab-nav-inner">
+ <button class="tab-btn active" data-tab="detail">📖 人格详解</button>
+ <button class="tab-btn" data-tab="ref">📋 速查对比</button>
+ <button class="tab-btn" data-tab="test">🧪 九型测试</button>
+ </div>
+ </div>
 
-  <div class="content">
-    <!-- Tab 1: Detail -->
-    <div class="tab-content active" id="tab-detail">
-      <div class="type-nav">
-        <div class="type-nav-inner">
-          <a href="#type1" class="type-btn" data-type="1"><span>1️⃣</span> 完美型</a>
-          <a href="#type2" class="type-btn" data-type="2"><span>2️⃣</span> 助人型</a>
-          <a href="#type3" class="type-btn" data-type="3"><span>3️⃣</span> 成就型</a>
-          <a href="#type4" class="type-btn" data-type="4"><span>4️⃣</span> 自我型</a>
-          <a href="#type5" class="type-btn" data-type="5"><span>5️⃣</span> 思考型</a>
-          <a href="#type6" class="type-btn" data-type="6"><span>6️⃣</span> 忠诚型</a>
-          <a href="#type7" class="type-btn" data-type="7"><span>7️⃣</span> 乐观型</a>
-          <a href="#type8" class="type-btn" data-type="8"><span>8️⃣</span> 挑战型</a>
-          <a href="#type9" class="type-btn" data-type="9"><span>9️⃣</span> 和平型</a>
-        </div>
-      </div>
+ <div class="content">
+ <!-- ===== Tab 1: Detail ===== -->
+ <div class="tab-content active" id="tab-detail">
+ <div class="type-nav">
+ <div class="type-nav-inner">
+ <a href="#type1" class="type-btn" data-type="1"><span>1️⃣</span> 完美型</a>
+ <a href="#type2" class="type-btn" data-type="2"><span>2️⃣</span> 助人型</a>
+ <a href="#type3" class="type-btn" data-type="3"><span>3️⃣</span> 成就型</a>
+ <a href="#type4" class="type-btn" data-type="4"><span>4️⃣</span> 自我型</a>
+ <a href="#type5" class="type-btn" data-type="5"><span>5️⃣</span> 思考型</a>
+ <a href="#type6" class="type-btn" data-type="6"><span>6️⃣</span> 忠诚型</a>
+ <a href="#type7" class="type-btn" data-type="7"><span>7️⃣</span> 乐观型</a>
+ <a href="#type8" class="type-btn" data-type="8"><span>8️⃣</span> 挑战型</a>
+ <a href="#type9" class="type-btn" data-type="9"><span>9️⃣</span> 和平型</a>
+ </div>
+ </div>
 
-      <div id="type-cards-container"></div>
+ <div id="type-cards-container"></div>
 
-      <div class="matching-section">
-        <h2>🤝 B2B留学销售团队搭配速查</h2>
-        <p>不同人格类型在英国留学B2B销售团队中的最佳协作方式</p>
-        <div class="matching-grid">
-          <div class="match-card">
-            <h4>🎯 机构攻坚</h4>
-            <p><strong>3号成就型 + 8号挑战型</strong><br>一个冲业绩结果，一个把控合作谈判方向，打硬仗的黄金搭档。</p>
-            <span class="match-tag" style="background:#FEFCBF;color:#975A16;">高效执行</span>
-          </div>
-          <div class="match-card">
-            <h4>💡 策略智囊</h4>
-            <p><strong>5号思考型 + 1号完美型</strong><br>一个深度分析院校政策，一个严格把关合作流程，适合精细化运作。</p>
-            <span class="match-tag" style="background:#EBF8FF;color:#2B6CB0;">深度分析</span>
-          </div>
-          <div class="match-card">
-            <h4>🌈 客户维系</h4>
-            <p><strong>2号助人型 + 9号和平型</strong><br>一个温暖关怀机构需求，一个调和合作冲突，B2B销售天然搭档。</p>
-            <span class="match-tag" style="background:#C6F6D5;color:#276749;">团队氛围</span>
-          </div>
-          <div class="match-card">
-            <h4>🃏 创新突破</h4>
-            <p><strong>7号乐观型 + 4号自我型</strong><br>一个发散创意营销，一个深挖差异化，适合品牌内容方向。</p>
-            <span class="match-tag" style="background:#E9D8FD;color:#6B46C1;">创意驱动</span>
-          </div>
-          <div class="match-card">
+ <div class="matching-section">
+ <h2>🤝 团队搭配速查</h2>
+ <p>不同人格类型在团队中的最佳协作方式</p>
+ <div class="matching-grid">
+ <div class="match-card">
+ <h4>🎯 目标攻坚</h4>
+ <p><strong>3号成就型 + 8号挑战型</strong><br>一个冲结果，一个把控方向，打硬仗的黄金搭档。</p>
+ <span class="match-tag" style="background:#FEFCBF;color:#975A16;">高效执行</span>
+ </div>
+ <div class="match-card">
+ <h4>💡 策略智囊</h4>
+ <p><strong>5号思考型 + 1号完美型</strong><br>一个深度分析，一个严格把关，适合精细化运作。</p>
+ <span class="match-tag" style="background:#EBF8FF;color:#2B6CB0;">深度分析</span>
+ </div>
+ <div class="match-card">
+ <h4>🌈 团队粘合</h4>
+ <p><strong>2号助人型 + 9号和平型</strong><br>一个温暖关怀，一个调和冲突，团队氛围守护者。</p>
+ <span class="match-tag" style="background:#C6F6D5;color:#276749;">团队氛围</span>
+ </div>
+ <div class="match-card">
+ <h4>🚀 创新突破</h4>
+ <p><strong>7号乐观型 + 4号自我型</strong><br>一个发散创意，一个深挖独特性，适合品牌内容方向。</p>
+ <span class="match-tag" style="background:#E9D8FD;color:#6B46C1;">创意驱动</span>
+ </div>
+ <div class="match-card">
+ <h4>🛡️ 风控守底</h4>
+ <p><strong>6号忠诚型 + 5号思考型</strong><br>一个识别风险，一个验证逻辑，合规风控最佳组合。</p>
+ <span class="match-tag" style="background:#C3DAFE;color:#434190;">风控合规</span>
+ </div>
+ <div class="match-card">
+ <h4>📊 客户攻坚</h4>
+ <p><strong>3号成就型 + 2号助人型</strong><br>一个聚焦业绩，一个维护关系，B2B销售天然搭档。</p>
+ <span class="match-tag" style="background:#FED7D7;color:#C53030;">销售攻坚</span>
+ </div>
+ </div>
+ </div>
+ </div>
 
-  <!-- Tab 2: Quick Reference Table -->
-  <div class="tab-content" id="tab-ref">
-    <div class="ref-table-wrapper">
-      <table class="ref-table">
-        <thead>
-          <tr>
-            <th>类型</th>
-            <th>注意力焦点</th>
-            <th>核心恐惧</th>
-            <th>快乐源泉</th>
-            <th>如何激发动机</th>
-            <th>雷区</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><div class="type-badge"><span style="background:linear-gradient(135deg,#63B3ED,#2B6CB0);">1</span> 完美型</div></td>
-            <td>对错、标准<br>流程是否正确</td>
-            <td><span class="ref-tag tag-red">做错、不够好</span><br>失控、混乱</td>
-            <td><span class="ref-tag tag-green">把事情做对</span><br>被认可专业严谨</td>
-            <td>标准升级<br>流程优化</td>
-            <td><span class="ref-tag tag-orange">只夸结果不夸方法</span><br>随意降低标准</td>
-          </tr>
-          <tr>
-            <td><div class="type-badge"><span style="background:linear-gradient(135deg,#FC8181,#C53030);">2</span> 助人型</div></td>
-            <td>别人需不需要我<br>关系是否被回应</td>
-            <td><span class="ref-tag tag-red">不被需要</span><br>被忽视、被冷落</td>
-            <td><span class="ref-tag tag-green">被感谢、被依赖</span><br>感到有价值</td>
-            <td>"你对团队很重要"<br>情感肯定</td>
-            <td><span class="ref-tag tag-orange">冷冰冰的制度激励</span><br>忽略情感需求</td>
-          </tr>
-          <tr>
-            <td><div class="type-badge"><span style="background:linear-gradient(135deg,#F6E05E,#D69E2E);">3</span> 成就型</div></td>
-            <td>目标、结果<br>效率、排名</td>
-            <td><span class="ref-tag tag-red">失败</span><br>被认为没用</td>
-            <td><span class="ref-tag tag-green">赢</span><br>被认可、被看见</td>
-            <td>清晰目标<br>可见成果</td>
-            <td><span class="ref-tag tag-orange">模糊评价</span><br>动机直接断电</td>
-          </tr>
-          <tr>
-            <td><div class="type-badge"><span style="background:linear-gradient(135deg,#B794F4,#6B46C1);">4</span> 自我型</div></td>
-            <td>感受是否真实<br>是否"不一样"</td>
-            <td><span class="ref-tag tag-red">平庸</span><br>被忽略价值</td>
-            <td><span class="ref-tag tag-green">被理解</span><br>被看见独特性</td>
-            <td>表达空间<br>意义感</td>
-            <td><span class="ref-tag tag-orange">只用KPI压</span><br>忽略情感世界</td>
-          </tr>
-          <tr>
-            <td><div class="type-badge"><span style="background:linear-gradient(135deg,#4FD1C5,#285E61);">5</span> 思考型</div></td>
-            <td>信息、逻辑<br>风险是否想清楚</td>
-            <td><span class="ref-tag tag-red">无能</span><br>被侵入、被打断</td>
-            <td><span class="ref-tag tag-green">掌握知识</span><br>专业边界被尊重</td>
-            <td>问题深度<br>专业授权</td>
-            <td><span class="ref-tag tag-orange">频繁催促</span><br>动机直接关闭</td>
-          </tr>
-          <tr>
-            <td><div class="type-badge"><span style="background:linear-gradient(135deg,#7F9CF5,#434190);">6</span> 忠诚型</div></td>
-            <td>风险在哪里<br>人和系统靠谱吗</td>
-            <td><span class="ref-tag tag-red">没有支持</span><br>被抛弃、被背叛</td>
-            <td><span class="ref-tag tag-green">安全感</span><br>清晰规则、可靠团队</td>
-            <td>确定性<br>承诺感</td>
-            <td><span class="ref-tag tag-orange">说话前后不一致</span><br>严重伤动机</td>
-          </tr>
-          <tr>
-            <td><div class="type-badge"><span style="background:linear-gradient(135deg,#F6AD55,#C05621);">7</span> 乐观型</div></td>
-            <td>有没有更好选择<br>事情有没有趣</td>
-            <td><span class="ref-tag tag-red">被限制</span><br>无聊、被困住</td>
-            <td><span class="ref-tag tag-green">新鲜感</span><br>自由选择</td>
-            <td>可能性<br>探索感</td>
-            <td><span class="ref-tag tag-orange">过度规训</span><br>直接逃离</td>
-          </tr>
-          <tr>
-            <td><div class="type-badge"><span style="background:linear-gradient(135deg,#FC8181,#9B2C2C);">8</span> 挑战型</div></td>
-            <td>谁在掌控<br>边界是否被侵犯</td>
-            <td><span class="ref-tag tag-red">被控制</span><br>显得软弱</td>
-            <td><span class="ref-tag tag-green">掌控感</span><br>被尊重为强者</td>
-            <td>掌控权<br>直接挑战</td>
-            <td><span class="ref-tag tag-orange">微观管理</span><br>削弱权威感</td>
-          </tr>
-          <tr>
-            <td><div class="type-badge"><span style="background:linear-gradient(135deg,#68D391,#276749);">9</span> 和平型</div></td>
-            <td>大家和不和<br>有没有被忽略</td>
-            <td><span class="ref-tag tag-red">冲突</span><br>被分离、失去连接</td>
-            <td><span class="ref-tag tag-green">和谐、被接纳</span><br>让团队更好</td>
-            <td>温和推动<br>肯定价值</td>
-            <td><span class="ref-tag tag-orange">强硬施压</span><br>突然改变节奏</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+ <!-- ===== Tab 2: Quick Reference ===== -->
+ <div class="tab-content" id="tab-ref">
+ <div class="ref-table-wrapper">
+ <table class="ref-table">
+ <thead>
+ <tr>
+ <th>类型</th>
+ <th>注意力焦点</th>
+ <th>核心恐惧</th>
+ <th>快乐源泉</th>
+ <th>如何激发动机</th>
+ <th>雷区</th>
+ </tr>
+ </thead>
+ <tbody></tbody>
+ </table>
+ </div>
+ </div>
 
-  <!-- Tab 3: Test -->
-  <div class="tab-content" id="tab-test">
-    <div class="test-container">
-      <div id="test-start-screen" class="test-start">
-        <div style="font-size:64px;margin-bottom:16px;">🧪</div>
-        <h2>九型人格测试</h2>
-        <p>共 18 道题，每道题选择最符合你的选项<br>完成后将自动生成你的九型人格评估报告<br>包含：性格分析、擅长/不擅长的工作、管理培养方案</p>
-        <button class="btn-start" onclick="startTest()">开始测试 →</button>
-      </div>
+ <!-- ===== Tab 3: Test ===== -->
+ <div class="tab-content" id="tab-test">
+ <div class="test-container">
+ <div id="test-start-screen" class="test-start">
+ <div style="font-size:64px;margin-bottom:16px;">🧪</div>
+ <h2>九型人格测试</h2>
+ <p>共 18 道题，每道题选择最符合你的选项<br>完成后将自动生成你的九型人格评估报告<br>包含：性格分析、擅长/不擅长的工作、管理培养方案</p>
+ <button class="btn-start" id="btn-start">开始测试 →</button>
+ </div>
 
-      <div id="test-question-screen" style="display:none;">
-        <div class="test-progress">
-          <div class="progress-text" id="progress-text">第 1 / 18 题</div>
-          <div class="progress-bar-wrapper">
-            <div class="progress-bar-fill" id="progress-fill" style="width:5.5%"></div>
-          </div>
-        </div>
-        <div class="test-question" id="question-container"></div>
-        <div class="test-nav">
-          <button class="btn-prev" id="btn-prev" onclick="prevQuestion()" style="visibility:hidden;">← 上一题</button>
-          <button class="btn-next" id="btn-next" onclick="nextQuestion()" disabled>下一题 →</button>
-        </div>
-      </div>
+ <div id="test-question-screen" style="display:none;">
+ <div class="test-progress">
+ <div class="progress-text" id="progress-text">第 1 / 18 题</div>
+ <div class="progress-bar-wrapper">
+ <div class="progress-bar-fill" id="progress-fill" style="width:5.5%"></div>
+ </div>
+ </div>
+ <div class="test-question" id="question-container"></div>
+ <div class="test-nav">
+ <button class="btn-prev" id="btn-prev" style="visibility:hidden;">← 上一题</button>
+ <button class="btn-next" id="btn-next" disabled>下一题 →</button>
+ </div>
+ </div>
 
-      <div id="test-report-screen" style="display:none;">
-        <div class="report-container" id="report-container"></div>
-      </div>
-    </div>
-  </div>
-</div>
+ <div id="test-report-screen" style="display:none;">
+ <div class="report-container" id="report-container"></div>
+ </div>
+ </div>
+ </div>
+ </div>
 
-<footer style="text-align:center;padding:40px 24px;border-top:1px solid #E2E8F0;background:white;">
-  <p style="font-size:13px;color:#A0AEC0;">Built with ❤️ by <strong style="color:#4A5568;">Fancy</strong> · Powered by AI</p>
-  <p style="margin-top:4px;font-size:12px;color:#CBD5E0;">九型人格 × 注意力 / 恐惧点 / 快乐源泉 / 团队管理</p>
-</footer>
+ <footer style="text-align:center;padding:40px 24px;border-top:1px solid #E2E8F0;background:white;">
+ <p style="font-size:13px;color:#A0AEC0;">Built with ❤️ by <strong style="color:#4A5568;">Fancy</strong> · Powered by AI</p>
+ <p style="margin-top:4px;font-size:12px;color:#CBD5E0;">九型人格 × 注意力 / 恐惧点 / 快乐源泉 / 团队管理</p>
+ </footer>
 
-<script src="enneagram-data.js"></script>
-<script>
-  // ===== State =====
-  let currentQ = 0;
-  let answers = new Array(questions.length).fill(-1);
-  let scores = {};
+ <script>
+ // ===== Type Data =====
+ const typeData = [
+ {
+ num: 1, name: '完美型', subtitle: 'The Reformer · 原则驱动的理想主义者',
+ keywords: ['有原则','严谨','标准高','自律'],
+ attention: ['对错、标准、流程是否"正确"','哪里还能被改进'],
+ fear: ['害怕自己是"错的""不够好"','害怕失控、混乱、低标准'],
+ happy: ['把事情做"对"','被认可为专业、严谨、有原则'],
+ manage: ['标准升级、流程优化','不只夸结果，要夸"方法是对的"'],
+ tip: '用"标准升级""流程优化"来激发动机。不要只夸结果，要夸"方法是对的"。',
+ strengths: ['原则性强，做事严谨可靠','善于发现流程中的改进空间','自律性高，能以身作则','注重细节，品质意识强'],
+ weaknesses: ['容易过度追求完美导致效率降低','对自己和他人标准过高','不善于灵活变通','容易忽略情感和关系'],
+ goodWork: ['质量控制、流程管理','审计、合规管理','项目管理、标准化建设','需要高标准的专业岗位'],
+ badWork: ['需要快速试错的创新岗','高度不确定的灵活岗位','需要大量应酬的关系型岗位','强调灵活变通的创意执行'],
+ plan: [
+ {time: '第1阶段（1-3个月）', title: '认知与融入', detail: '帮助其理解团队文化和目标。安排明确职责，给予清晰的流程和标准。定期一对一沟通，认可其严谨的工作方法。'},
+ {time: '第2阶段（3-6个月）', title: '价值释放', detail: '分配需要精细化运作的项目。鼓励其主导流程优化或质量提升工作。给予专业认可和成长空间。'},
+ {time: '第3阶段（6-12个月）', title: '领导力培养', detail: '培养带教能力，将标准化经验传递给团队。适度挑战"非标准"场景，提升灵活性。引导关注团队情感和关系。'}
+ ]
+ },
+ {
+ num: 2, name: '助人型', subtitle: 'The Helper · 关系驱动的温暖担当',
+ keywords: ['热情','乐于助人','关系导向','善解人意'],
+ attention: ['别人需不需要我','关系是否被需要、被回应'],
+ fear: ['不被需要','被忽视、被冷落'],
+ happy: ['被感谢、被依赖','"我对你是有价值的"'],
+ manage: ['情感激励、价值肯定','避免冷冰冰的纯制度激励'],
+ tip: '用"你对团队很重要"来激发动机。冷冰冰的制度激励，对他们无效。',
+ strengths: ['善于建立和维护人际关系','同理心强，能感知他人需求','团队粘合剂，促进协作','乐于奉献，服务意识强'],
+ weaknesses: ['容易忽略自身需求','可能因讨好而模糊边界','在冲突面前容易回避','目标感相对较弱'],
+ goodWork: ['客户关系维护','团队文化建设','培训、带教','需要高度同理心的服务岗位'],
+ badWork: ['需要强硬谈判的岗位','高度数据驱动的分析岗','需要大量独立工作的岗位','强调冷冰冰KPI的纯结果岗'],
+ plan: [
+ {time: '第1阶段（1-3个月）', title: '价值认同', detail: '充分表达"你很重要"。让其感受到被需要和被认可。安排需要与人打交道的工作，发挥关系优势。'},
+ {time: '第2阶段（3-6个月）', title: '边界建立', detail: '帮助建立健康的个人边界。引导从"帮助他人"到"赋能他人"转变。设定清晰的个人业绩目标。'},
+ {time: '第3阶段（6-12个月）', title: '独立成长', detail: '培养独立决策和目标驱动的能力。减少对他人认可的依赖。引导成为能兼顾关系与结果的成熟管理者。'}
+ ]
+ },
+ {
+ num: 3, name: '成就型', subtitle: 'The Achiever · 目标驱动的效率先锋',
+ keywords: ['目标导向','高效','自驱力强','形象意识'],
+ attention: ['目标、结果、效率、排名','别人怎么看我成不成功'],
+ fear: ['失败','被看作没用、没价值'],
+ happy: ['赢','被认可、被看见、被表扬'],
+ manage: ['清晰目标 + 可见成果','避免模糊评价'],
+ tip: '用"清晰目标 + 可见成果"来激励。模糊评价 = 动机断电。',
+ strengths: ['目标感强，执行力出色','自驱力高，效率出众','善于展现和沟通成果','抗压力强，适应性好'],
+ weaknesses: ['可能为了结果忽视过程','在人际关系上可能不够真诚','过度追求形象','面对非目标驱动的工作容易倦怠'],
+ goodWork: ['销售（B2B/B2C）','项目管理、目标冲刺','需要高效产出的执行岗位','商业拓展与BD'],
+ badWork: ['需要长期等待的慢热型岗位','强调过程而非结果的文化研究岗','需要深度反思的内省型工作','高度情感支持的辅助性岗位'],
+ plan: [
+ {time: '第1阶段（1-3个月）', title: '目标设定', detail: '设定清晰、可量化的短期和中期目标。建立明确的评价标准和反馈机制。给予充分的表现舞台和认可。'},
+ {time: '第2阶段（3-6个月）', title: '深度拓展', detail: '挑战更高目标的同时引导关注过程和团队。培养带教能力，从个人目标转向团队目标。鼓励展现脆弱和真实。'},
+ {time: '第3阶段（6-12个月）', title: '格局提升', detail: '从"赢"升维到"长期价值"。培养战略思维和团队赋能能力。引导成为既高效又有温度的领导者。'}
+ ]
+ },
+ {
+ num: 4, name: '自我型', subtitle: 'The Individualist · 意义驱动的创意灵魂',
+ keywords: ['感性','独特','追求意义','创造力强'],
+ attention: ['自我感受是否真实','我是不是"不一样的我"'],
+ fear: ['平庸','被忽略个体价值'],
+ happy: ['被理解','被看见"独特性"'],
+ manage: ['表达空间 + 意义感','避免只用KPI压他们'],
+ tip: '给"表达空间"和"意义感"。不要只用KPI压他们。',
+ strengths: ['创造力强，审美独特','情感敏锐，洞察力深','善于发现差异化价值','真诚，不做作'],
+ weaknesses: ['情绪波动较大','容易陷入自我比较','对"常规"工作缺乏耐心','在团队合作中可能显得独立'],
+ goodWork: ['品牌策划、内容创作','设计、艺术相关','需要深度洞察的研究岗位','差异化定位与市场分析'],
+ badWork: ['高度标准化的流程型岗位','强调快速执行的销售冲刺岗','需要大量重复性工作的岗位','忽视个性表达的团队环境'],
+ plan: [
+ {time: '第1阶段（1-3个月）', title: '意义构建', detail: '帮助理解工作背后的意义和价值。给予创意发挥的空间。用"你的独特视角很重要"来肯定。'},
+ {time: '第2阶段（3-6个月）', title: '结构化引导', detail: '在自由创作的基础上适度引入结构化框架。帮助建立稳定的工作节奏。鼓励将创意转化为可落地的方案。'},
+ {time: '第3阶段（6-12个月）', title: '影响力扩展', detail: '引导将个人才华转化为团队资产。培养与其他类型协作的能力。鼓励从"独特"走向"不可替代"。'}
+ ]
+ },
+ {
+ num: 5, name: '思考型', subtitle: 'The Investigator · 知识驱动的深度思考者',
+ keywords: ['理性','善于分析','独立','边界感强'],
+ attention: ['信息、逻辑、知识是否足够','风险有没有被想清楚'],
+ fear: ['无能','被侵入、被打断、被掏空'],
+ happy: ['掌握知识','被尊重专业边界'],
+ manage: ['问题深度 + 专业授权','避免频繁催促'],
+ tip: '用"问题深度"和"专业授权"来激励。频繁催促 = 动机直接关闭。',
+ strengths: ['逻辑思维强，分析能力出众','独立思考，不被情绪左右','知识储备丰富，专业性强','能发现别人忽略的关键问题'],
+ weaknesses: ['社交主动性较弱','过度分析导致行动迟缓','边界感过强，协作性不足','不善于表达情感和认可'],
+ goodWork: ['数据分析、市场研究','策略规划、风控管理','需要深度专业知识的岗位','产品架构、系统设计'],
+ badWork: ['需要高频社交的销售岗','强调快速决策的快节奏岗位','需要大量情感表达的服务岗','频繁被打断的开放式办公环境'],
+ plan: [
+ {time: '第1阶段（1-3个月）', title: '专业空间', detail: '给予充足的独立思考时间。尊重专业边界，减少不必要的打扰。分配需要深度分析的工作。'},
+ {time: '第2阶段（3-6个月）', title: '协作桥梁', detail: '鼓励分享研究成果和观点。创造安全的表达环境。帮助将专业能力转化为团队影响力。'},
+ {time: '第3阶段（6-12个月）', title: '领导力拓展', detail: '培养跨领域沟通和协作能力。引导成为团队的"智慧中枢"而非"独立城堡"。在保持专业深度的同时拓展广度。'}
+ ]
+ },
+ {
+ num: 6, name: '忠诚型', subtitle: 'The Loyalist · 安全驱动的可靠伙伴',
+ keywords: ['忠诚','谨慎','责任感强','风险意识'],
+ attention: ['风险在哪里','人和系统靠不靠谱'],
+ fear: ['没有支持','被抛弃、被背叛'],
+ happy: ['安全感','有清晰规则、可靠团队'],
+ manage: ['确定性 + 承诺感','保持言行一致'],
+ tip: '给"确定性 + 承诺感"。说话前后不一致会严重伤动机。',
+ strengths: ['忠诚可靠，团队粘性高','风险意识强，提前预判问题','责任心强，承诺必达','善于建立稳定的合作关系'],
+ weaknesses: ['可能过度担忧和犹豫','在不确定性面前容易焦虑','过度依赖权威和系统','自主决策时可能缺乏信心'],
+ goodWork: ['风控管理、合规审查','客户维护、关系深耕','需要长期信任建设的岗位','质量监控、问题排查'],
+ badWork: ['高度不确定的创业型岗位','需要快速试错的创新探索岗','频繁变化策略的灵活型岗位','缺乏清晰规则的混沌环境'],
+ plan: [
+ {time: '第1阶段（1-3个月）', title: '安全感建立', detail: '给出清晰的规则、流程和期望。保持言行一致，建立信任。分配需要持续跟进和深入的工作。'},
+ {time: '第2阶段（3-6个月）', title: '信心培养', detail: '逐步给予自主决策的空间。通过小胜利积累信心。引导从"防范风险"到"管理风险"的转变。'},
+ {time: '第3阶段（6-12个月）', title: '自主领导', detail: '培养独立判断和行动的勇气。减少对外部确定性的依赖。引导成为既能预见风险又能果断行动的管理者。'}
+ ]
+ },
+ {
+ num: 7, name: '乐观型', subtitle: 'The Enthusiast · 可能性驱动的创意引擎',
+ keywords: ['活力','创意','多线程','追求新鲜'],
+ attention: ['有没有更好的选择','事情是不是有趣、有空间'],
+ fear: ['被限制','痛苦、无聊、被困住'],
+ happy: ['新鲜感','自由选择'],
+ manage: ['可能性 + 探索感','避免过度规训'],
+ tip: '用"可能性"和"探索感"来激励。过度规训 = 直接逃离。',
+ strengths: ['创意丰富，思维活跃','适应力强，学习速度快','能快速发现新机会','感染力强，带动团队氛围'],
+ weaknesses: ['容易三分钟热度，缺乏坚持','回避痛苦和困难','多线程并行导致精力分散','细节执行可能不到位'],
+ goodWork: ['新业务拓展、创意策划','活动运营、品牌推广','需要快速学习的灵活岗位','创新项目和探索性工作'],
+ badWork: ['需要长期重复执行的后勤岗','强调细节的审计合规类岗位','流程固化、变化少的管理岗','需要深度专注的单一任务'],
+ plan: [
+ {time: '第1阶段（1-3个月）', title: '自由探索', detail: '给予探索新方向的空间和资源。设定弹性目标而非僵化计划。利用其创意优势贡献新鲜想法。'},
+ {time: '第2阶段（3-6个月）', title: '聚焦引导', detail: '帮助识别最有价值的机会并聚焦。培养将创意落地的执行能力。引导体验"深耕一件事"的成就感。'},
+ {time: '第3阶段（6-12个月）', title: '深度领导', detail: '培养从"点子多"到"把一件事做透"的能力。引导成为既有创意又有执行力的领导者。在自由和纪律间找到平衡。'}
+ ]
+ },
+ {
+ num: 8, name: '挑战型', subtitle: 'The Challenger · 力量驱动的决策核心',
+ keywords: ['果断','掌控力','直接','保护欲'],
+ attention: ['谁在掌控','边界有没有被侵犯'],
+ fear: ['被控制','显得软弱'],
+ happy: ['掌控感','被尊重为强者'],
+ manage: ['授权 + 尊重','直接沟通，不绕弯子'],
+ tip: '用"掌控权"和"直接挑战"来激励。给他们空间，不要微观管理。',
+ strengths: ['决策果断，执行力强','在压力下表现出色','有保护团队的担当','敢于直面冲突和困难'],
+ weaknesses: ['可能过于强势忽视他人感受','控制欲强，授权不足','在需要柔软手段的场景中吃力','容易低估他人的能力'],
+ goodWork: ['团队负责人、项目总监','需要快速决策的管理岗','高压环境下的攻坚任务','需要强执行力的变革项目'],
+ badWork: ['需要高度协作的平级岗位','强调温和方式的服务型岗位','需要频繁妥协的外交型角色','下属能力很强不需要强管控的场景'],
+ plan: [
+ {time: '第1阶段（1-3个月）', title: '授权与信任', detail: '给予充分的决策权和掌控空间。直接沟通，不绕弯子。尊重其领导力和决策能力。'},
+ {time: '第2阶段（3-6个月）', title: '柔软力量', detail: '引导意识到"真正的力量也包括柔软"。培养倾听和共情能力。帮助学会通过他人来实现目标。'},
+ {time: '第3阶段（6-12个月）', title: '成熟领导力', detail: '从"力量型领导"进化为"智慧型领导"。培养战略耐心和长期视野。引导成为既果断又包容的成熟管理者。'}
+ ]
+ },
+ {
+ num: 9, name: '和平型', subtitle: 'The Peacemaker · 和谐驱动的团队粘合剂',
+ keywords: ['温和','包容','稳定','善于调和'],
+ attention: ['大家和不和','有没有被忽略的立场'],
+ fear: ['冲突','被分离、失去连接'],
+ happy: ['和谐与被接纳','"我的存在让团队更好"'],
+ manage: ['温和推动 + 肯定价值','避免强硬施压'],
+ tip: '用"温和推动"和"肯定价值"来激励。给足时间和空间，不要突然改变节奏。',
+ strengths: ['善于调解矛盾，维护和谐','包容性强，善于倾听','情绪稳定，给人安全感','能看见每个人的立场'],
+ weaknesses: ['回避冲突导致问题积累','主动性不足，容易被动','可能忽视自己的需求','决策速度较慢'],
+ goodWork: ['团队协调、HRBP','客户维护、客户成功','需要多方协调的项目管理','团队文化和氛围建设'],
+ badWork: ['需要快速强硬决策的岗位','高冲突环境下的谈判岗','需要激进推动的变革型角色','强调个人突出表现的竞争型环境'],
+ plan: [
+ {time: '第1阶段（1-3个月）', title: '价值确认', detail: '充分认可其在团队中的调和作用。给予安全的工作环境，避免突然施压。分配需要协调和倾听的工作。'},
+ {time: '第2阶段（3-6个月）', title: '主动激活', detail: '温和地推动表达个人观点和需求。帮助建立主动发声的习惯。在冲突场景中给予支持和安全网。'},
+ {time: '第3阶段（6-12个月）', title: '领导力觉醒', detail: '培养独立决策和推动变革的能力。引导从"维持和谐"到"建设性冲突"。鼓励成为有主张又有温度的领导者。'}
+ ]
+ }
+ ];
 
-  // ===== Tab Switch =====
-  function switchTab(tab) {
+ // ===== Test Questions =====
+ const questions = [
+ { q: '在工作中，你最在意的是：', opts: [
+ {text: '事情是否做得正确、符合标准', types: [1]},
+ {text: '是否帮助到了别人，关系好不好', types: [2,9]},
+ {text: '目标是否达成，结果好不好', types: [3]},
+ {text: '是否有意义，是否忠于自己的感受', types: [4]}
+ ]},
+ {q: '面对一个新项目，你的第一反应是：', opts: [
+ {text: '先制定详细的计划和标准流程', types: [1]},
+ {text: '先了解团队需要我怎么配合', types: [2]},
+ {text: '快速确定目标和关键节点', types: [3]},
+ {text: '思考这个项目有没有深度和价值', types: [4,5]}
+ ]},
+ { q: '你最害怕的事情是：', opts: [
+ {text: '犯错误，被批评不够好', types: [1]},
+ {text: '被孤立，不被任何人需要', types: [2]},
+ {text: '失败，被人看不起', types: [3]},
+ {text: '被困住，没有自由', types: [7,4]}
+ ]},
+ { q: '同事来找你帮忙，你通常会：', opts: [
+ {text: '评估这事该不该帮，符不符合规范', types: [1,6]},
+ {text: '放下手中的事，优先帮助对方', types: [2]},
+ {text: '快速帮忙，因为这也算一次展示能力的机会', types: [3]},
+ {text: '看心情和关系远近再决定', types: [4,9]}
+ ]},
+ { q: '你在团队中的角色通常是：', opts: [
+ {text: '质量把关者，发现问题并纠正', types: [1]},
+ {text: '团队的暖心人，维护关系', types: [2]},
+ {text: '业绩担当，冲锋在前', types: [3,8]},
+ {text: '幕后的智囊，提供深度分析', types: [5]}
+ ]},
+ { q: '你的快乐主要来自于：', opts: [
+ {text: '把事情做到极致', types: [1]},
+ {text: '被感谢和认可', types: [2]},
+ {text: '完成挑战，取得成果', types: [3]},
+ {text: '探索新事物，发现新可能', types: [7]}
+ ]},
+ { q: '面对冲突，你倾向于：', opts: [
+ {text: '坚持原则，据理力争', types: [1,8]},
+ {text: '主动调和，寻找共识', types: [2,9]},
+ {text: '快速解决，不让事态扩大', types: [3]},
+ {text: '先退一步，观察分析', types: [5,6]}
+ ]},
+ { q: '被领导批评后，你最真实的反应是：', opts: [
+ {text: '反思哪里不对，马上改进', types: [1]},
+ {text: '有点受伤，怀疑是不是不被认可了', types: [2,4]},
+ {text: '快速调整，争取下次证明自己', types: [3]},
+ {text: '冷静分析批评是否合理', types: [5]}
+ ]},
+ { q: '你放松的方式是：', opts: [
+ {text: '整理环境、优化流程，让一切井井有条', types: [1]},
+ {text: '和朋友聊天、聚会', types: [2,7]},
+ {text: '运动或挑战某个目标', types: [3,8]},
+ {text: '独处、阅读、思考', types: [4,5]}
+ ]},
+ { q: '在做决策时，你最依赖的是：', opts: [
+ {text: '数据和标准', types: [1,5]},
+ {text: '对他人的影响和感受', types: [2,9]},
+ {text: '目标和结果', types: [3]},
+ {text: '直觉和内心感受', types: [4,7]}
+ ]},
+ { q: '以下哪种说法最能代表你：', opts: [
+ {text: '"没有规矩不成方圆"', types: [1]},
+ {text: '"大家好才是真的好"', types: [2,9]},
+ {text: '"不想当将军的士兵不是好士兵"', types: [3,8]},
+ {text: '"知识就是力量"', types: [5]}
+ ]},
+ { q: '你讨厌的工作环境是：', opts: [
+ {text: '混乱无序、没有标准', types: [1]},
+ {text: '冷漠疏离、没有人情味', types: [2]},
+ {text: '没有目标、看不到成长', types: [3]},
+ {text: '被限制、充满规则', types: [7,8]}
+ ]},
+ { q: '面对风险，你的态度是：', opts: [
+ {text: '评估风险，制定应对方案', types: [1,5]},
+ {text: '担心风险，倾向于谨慎行事', types: [6]},
+ {text: '风险越大机会越大', types: [3,7,8]},
+ {text: '随遇而安，车到山前必有路', types: [9]}
+ ]},
+ { q: '你最希望别人怎么评价你：', opts: [
+ {text: '专业、可靠、有原则', types: [1]},
+ {text: '温暖、善良、重要', types: [2]},
+ {text: '成功、有能力、值得信赖', types: [3]},
+ {text: '独特、有深度、有见解', types: [4,5]}
+ ]},
+ { q: '你管理/带人的风格是：', opts: [
+ {text: '高标准严要求，以身作则', types: [1]},
+ {text: '关心下属，注重团队氛围', types: [2,9]},
+ {text: '目标明确，结果导向', types: [3,8]},
+ {text: '授权信任，尊重专业边界', types: [5,7]}
+ ]},
+ { q: '你最珍惜的东西是：', opts: [
+ {text: '诚信和原则', types: [1]},
+ {text: '关系和情感', types: [2]},
+ {text: '成就和认可', types: [3]},
+ {text: '自由和独立', types: [7,4,5]}
+ ]},
+ { q: '压力大的时候你会：', opts: [
+ {text: '更加严格地执行计划', types: [1,3]},
+ {text: '找人倾诉，寻求支持', types: [2,6]},
+ {text: '转移注意力，寻找快乐', types: [7]},
+ {text: '退回到自己的空间里消化', types: [4,5,9]}
+ ]},
+ { q: '你觉得自己最大的优点是：', opts: [
+ {text: '靠谱、负责、有担当', types: [1,6]},
+ {text: '善解人意、有同理心', types: [2,9]},
+ {text: '行动力强、效率高', types: [3,8]},
+ {text: '有想法、有深度', types: [4,5,7]}
+ ]}
+ ];
+
+ // ===== State =====
+ let currentQ = 0;
+ let answers = new Array(questions.length).fill(-1);
+ let scores = {};
+
+ // ===== Init =====
+ document.addEventListener('DOMContentLoaded', function() {
+  initTabs();
+  renderTypeCards();
+  renderRefTable();
+  initTestButtons();
+  document.querySelector('#type-cards-container .type-section:first-child')?.classList.add('visible');
+ });
+
+ // ===== Tab Switch (using addEventListener) =====
+ function initTabs() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+   btn.addEventListener('click', function() {
+    const tab = this.dataset.tab;
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
+    this.classList.add('active');
     document.getElementById('tab-' + tab).classList.add('active');
-  }
-
-  // ===== Generate Type Cards =====
-  function renderTypeCards() {
-    const container = document.getElementById('type-cards-container');
-    container.innerHTML = typeData.map(t => `
-      <div class="type-section type-${t.num}" id="type${t.num}">
-        <div class="type-header" onclick="toggleSection(this)">
-          <div class="type-number">${t.num}</div>
-          <div class="type-info">
-            <h3>${t.name}（${t.subtitle.split('·')[0].trim()}）</h3>
-            <div class="type-subtitle">${t.subtitle}</div>
-            <div class="type-keywords">${t.keywords.map(k => `<span>${k}</span>`).join('')}</div>
-          </div>
-          <div class="type-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        </div>
-        <div class="type-body">
-          <div class="type-body-inner">
-            <div class="detail-grid">
-              <div class="detail-card card-attention">
-                <div class="detail-card-header"><span class="detail-card-icon">👁️</span><h4>注意力焦点</h4></div>
-                <ul>${t.attention.map(a=>`<li>${a}</li>`).join('')}</ul>
-              </div>
-              <div class="detail-card card-fear">
-                <div class="detail-card-header"><span class="detail-card-icon">😰</span><h4>核心恐惧</h4></div>
-                <ul>${t.fear.map(f=>`<li>${f}</li>`).join('')}</ul>
-              </div>
-              <div class="detail-card card-happy">
-                <div class="detail-card-header"><span class="detail-card-icon">✨</span><h4>快乐源泉</h4></div>
-                <ul>${t.happy.map(h=>`<li>${h}</li>`).join('')}</ul>
-              </div>
-              <div class="detail-card card-manage">
-                <div class="detail-card-header"><span class="detail-card-icon">💼</span><h4>管理关键词</h4></div>
-                <ul>${t.manage.map(m=>`<li>${m}</li>`).join('')}</ul>
-              </div>
-            </div>
-            <div class="manage-tip">
-              <div class="manage-tip-label">💡 激发动机</div>
-              <p>${t.tip}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  function toggleSection(header) {
-    const section = header.parentElement;
-    const body = section.querySelector('.type-body');
-    if (section.classList.contains('open')) {
-      body.style.maxHeight = '0';
-      section.classList.remove('open');
-    } else {
-      body.style.maxHeight = body.scrollHeight + 'px';
-      section.classList.add('open');
-    }
-  }
-
-  // ===== Test =====
-  function startTest() {
-    document.getElementById('test-start-screen').style.display = 'none';
-    document.getElementById('test-question-screen').style.display = 'block';
-    currentQ = 0;
-    answers = new Array(questions.length).fill(-1);
-    scores = {};
-    renderQuestion();
-  }
-
-  function renderQuestion() {
-    const q = questions[currentQ];
-    const container = document.getElementById('question-container');
-    const selected = answers[currentQ];
-
-    container.innerHTML = `
-      <h3><span class="q-number">Q${currentQ+1}</span>${q.q}</h3>
-      <div class="option-list">
-        ${q.opts.map((opt, i) => `
-          <button class="option-btn ${selected === i ? 'selected' : ''}" onclick="selectOption(${i})">${opt.text}</button>
-        `).join('')}
-      </div>
-    `;
-
-    document.getElementById('progress-text').textContent = `第 ${currentQ+1} / ${questions.length} 题`;
-    document.getElementById('progress-fill').style.width = `${((currentQ+1)/questions.length)*100}%`;
-    document.getElementById('btn-prev').style.visibility = currentQ === 0 ? 'hidden' : 'visible';
-    document.getElementById('btn-next').textContent = currentQ === questions.length - 1 ? '生成报告 →' : '下一题 →';
-    document.getElementById('btn-next').disabled = selected === -1;
-  }
-
-  function selectOption(idx) {
-    answers[currentQ] = idx;
-    document.querySelectorAll('.option-btn').forEach((b, i) => {
-      b.classList.toggle('selected', i === idx);
-    });
-    document.getElementById('btn-next').disabled = false;
-  }
-
-  function prevQuestion() {
-    if (currentQ > 0) { currentQ--; renderQuestion(); }
-  }
-
-  function nextQuestion() {
-    if (answers[currentQ] === -1) return;
-    if (currentQ < questions.length - 1) {
-      currentQ++;
-      renderQuestion();
-    } else {
-      generateReport();
-    }
-  }
-
-  function generateReport() {
-    scores = {};
-    typeData.forEach(t => scores[t.num] = 0);
-    answers.forEach((a, qi) => {
-      if (a >= 0) {
-        questions[qi].opts[a].types.forEach(t => {
-          scores[t] = (scores[t] || 0) + 1;
-        });
-      }
-    });
-    let sortedTypes = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-    const topType = parseInt(sortedTypes[0][0]);
-    const t = typeData.find(d => d.num === topType);
-    document.getElementById('test-question-screen').style.display = 'none';
-    document.getElementById('test-report-screen').style.display = 'block';
-    const scoreColors = ['#63B3ED','#FC8181','#F6E05E','#B794F4','#4FD1C5','#7F9CF5','#F6AD55','#FC8181','#68D391'];
-    const maxScore = Math.max(...Object.values(scores));
-    document.getElementById('report-container').innerHTML = `
-      <div class="report-card">
-        <div class="report-header">
-          <div class="result-type">${t.num}号 ${t.name}</div>
-          <h2>${t.subtitle}</h2>
-          <div style="margin-top:16px; text-align:left;">
-            <p style="font-size:14px; color:var(--gray-500); margin-bottom:8px;"><strong>九型得分分布：</strong></p>
-            <div class="score-bars">
-              ${sortedTypes.map(([num, score], i) => {
-                const td = typeData.find(d => d.num == num);
-                const pct = maxScore > 0 ? (score / maxScore * 100) : 0;
-                return `
-                <div class="score-bar-item">
-                  <div class="score-bar-label"><span>${num}号 ${td.name}</span><span>${score}分</span></div>
-                  <div class="score-bar-track">
-                    <div class="score-bar-value" style="width:${pct}%;background:${scoreColors[num-1]};"></div>
-                  </div>
-                </div>`;
-              }).join('')}
-            </div>
-          </div>
-          <div class="type-desc">
-            <strong>📋 性格概述：</strong>${t.subtitle.split('·')[1]?.trim() || ''}。
-            注意力集中在"${t.attention[0]}"，核心恐惧是"${t.fear[0]}"。
-            当"${t.happy[0]}"时会感到快乐和满足。
-            <br><br><strong>💡 管理提示：</strong>${t.tip}
-          </div>
-        </div>
-        <div class="report-body">
-          <div class="report-section">
-            <h3>💪 核心优势 & 待提升</h3>
-            <div class="report-grid">
-              <div class="report-item item-strength">
-                <h4>✅ 核心优势</h4>
-                <ul>${t.strengths.map(s=>`<li>${s}</li>`).join('')}</ul>
-              </div>
-              <div class="report-item item-weakness">
-                <h4>⚠️ 待提升方向</h4>
-                <ul>${t.weaknesses.map(w=>`<li>${w}</li>`).join('')}</ul>
-              </div>
-            </div>
-          </div>
-          <div class="report-section">
-            <h3>🎯 工作适配分析</h3>
-            <div class="report-grid">
-              <div class="report-item item-good-work">
-                <h4>✅ 擅长的工作</h4>
-                <ul>${t.goodWork.map(w=>`<li>${w}</li>`).join('')}</ul>
-              </div>
-              <div class="report-item item-bad-work">
-                <h4>⚠️ 不擅长的工作</h4>
-                <ul>${t.badWork.map(w=>`<li>${w}</li>`).join('')}</ul>
-              </div>
-            </div>
-          </div>
-          <div class="report-section">
-            <h3>📈 管理培养计划</h3>
-            <div class="plan-timeline">
-              ${t.plan.map(p => `
-                <div class="plan-item">
-                  <div class="plan-time">${p.time}</div>
-                  <div class="plan-title">${p.title}</div>
-                  <div class="plan-detail">${p.detail}</div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        </div>
-        <div class="report-footer">
-          <button class="btn-secondary" onclick="resetTest()">重新测试</button>
-          <button class="btn-primary" onclick="viewDetail(${t.num})">查看详细解析</button>
-        </div>
-      </div>
-    `;
-  }
-
-  function resetTest() {
-    document.getElementById('test-report-screen').style.display = 'none';
-    document.getElementById('test-start-screen').style.display = 'block';
-  }
-
-  function viewDetail(num) {
-    switchTab('detail');
-    setTimeout(() => {
-      const el = document.getElementById('type' + num);
-      if (el) {
-        el.scrollIntoView({behavior: 'smooth'});
-        if (!el.classList.contains('open')) {
-          el.querySelector('.type-header').click();
-        }
-      }
-    }, 100);
-  }
-
-  // ===== Init =====
-  window.addEventListener('DOMContentLoaded', function() {
-    renderTypeCards();
-    // Intersection Observer for animation
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.type-section').forEach(section => {
-      observer.observe(section);
-    });
+   });
   });
-</script>
+ }
+
+ // ===== Generate Type Cards =====
+ function renderTypeCards() {
+  const container = document.getElementById('type-cards-container');
+  container.innerHTML = typeData.map(t => `
+   <div class="type-section type-${t.num}" id="type${t.num}">
+    <div class="type-header">
+     <div class="type-number">${t.num}</div>
+     <div class="type-info">
+      <h3>${t.name}（${t.subtitle.split('·')[0].trim()}）</h3>
+      <div class="type-subtitle">${t.subtitle}</div>
+      <div class="type-keywords">${t.keywords.map(k => '<span>'+k+'</span>').join('')}</div>
+     </div>
+     <div class="type-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+    </div>
+    <div class="type-body">
+     <div class="type-body-inner">
+      <div class="detail-grid">
+       <div class="detail-card card-attention">
+        <div class="detail-card-header"><span class="detail-card-icon">👁️</span><h4>注意力焦点</h4></div>
+        <ul>${t.attention.map(a=>'<li>'+a+'</li>').join('')}</ul>
+       </div>
+       <div class="detail-card card-fear">
+        <div class="detail-card-header"><span class="detail-card-icon">😰</span><h4>核心恐惧</h4></div>
+        <ul>${t.fear.map(f=>'<li>'+f+'</li>').join('')}</ul>
+       </div>
+       <div class="detail-card card-happy">
+        <div class="detail-card-header"><span class="detail-card-icon">✨</span><h4>快乐源泉</h4></div>
+        <ul>${t.happy.map(h=>'<li>'+h+'</li>').join('')}</ul>
+       </div>
+       <div class="detail-card card-manage">
+        <div class="detail-card-header"><span class="detail-card-icon">💼</span><h4>管理关键词</h4></div>
+        <ul>${t.manage.map(m=>'<li>'+m+'</li>').join('')}</ul>
+       </div>
+      </div>
+      <div class="manage-tip">
+       <div class="manage-tip-label">💡 激发动机</div>
+       <p>${t.tip}</p>
+      </div>
+     </div>
+    </div>
+   </div>
+  `).join('');
+
+  // Attach click events to type headers
+  document.querySelectorAll('.type-header').forEach(hd => {
+   hd.addEventListener('click', function() {
+    const section = this.parentElement;
+    const body = section.querySelector('.type-body');
+    const isOpen = section.classList.contains('open');
+    document.querySelectorAll('.type-section').forEach(s => {
+     s.classList.remove('open');
+     s.querySelector('.type-body').style.maxHeight = '0';
+    });
+    if (!isOpen) {
+     body.style.maxHeight = body.scrollHeight + 'px';
+     section.classList.add('open');
+     section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+   });
+  });
+
+  // Observe visible
+  const observer = new IntersectionObserver((entries) => {
+   entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+   });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.type-section').forEach(el => observer.observe(el));
+ }
+
+ // ===== Render Quick Reference Table =====
+ function renderRefTable() {
+  const tbody = document.querySelector('.ref-table tbody');
+  const colorMap = [
+   'linear-gradient(135deg,#63B3ED,#2B6CB0)',
+   'linear-gradient(135deg,#FC8181,#C53030)',
+   'linear-gradient(135deg,#F6E05E,#D69E2E)',
+   'linear-gradient(135deg,#B794F4,#6B46C1)',
+   'linear-gradient(135deg,#4FD1C5,#285E61)',
+   'linear-gradient(135deg,#7F9CF5,#434190)',
+   'linear-gradient(135deg,#F6AD55,#C05621)',
+   'linear-gradient(135deg,#FC8181,#9B2C2C)',
+   'linear-gradient(135deg,#68D391,#276749)',
+  ];
+  tbody.innerHTML = typeData.map((t, i) => `
+   <tr>
+    <td><div class="type-badge"><span style="background:${colorMap[i]};">${t.num}</span> ${t.name}</div></td>
+    <td>${t.attention[0]}<br>${t.attention[1]||''}</td>
+    <td><span class="ref-tag tag-red">${t.fear[0]}</span><br>${t.fear[1]||''}</td>
+    <td><span class="ref-tag tag-green">${t.happy[0]}</span><br>${t.happy[1]||''}</td>
+    <td>${t.manage[0]}<br>${t.manage[1]||''}</td>
+    <td><span class="ref-tag tag-orange">${t.tip.replace(/[，。]/g, '')}</span></td>
+   </tr>
+  `).join('');
+ }
+
+ // ===== Test Buttons (using addEventListener) =====
+ function initTestButtons() {
+  document.getElementById('btn-start').addEventListener('click', startTest);
+  document.getElementById('btn-prev').addEventListener('click', prevQuestion);
+  document.getElementById('btn-next').addEventListener('click', nextQuestion);
+ }
+
+ function startTest() {
+  document.getElementById('test-start-screen').style.display = 'none';
+  document.getElementById('test-question-screen').style.display = 'block';
+  currentQ = 0;
+  answers = new Array(questions.length).fill(-1);
+  scores = {};
+  renderQuestion();
+ }
+
+ function renderQuestion() {
+  const q = questions[currentQ];
+  const container = document.getElementById('question-container');
+  const selected = answers[currentQ];
+
+  // Use string operations to avoid template literal issues
+  let html = '<h3><span class="q-number">Q' + (currentQ+1) + '</span>' + q.q + '</h3>';
+  html += '<div class="option-list">';
+  q.opts.forEach(function(opt, i) {
+   var cls = 'option-btn';
+   if (selected === i) cls += ' selected';
+   html += '<button class="' + cls + '" data-opt="' + i + '">' + opt.text + '</button>';
+  });
+  html += '</div>';
+  container.innerHTML = html;
+
+  // Attach click events to options
+  container.querySelectorAll('.option-btn').forEach(function(btn) {
+   btn.addEventListener('click', function() {
+    selectOption(parseInt(this.dataset.opt));
+   });
+  });
+
+  document.getElementById('progress-text').textContent = '第 ' + (currentQ+1) + ' / ' + questions.length + ' 题';
+  document.getElementById('progress-fill').style.width = ((currentQ+1)/questions.length*100) + '%';
+  document.getElementById('btn-prev').style.visibility = currentQ === 0 ? 'hidden' : 'visible';
+  document.getElementById('btn-next').textContent = currentQ === questions.length - 1 ? '生成报告 →' : '下一题 →';
+  document.getElementById('btn-next').disabled = selected === -1;
+ }
+
+ function selectOption(idx) {
+  answers[currentQ] = idx;
+  document.querySelectorAll('.option-btn').forEach(function(b, i) {
+   b.classList.toggle('selected', i === idx);
+  });
+  document.getElementById('btn-next').disabled = false;
+ }
+
+ function prevQuestion() {
+  if (currentQ > 0) { currentQ--; renderQuestion(); }
+ }
+
+ function nextQuestion() {
+  if (answers[currentQ] === -1) return;
+  if (currentQ < questions.length - 1) {
+   currentQ++;
+   renderQuestion();
+  } else {
+   generateReport();
+  }
+ }
+
+ function generateReport() {
+  scores = {};
+  typeData.forEach(function(t) { scores[t.num] = 0; });
+  answers.forEach(function(a, qi) {
+   if (a >= 0) {
+    questions[qi].opts[a].types.forEach(function(t) {
+     scores[t] = (scores[t] || 0) + 1;
+    });
+   }
+  });
+
+  var sortedTypes = Object.entries(scores).sort(function(a, b) { return b[1] - a[1]; });
+  var topType = parseInt(sortedTypes[0][0]);
+  var t = typeData.find(function(d) { return d.num === topType; });
+
+  document.getElementById('test-question-screen').style.display = 'none';
+  document.getElementById('test-report-screen').style.display = 'block';
+
+  var scoreColors = ['#63B3ED','#FC8181','#F6E05E','#B794F4','#4FD1C5','#7F9CF5','#F6AD55','#FC8181','#68D391'];
+  var maxScore = Math.max.apply(null, Object.values(scores));
+
+  var barsHtml = '';
+  sortedTypes.forEach(function(item) {
+   var num = parseInt(item[0]), score = item[1];
+   var td = typeData.find(function(d) { return d.num === num; });
+   var pct = maxScore > 0 ? (score / maxScore * 100) : 0;
+   barsHtml += '' +
+    '<div class="score-bar-item">' +
+    '<div class="score-bar-label"><span>' + num + '号 ' + td.name + '</span><span>' + score + '分</span></div>' +
+    '<div class="score-bar-track">' +
+    '<div class="score-bar-value" style="width:' + pct + '%;background:' + scoreColors[num-1] + ';"></div>' +
+    '</div></div>';
+  });
+
+  var tipPart = t.subtitle.split('·')[1];
+  if (!tipPart) tipPart = '';
+
+  var reportHtml = '' +
+   '<div class="report-card">' +
+   '<div class="report-header">' +
+   '<div class="result-type">' + t.num + '号 ' + t.name + '</div>' +
+   '<h2>' + t.subtitle + '</h2>' +
+   '<div style="margin-top:16px; text-align:left;">' +
+   '<p style="font-size:14px; color:var(--gray-500); margin-bottom:8px;"><strong>九型得分分布：</strong></p>' +
+   '<div class="score-bars">' + barsHtml + '</div>' +
+   '</div>' +
+   '<div class="type-desc">' +
+   '<strong>📋 性格概述：</strong>' + tipPart + '。注意力集中在"' + t.attention[0] + '"，核心恐惧是"' + t.fear[0] + '"。当"' + t.happy[0] + '"时会感到快乐和满足。' +
+   '<br><br><strong>💡 管理提示：</strong>' + t.tip +
+   '</div>' +
+   '</div>' +
+   '<div class="report-body">' +
+   '<div class="report-section">' +
+   '<h3>💪 核心优势 & 待提升</h3>' +
+   '<div class="report-grid">' +
+   '<div class="report-item item-strength"><h4>✅ 核心优势</h4><ul>' + t.strengths.map(function(s){return '<li>'+s+'</li>';}).join('') + '</ul></div>' +
+   '<div class="report-item item-weakness"><h4>⚠️ 待提升方向</h4><ul>' + t.weaknesses.map(function(w){return '<li>'+w+'</li>';}).join('') + '</ul></div>' +
+   '</div></div>' +
+   '<div class="report-section">' +
+   '<h3>🎯 工作适配分析</h3>' +
+   '<div class="report-grid">' +
+   '<div class="report-item item-good-work"><h4>✅ 擅长的工作</h4><ul>' + t.goodWork.map(function(w){return '<li>'+w+'</li>';}).join('') + '</ul></div>' +
+   '<div class="report-item item-bad-work"><h4>⚠️ 不擅长的工作</h4><ul>' + t.badWork.map(function(w){return '<li>'+w+'</li>';}).join('') + '</ul></div>' +
+   '</div></div>' +
+   '<div class="report-section">' +
+   '<h3>📈 管理培养计划</h3>' +
+   '<div class="plan-timeline">' +
+   t.plan.map(function(p){return '<div class="plan-item"><div class="plan-time">'+p.time+'</div><div class="plan-title">'+p.title+'</div><div class="plan-detail">'+p.detail+'</div></div>';}).join('') +
+   '</div></div>' +
+   '</div>' +
+   '<div class="report-footer">' +
+   '<button class="btn-secondary" id="btn-retest">重新测试</button>' +
+   '<button class="btn-primary" id="btn-print">打印报告</button>' +
+   '</div></div>';
+
+  document.getElementById('report-container').innerHTML = reportHtml;
+  document.getElementById('btn-retest').addEventListener('click', resetTest);
+  document.getElementById('btn-print').addEventListener('click', function() { window.print(); });
+ }
+
+ function resetTest() {
+  document.getElementById('test-report-screen').style.display = 'none';
+  document.getElementById('test-start-screen').style.display = 'block';
+  currentQ = 0;
+  answers = new Array(questions.length).fill(-1);
+  scores = {};
+ }
+ </script>
 </body>
 </html>
