@@ -956,7 +956,47 @@
                             <textarea id="otherSupport" class="form-textarea" placeholder="培训、物料、市场支持等"></textarea>
                         </div>
                         
-                        <!-- Score Inputs -->
+                        
+                        <!-- 输入方式选择 -->
+                        <div class="form-group full" style="margin-top: 16px; padding: 16px; background: var(--gray-50); border-radius: var(--radius-sm); border: 1px dashed var(--gray-300);">
+                            <label class="form-label" style="margin-bottom: 12px;">📎 数据类型补充（可选）</label>
+                            
+                            <!-- 文件上传 -->
+                            <div style="margin-bottom: 16px;">
+                                <label class="form-label" style="font-size: 13px; color: var(--gray-600);">📁 上传资料文件</label>
+                                <div style="display: flex; align-items: center; gap: 12px; margin-top: 6px;">
+                                    <label class="btn btn-secondary" style="cursor: pointer; padding: 8px 16px; font-size: 13px;">
+                                        📎 选择文件
+                                        <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.webp" 
+                                               onchange="handleFileSelect(event)" style="display: none;">
+                                    </label>
+                                    <span id="fileName" style="font-size: 13px; color: var(--gray-500);">未选择文件</span>
+                                </div>
+                                <textarea id="fileAnalysisResult" class="form-textarea" style="margin-top: 10px; display: none;" 
+                                          placeholder="文件解析结果将显示在这里，也可手动编辑..."></textarea>
+                                <div id="fileAnalysisStatus" style="margin-top: 8px; font-size: 12px; color: var(--gray-500); display: none;">
+                                    ⏳ 正在解析文件，请稍候...
+                                </div>
+                            </div>
+                            
+                            <!-- 网址输入 -->
+                            <div>
+                                <label class="form-label" style="font-size: 13px; color: var(--gray-600);">🌐 竞品官网/信息链接</label>
+                                <div style="display: flex; gap: 8px; margin-top: 6px;">
+                                    <input type="url" id="websiteUrl" class="form-input" style="flex: 1;" 
+                                           placeholder="https://www.example.com 或竞品相关页面链接">
+                                    <button type="button" class="btn btn-secondary" style="font-size: 13px; padding: 8px 16px;"
+                                            onclick="fetchWebsiteData()">🔍 抓取分析</button>
+                                </div>
+                                <textarea id="websiteAnalysisResult" class="form-textarea" style="margin-top: 10px; display: none;" 
+                                          placeholder="网站抓取结果将显示在这里，也可手动编辑..."></textarea>
+                                <div id="websiteAnalysisStatus" style="margin-top: 8px; font-size: 12px; color: var(--gray-500); display: none;">
+                                    ⏳ 正在抓取网站内容，请稍候...
+                                </div>
+                            </div>
+                        </div>
+                        
+<!-- Score Inputs -->
                         <div class="form-group full" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--gray-200);">
                             <label class="form-label" style="margin-bottom: 12px;">📊 综合评分（1-10分）</label>
                         </div>
@@ -1666,6 +1706,177 @@
             link.click();
             URL.revokeObjectURL(url);
         }
-    </script>
+    
+// ===== 文件上传处理 =====
+function handleFileSelect(event) {
+    var file = event.target.files[0];
+    if (!file) return;
+    
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('fileAnalysisStatus').style.display = 'block';
+    document.getElementById('fileAnalysisStatus').innerHTML = '⏳ 正在解析文件：' + file.name + '...';
+    document.getElementById('fileAnalysisResult').style.display = 'none';
+    
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var text = e.target.result;
+        // 尝试解析内容
+        var result = analyzeText(text, file.name);
+        document.getElementById('fileAnalysisResult').value = result;
+        document.getElementById('fileAnalysisResult').style.display = 'block';
+        document.getElementById('fileAnalysisStatus').innerHTML = '✅ 文件解析完成！请确认或编辑下方内容：';
+        
+        // 自动填充到对应字段
+        autoFillFields(result);
+    };
+    reader.onerror = function() {
+        document.getElementById('fileAnalysisStatus').innerHTML = '❌ 文件读取失败，请重试或手动输入。';
+    };
+    
+    // 根据文件类型处理
+    if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
+        // PDF 文件：提示需要后端支持，这里用文件名模拟
+        document.getElementById('fileAnalysisStatus').innerHTML = '⚠️ PDF文件需要后端解析支持，当前仅提取文件名。<br>建议：将PDF内容复制粘贴到下方文本框。';
+        document.getElementById('fileAnalysisResult').value = '【文件：' + file.name + '】\n\n请手动粘贴文件内容或关键信息到此处。';
+        document.getElementById('fileAnalysisResult').style.display = 'block';
+    } else if (file.type.startsWith('image/')) {
+        // 图片文件：尝试 OCR（需要后端），这里提示
+        document.getElementById('fileAnalysisStatus').innerHTML = '⚠️ 图片文件识别需要后端OCR支持。<br>建议：将图片中的文字内容手动输入到下方。';
+        document.getElementById('fileAnalysisResult').value = '【图片文件：' + file.name + '】\n\n请手动输入图片中的关键信息。';
+        document.getElementById('fileAnalysisResult').style.display = 'block';
+    } else {
+        // 文本文件
+        reader.readAsText(file, 'UTF-8');
+    }
+}
+
+// ===== 网址抓取 =====
+function fetchWebsiteData() {
+    var url = document.getElementById('websiteUrl').value.trim();
+    if (!url) {
+        showToast('请输入网址链接');
+        return;
+    }
+    
+    document.getElementById('websiteAnalysisStatus').style.display = 'block';
+    document.getElementById('websiteAnalysisStatus').innerHTML = '⏳ 正在抓取网站内容：' + url + '...';
+    document.getElementById('websiteAnalysisResult').style.display = 'none';
+    
+    // 使用 CORS 代理或直接 fetch（浏览器可能拦截）
+    // 这里先模拟：尝试用 fetch
+    fetch(url, { mode: 'cors' }).then(function(response) {
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return response.text();
+    }).then(function(html) {
+        var result = extractMainContent(html, url);
+        document.getElementById('websiteAnalysisResult').value = result;
+        document.getElementById('websiteAnalysisResult').style.display = 'block';
+        document.getElementById('websiteAnalysisStatus').innerHTML = '✅ 网站抓取完成！请确认或编辑下方内容：';
+        autoFillFields(result);
+    }).catch(function(err) {
+        // CORS 限制，提示用户
+        document.getElementById('websiteAnalysisStatus').innerHTML = '⚠️ 浏览器无法直接抓取该网站（CORS限制）。<br>建议：<br>1. 复制网站关键内容粘贴到下方<br>2. 或使用浏览器插件（如SingleFile）保存为HTML后上传文件';
+        document.getElementById('websiteAnalysisResult').value = '【来源：' + url + '】\n\n请手动粘贴网站关键内容到此处。';
+        document.getElementById('websiteAnalysisResult').style.display = 'block';
+    });
+}
+
+// ===== 文本分析（提取关键信息）=====
+function analyzeText(text, source) {
+    var lines = text.split('\n').map(function(l) { return l.trim(); }).filter(Boolean);
+    var result = '【来源：' + (source || '文件') + '】\n\n';
+    
+    // 简单关键词提取
+    var keywords = {
+        '佣金': 'commission', '返佣': 'commission', '返点': 'commission',
+        '服务': 'service', '支持': 'service', '培训': 'service',
+        '英国': 'productLine', '澳洲': 'productLine', '美国': 'productLine',
+        'BC': 'bcBoth', '同做': 'bcBoth', '做BC': 'bcBoth',
+        '优势': 'advantageRegion', '地区': 'advantageRegion', '北上广': 'advantageRegion'
+    };
+    
+    var matched = {};
+    lines.forEach(function(line) {
+        Object.keys(keywords).forEach(function(kw) {
+            if (line.indexOf(kw) > -1) {
+                if (!matched[kw]) matched[kw] = [];
+                matched[kw].push(line.substring(0, 100));
+            }
+        });
+    });
+    
+    if (Object.keys(matched).length > 0) {
+        result += '【自动提取的关键信息】\n';
+        Object.keys(matched).forEach(function(kw) {
+            result += '• ' + kw + '：' + matched[kw].join('；') + '\n';
+        });
+    } else {
+        result += '【原始内容（前2000字）】\n' + text.substring(0, 2000);
+    }
+    
+    return result;
+}
+
+// ===== 从HTML提取主要内容 =====
+function extractMainContent(html, url) {
+    // 简单提取：去掉标签，保留文本
+    var text = html.replace(/<script[^>]*>.*?<\/script>/gis, '')
+                   .replace(/<style[^>]*>.*?<\/style>/gis, '')
+                   .replace(/<[^>]+>/g, ' ')
+                   .replace(/\s+/g, ' ')
+                   .trim();
+    
+    var result = '【来源：' + url + '】\n\n';
+    result += '【网页内容摘要（前2000字）】\n';
+    result += text.substring(0, 2000);
+    result += '\n\n【提示】请手动整理上方内容到对应字段，或补充到下方文本框。';
+    return result;
+}
+
+// ===== 自动填充字段 =====
+function autoFillFields(text) {
+    // 简单规则自动填充
+    var lower = text.toLowerCase();
+    
+    // 检测国家条线
+    var countries = [];
+    if (lower.indexOf('英国') > -1 || lower.indexOf('uk') > -1) countries.push('英国');
+    if (lower.indexOf('澳洲') > -1 || lower.indexOf('澳大利亚') > -1) countries.push('澳洲');
+    if (lower.indexOf('美国') > -1 || lower.indexOf('usa') > -1) countries.push('美国');
+    if (lower.indexOf('加拿大') > -1 || lower.indexOf('canada') > -1) countries.push('加拿大');
+    if (countries.length > 0) {
+        var el = document.getElementById('productLine');
+        if (el && !el.value) el.value = countries.join('、');
+    }
+    
+    // 检测BC
+    if (lower.indexOf('bc同做') > -1 || lower.indexOf('做bc') > -1) {
+        var el = document.getElementById('bcBoth');
+        if (el) el.value = '是';
+    }
+    
+    // 检测地区
+    var regions = [];
+    if (lower.indexOf('北京') > -1 || lower.indexOf('北上') > -1) regions.push('北京');
+    if (lower.indexOf('上海') > -1 || lower.indexOf('北上') > -1) regions.push('上海');
+    if (lower.indexOf('广州') > -1 || lower.indexOf('广深') > -1) regions.push('广州');
+    if (lower.indexOf('深圳') > -1 || lower.indexOf('广深') > -1) regions.push('深圳');
+    if (regions.length > 0) {
+        var el = document.getElementById('advantageRegion');
+        if (el && !el.value) el.value = regions.join('、');
+    }
+    
+    // 检测佣金：找数字+%
+    var commissionMatch = text.match(/(\d+\s*%)/g);
+    if (commissionMatch) {
+        var el = document.getElementById('commission');
+        if (el && !el.value) el.value = '佣金：' + commissionMatch.join('、');
+    }
+    
+    showToast('已尝试自动填充字段，请检查确认！');
+}
+
+// ===== 修改 saveCompetitor 支持新字段 =====
+</script>
 </body>
 </html>
