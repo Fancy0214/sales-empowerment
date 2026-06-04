@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工具库 | 销售赋能平台</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #F7FAFC;
+            color: #1A202C;
+            padding: 32px;
+            min-height: 100vh;
+        }
+        .page-header { margin-bottom: 32px; }
+        .page-header h1 { font-size: 24px; font-weight: 700; color: #2B6CB0; }
+        .page-header p { font-size: 14px; color: #718096; margin-top: 6px; }
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .tool-card {
+            background: white;
+            border-radius: 14px;
+            padding: 28px 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: 1px solid #E2E8F0;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        .tool-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        .tool-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+        .tool-icon.blue { background: #EBF8FF; }
+        .tool-icon.green { background: #C6F6D5; }
+        .tool-icon.orange { background: #FEEBC8; }
+        .tool-icon.purple { background: #E9D8FD; }
+        .tool-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; color: #2D3748; }
+        .tool-card p { font-size: 13px; color: #718096; line-height: 1.6; }
+        .tool-tag {
+            display: inline-block;
+            background: #EBF8FF;
+            color: #2B6CB0;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-top: 12px;
+        }
+        .category-section { margin-top: 40px; }
+        .category-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4A5568;
+            margin-bottom: 16px;
+            padding-left: 12px;
+            border-left: 3px solid #2B6CB0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <h1>🧰 工具库</h1>
+    <p>销售全流程工具包 · 按5A模型维度拆解</p>
+</div>
+
+<!-- 获客工具 -->
+<div class="category-section">
+    <div class="category-title">📡 获客阶段（Awareness / Appeal）</div>
+    <div class="tools-grid">
+        <div class="tool-card" onclick="alert('功能开发中，敬请期待！')">
+            <div class="tool-icon blue">📊</div>
+            <h3>机构画像模板</h3>
+            <p>快速梳理目标机构的核心信息：规模、业务方向、决策链、痛点分析</p>
+            <span class="tool-tag">B2B 获客</span>
+        </div>
+        <div class="tool-card" onclick="alert('功能开发中，敬请期待！')">
+            <div class="tool-icon blue">📞</div>
+            <h3>首通电话话术清单</h3>
+            <p>结构化首通电话要点，确保每次通话都能推进到下一步</p>
+            <span class="tool-tag">B2B 获客</span>
+        </div>
+        <div class="tool-card" onclick="alert('功能开发中，敬请期待！')">
+            <div class="tool-icon blue">📧</div>
+            <h3>邮件触达模板</h3>
+            <p>分场景邮件模板：首次介绍、跟进激活、活动邀请</p>
+            <span class="tool-tag">B2B 获客</span>
+        </div>
+    </div>
+</div>
+
+<!-- 转化工具 -->
+<div class="category-section">
+    <div class="category-title">🤝 转化阶段（Ask / Act）</div>
+    <div class="tools-grid">
+        <div class="tool-card" onclick="alert('功能开发中，敬请期待！')">
+            <div class="tool-icon green">🎯</div>
+            <h3>需求挖掘清单</h3>
+            <p>5A模型深度挖需：机构现状、痛点、目标、决策流程、预算</p>
+            <span class="tool-tag">B2B 转化</span>
+        </div>
+        <div class="tool-card" onclick="alert('功能开发中，敬请期待！')">
+            <div class="tool-icon green">🛡️</div>
+            <h3>异议处理手册</h3>
+            <p>覆盖价格、竞品、时机、决策链等常见异议的应对框架</p>
+            <span class="tool-tag">B2B 转化</span>
+        </div>
+        <div class="tool-card" onclick="alert('功能开发中，敬请期待！')">
+            <div class="tool-icon green">📋</div>
+            <h3>签约前检查清单</h3>
+            <p>确保签约流程无遗漏：文件、佣金、服务条款、时间节点</p>
+            <span class="tool-tag">B2B 转化</span>
+        </div>
+    </div>
+</div>
+
+<!-- 留存工具 -->
+<div class="category-section">
+    <div class="category-title">🔒 留存阶段（Advocate）</div>
+    <div class="tools-grid">
+        <div class="tool-card" onclick="alert('功能开发中，敬请期待！')">
+            <div class="tool-icon orange">📈</div>
+            <h3>机构健康度评分</h3>
+            <p>从送生量、转化率、满意度、续约意愿四个维度评估机构</p>
+            <span class="tool-tag">B2B 留存</span>
+        </div>
+        <div class="tool-card" onclick="alert('功能开发中，敬请期待！')">
+            <div class="tool-icon orange">🎁</div>
+            <h3>增值服务清单</h3>
+            <p>培训、物料、市场支持等增值服务，提升机构粘性</p>
+            <span class="tool-tag">B2B 留存</span>
+        </div>
+        <div class="tool-card" onclick="alert('功能开发中，敬请期待！')">
+            <div class="tool-icon orange">📅</div>
+            <h3>跟进节奏模板</h3>
+            <p>新签约 / 稳定期 / 风险期 三种跟进节奏建议</p>
+            <span class="tool-tag">B2B 留存</span>
+        </div>
+    </div>
+</div>
+
+<!-- 团队管理工具 -->
+<div class="category-section">
+    <div class="category-title">👥 团队管理</div>
+    <div class="tools-grid">
+        <div class="tool-card" onclick="alert('功能开发中，敬请期待！')">
+            <div class="tool-icon purple">📝</div>
+            <h3>新顾问入职 Checklist</h3>
+            <p>7天 / 14天 / 30天 分阶段入职培养计划</p>
+            <span class="tool-tag">团队管理</span>
+        </div>
+        <div class="tool-card" onclick="alert('功能开发中，敬请期待！')">
+            <div class="tool-icon purple">🏆</div>
+            <h3>业绩复盘模板</h3>
+            <p>周复盘 / 月复盘 结构化模板，聚焦增量杠杆</p>
+            <span class="tool-tag">团队管理</span>
+        </div>
+        <div class="tool-card" onclick="alert('功能开发中，敬请期待！')">
+            <div class="tool-icon purple">🧠</div>
+            <h3>九型人格速查</h3>
+            <p>快速查看9种人格类型的沟通风格和管理建议</p>
+            <span class="tool-tag">团队管理</span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

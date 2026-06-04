@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>话术库 | B2B留学销售管理工具箱</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2B6CB0;
+            --primary-light: #63B3ED;
+            --primary-lighter: #EBF8FF;
+            --accent: #38A169;
+            --accent-light: #C6F6D5;
+            --warm: #ED8936;
+            --warm-light: #FEFCBF;
+            --purple: #805AD5;
+            --purple-light: #E9D8FD;
+            --red: #E53E3E;
+            --red-light: #FED7D7;
+            --teal: #319795;
+            --teal-light: #B2F5EA;
+            --gray-50: #F7FAFC;
+            --gray-100: #EDF2F7;
+            --gray-200: #E2E8F0;
+            --gray-300: #CBD5E0;
+            --gray-400: #A0AEC0;
+            --gray-500: #718096;
+            --gray-600: #4A5568;
+            --gray-700: #2D3748;
+            --gray-800: #1A202C;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
+            --radius: 16px;
+            --radius-sm: 12px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-700);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ===== Navigation ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--gray-200);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .nav-logo span {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-back {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--gray-500);
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-back:hover {
+            color: var(--primary);
+            background: var(--primary-lighter);
+        }
+
+        /* ===== Main Content ===== */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 88px 24px 40px;
+        }
+
+        /* ===== Header Section ===== */
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(ellipse, rgba(99,179,237,0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .page-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 24px rgba(43,108,176,0.2);
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .page-header p {
+            font-size: 16px;
+            color: var(--gray-500);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* ===== Stats Bar ===== */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            border: 1px solid var(--gray-200);
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-number.blue { color: var(--primary); }
+        .stat-number.green { color: var(--accent); }
+        .stat-number.orange { color: var(--warm); }
+        .stat-number.purple { color: var(--purple); }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--gray-400);
+            font-weight: 500;
+        }
+
+        /* ===== Controls ===== */
+        .controls {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 280px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 20px 14px 48px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            background: white;
+            outline: none;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(99,179,237,0.15);
+        }
+
+        .search-box input::placeholder {
+            color: var(--gray-300);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-300);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid var(--gray-200);
+            background: white;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .filter-tab:hover {
+            border-color: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .filter-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .filter-tab .count {
+            display: inline-block;
+            margin-left: 6px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .filter-tab:not(.active) .count {
+            background: var(--gray-100);
+            color: var(--gray-500);
+        }
+
+        /* ===== Action Buttons ===== */
+        .action-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            box-shadow: 0 4px 12px rgba(43,108,176,0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(43,108,176,0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--gray-600);
+            border: 1px solid var(--gray-200);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--gray-300);
+            background: var(--gray-50);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--gray-500);
+            padding: 8px 12px;
+        }
+
+        .btn-ghost:hover {
+            color: var(--primary);
+            background: var(--primary-lighter);
+        }
+
+        /* ===== Scripts Grid ===== */
+        .scripts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 20px;
+        }
+
+        .script-card {
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .script-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: transparent;
+        }
+
+        .script-card-header {
+            padding: 20px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .script-category-badge {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .badge-icebreak { background: #DBEAFE; color: #1E40AF; }
+        .badge-explore { background: #D1FAE5; color: #065F46; }
+        .badge-objection { background: #FEE2E2; color: #991B1B; }
+        .badge-close { background: #FEF3C7; color: #92400E; }
+        .badge-follow { background: #E9D8FD; color: #553C9A; }
+        .badge-favorite { background: #FED7E2; color: #97266D; }
+
+        .script-title-area {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .script-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .script-title .star {
+            color: var(--warm);
+            font-size: 14px;
+        }
+
+        .script-scenario {
+            font-size: 13px;
+            color: var(--gray-400);
+        }
+
+        .script-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .script-action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: var(--gray-100);
+            color: var(--gray-500);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .script-action-btn:hover {
+            background: var(--primary-lighter);
+            color: var(--primary);
+        }
+
+        .script-action-btn.danger:hover {
+            background: var(--red-light);
+            color: var(--red);
+        }
+
+        .script-card-body {
+            padding: 20px 24px;
+        }
+
+        .script-content {
+            font-size: 14px;
+            color: var(--gray-600);
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .script-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .script-tag {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            background: var(--gray-100);
+            color: var(--gray-500);
+        }
+
+        .script-card-footer {
+            padding: 12px 24px;
+            background: var(--gray-50);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .script-meta {
+            font-size: 12px;
+            color: var(--gray-400);
+        }
+
+        .copy-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid var(--gray-200);
+            background: white;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: inherit;
+        }
+
+        .copy-btn:hover {
+            border-color: var(--primary-light);
+            color: var(--primary);
+            background: var(--primary-lighter);
+        }
+
+        .copy-btn.copied {
+            background: var(--accent-light);
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* ===== Modal ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 560px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: none;
+            background: var(--gray-100);
+            color: var(--gray-500);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: var(--gray-200);
+            color: var(--gray-600);
+        }
+
+        .modal-body {
+            padding: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(99,179,237,0.15);
+        }
+
+        .form-group textarea {
+            min-height: 160px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .form-group .hint {
+            font-size: 12px;
+            color: var(--gray-400);
+            margin-top: 6px;
+        }
+
+        .modal-footer {
+            padding: 20px 28px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        /* ===== Empty State ===== */
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            background: white;
+            border-radius: var(--radius);
+            border: 2px dashed var(--gray-200);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: var(--gray-400);
+            margin-bottom: 24px;
+        }
+
+        /* ===== Toast ===== */
+        .toast {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--gray-800);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 300;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: var(--accent);
+        }
+
+        .toast.error {
+            background: var(--red);
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .scripts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .search-box {
+                min-width: 100%;
+            }
+
+            .filter-tabs {
+                overflow-x: auto;
+                padding-bottom: 4px;
+            }
+
+            .page-header h1 {
+                font-size: 24px;
+            }
+        }
+
+        /* ===== Animations ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .script-card {
+            animation: fadeInUp 0.4s ease forwards;
+        }
+
+        .script-card:nth-child(1) { animation-delay: 0.05s; }
+        .script-card:nth-child(2) { animation-delay: 0.1s; }
+        .script-card:nth-child(3) { animation-delay: 0.15s; }
+        .script-card:nth-child(4) { animation-delay: 0.2s; }
+        .script-card:nth-child(5) { animation-delay: 0.25s; }
+        .script-card:nth-child(6) { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">
+                <span>💬 话术库</span>
+            </a>
+            <a href="/root/.openclaw/fancy-workshop.html" class="nav-back">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                返回主页
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-icon">📝</div>
+            <h1>销售话术库</h1>
+            <p>从破冰到成交的全流程话术沉淀，覆盖常见异议处理、逼单技巧与跟进模板</p>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-number blue" id="totalCount">0</div>
+                <div class="stat-label">话术总数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number green" id="favoriteCount">0</div>
+                <div class="stat-label">收藏话术</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number orange" id="categoryCount">0</div>
+                <div class="stat-label">分类数量</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number purple" id="copyCount">0</div>
+                <div class="stat-label">复制次数</div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="search-box">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="searchInput" placeholder="搜索话术内容、场景、标签...">
+            </div>
+            <div class="filter-tabs" id="filterTabs">
+                <button class="filter-tab active" data-category="all">全部</button>
+                <button class="filter-tab" data-category="icebreak">破冰</button>
+                <button class="filter-tab" data-category="explore">需求挖掘</button>
+                <button class="filter-tab" data-category="objection">异议处理</button>
+                <button class="filter-tab" data-category="close">逼单</button>
+                <button class="filter-tab" data-category="follow">跟进</button>
+                <button class="filter-tab" data-category="favorite">⭐ 收藏</button>
+            </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="action-bar">
+            <button class="btn btn-primary" onclick="openModal()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                添加话术
+            </button>
+            <button class="btn btn-secondary" onclick="exportData()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                导出数据
+            </button>
+            <button class="btn btn-secondary" onclick="importData()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                导入数据
+            </button>
+            <input type="file" id="importFile" accept=".json" style="display: none" onchange="handleImport(event)">
+        </div>
+
+        <!-- Scripts Grid -->
+        <div class="scripts-grid" id="scriptsGrid">
+            <!-- Scripts will be rendered here -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-state-icon">📝</div>
+            <h3>暂无话术</h3>
+            <p>点击"添加话术"按钮开始沉淀你的销售话术</p>
+            <button class="btn btn-primary" onclick="openModal()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                添加第一条话术
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitle">添加话术</h2>
+                <button class="modal-close" onclick="closeModal()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label>话术分类 *</label>
+                    <select id="scriptCategory">
+                        <option value="icebreak">破冰</option>
+                        <option value="explore">需求挖掘</option>
+                        <option value="objection">异议处理</option>
+                        <option value="close">逼单</option>
+                        <option value="follow">跟进</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>话术标题 *</label>
+                    <input type="text" id="scriptTitle" placeholder="给话术起个简洁的标题">
+                </div>
+                <div class="form-group">
+                    <label>适用场景</label>
+                    <input type="text" id="scriptScenario" placeholder="描述使用这个话术的场景">
+                </div>
+                <div class="form-group">
+                    <label>话术内容 *</label>
+                    <textarea id="scriptContent" placeholder="输入完整的话术内容..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>标签</label>
+                    <input type="text" id="scriptTags" placeholder="用逗号分隔多个标签，如：价格,竞品,时间">
+                    <p class="hint">标签方便后续搜索和分类</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">取消</button>
+                <button class="btn btn-primary" onclick="saveScript()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ===== Category Config =====
+        const categoryConfig = {
+            icebreak: { name: '破冰', badge: 'badge-icebreak', icon: '👋' },
+            explore: { name: '需求挖掘', badge: 'badge-explore', icon: '🔍' },
+            objection: { name: '异议处理', badge: 'badge-objection', icon: '🛡️' },
+            close: { name: '逼单', badge: 'badge-close', icon: '🎯' },
+            follow: { name: '跟进', badge: 'badge-follow', icon: '📞' }
+        };
+
+        // ===== Default Scripts =====
+        const defaultScripts = [
+            {
+                id: '1',
+                category: 'icebreak',
+                title: '微信加好友开场白',
+                scenario: '添加新客户微信后的首次沟通',
+                content: `您好！我是XX留学的小李，之前在展会上和您有过交流，了解到您对孩子英国留学的事情比较关心。
+
+看到您朋友圈分享的孩子照片，看起来孩子学习成绩很棒呢！👏
+
+关于英国留学的事情，我这边整理了一些最新资料，包括：
+• 2024年英国院校申请趋势
+• 热门专业录取要求变化
+• 奖学金申请攻略
+
+您看什么时候方便，我可以给您发一份参考一下？`,
+                tags: ['微信', '首次沟通', '开场'],
+                favorite: true,
+                copyCount: 128,
+                createdAt: '2024-01-15'
+            },
+            {
+                id: '2',
+                category: 'icebreak',
+                title: '电话跟进开场白',
+                scenario: '陌生电话或冷线索跟进',
+                content: `您好，请问是XX家长吗？我是XX留学的顾问小王。
+
+打扰您几分钟时间，是这样——前段时间我们做了一份《2024英国低龄留学白皮书》，里面有很多最新的政策解读和择校建议，我觉得对您应该挺有帮助的。
+
+您现在方便聊聊吗？还是我加您微信，把资料发给您看看？
+
+（如果对方说没兴趣）
+没关系没关系，我理解您的顾虑。要不我先加您微信，资料发给您，您有空了随便翻翻，有用更好，没用也没损失，您看可以吗？`,
+                tags: ['电话', '陌生拜访', '低龄留学'],
+                favorite: false,
+                copyCount: 89,
+                createdAt: '2024-01-18'
+            },
+            {
+                id: '3',
+                category: 'explore',
+                title: '需求深度挖掘话术',
+                scenario: '客户初步表达意向，需要深入了解需求',
+                content: `好的，我大概了解您的基本情况了。为了更精准地给您推荐方案，我想多了解几个细节：
+
+1️⃣ 关于目标院校
+您这边是已经有心仪的学校了，还是希望我根据孩子情况来推荐？
+（追问：您对学校的地理位置、学校类型有特别偏好吗？）
+
+2️⃣ 关于专业方向
+孩子自己有明确想学的专业方向吗？还是目前还在探索阶段？
+（追问：孩子平时成绩哪些科目比较好？有什么特长或兴趣爱好？）
+
+3️⃣ 关于时间规划
+您计划让孩子什么时候出去？是GCSE还是A-level阶段？
+（追问：如果时间紧张的话，我们可能需要考虑一些灵活方案）
+
+4️⃣ 关于预算
+您这边的预算范围大概是多少？这样我好给您匹配最合适的方案。
+
+我帮您梳理一份个性化的方案，您看可以吗？`,
+                tags: ['需求挖掘', '背景调查', '个性化方案'],
+                favorite: true,
+                copyCount: 156,
+                createdAt: '2024-01-20'
+            },
+            {
+                id: '4',
+                category: 'objection',
+                title: '价格异议处理 - 贵了',
+                scenario: '客户觉得服务费贵，在犹豫',
+                content: `我特别理解您的想法，毕竟这是一笔不小的投入。
+
+这样，我帮您算一笔账，您看看划不划算：
+
+📌 我们服务包含的内容：
+• 申请规划：根据孩子情况定制方案
+• 文书打磨：外籍顾问+中方团队双审
+• 面试辅导：模拟面试+专项训练
+• 后续服务：签证、接机、住宿一条龙
+
+📌 如果您自己DIY：
+• 时间成本：至少需要3-6个月全职投入
+• 试错成本：文书反复修改，方案调整
+• 隐性成本：错过最佳申请窗口
+
+📌 最关键的是——
+我们的成功率是XX%，往年同背景学生拿到了XX等学校的offer。
+
+您算算，如果因为某个细节没处理好，错失了理想学校，这个机会成本是不是更高？
+
+要不这样，我给您介绍一个和您孩子情况类似的家长，您可以听听TA的真实感受？`,
+                tags: ['价格', '价值塑造', '对比'],
+                favorite: true,
+                copyCount: 203,
+                createdAt: '2024-01-22'
+            },
+            {
+                id: '5',
+                category: 'objection',
+                title: '考虑考虑 - 延期决策处理',
+                scenario: '客户说要回去考虑一下',
+                content: `好的好的，您慎重考虑是对的，毕竟这是孩子的大事。
+
+我想问一下，您这边主要是在顾虑哪些方面呢？是我刚才介绍得不够清楚，还是有其他什么担心的点？
+
+（如果客户说出顾虑，针对性解决）
+
+（如果客户说就是想再看看）
+没问题，我这边给您发一份详细的方案书，您和家人慢慢研究。
+
+对了，有件事我得提醒您一下——
+XX学校的申请截止日期是X月X日，如果您确定要申请的话，建议尽快启动，因为：
+• 文书打磨需要时间
+• 推荐信需要提前沟通老师
+• 面试辅导也要安排
+
+要不这样，我先帮您占一个服务名额，您回去和家人商量后，如果确定做，我们随时启动；如果不做了，这个名额我随时取消，没有任何损失，您看可以吗？`,
+                tags: ['考虑考虑', '催单', '截止日期'],
+                favorite: false,
+                copyCount: 178,
+                createdAt: '2024-01-25'
+            },
+            {
+                id: '6',
+                category: 'objection',
+                title: '竞品对比 - 为什么选我们',
+                scenario: '客户在对比多家机构',
+                content: `您对比多家再决定，这个做法特别明智！我支持您多比较。
+
+作为业内人士，我可以给您几个建议，帮助您做判断：
+
+1️⃣ 看专业度
+我们专注英国留学XX年，只做英国方向，专业度可以保证。您可以问问其他机构：他们英国方向的案例有多少？同类型学生拿到什么结果？
+
+2️⃣ 看团队配置
+我们每个学生都有：主顾问+文书顾问+外籍顾问+后期服务老师，4对1服务。您可以对比一下其他机构的团队配置。
+
+3️⃣ 看真实案例
+我这边有往年学生的offer记录和联系方式，您可以随机抽取核实。建议您向所有机构都要真实案例来验证。
+
+4️⃣ 看服务细节
+比如文书修改次数、面试辅导频次、后期服务范围，这些都写进合同，白纸黑字。
+
+不瞒您说，确实有比我们便宜的机构，但如果因为服务不到位，影响了孩子的申请结果，这个损失是多少钱都弥补不了的。
+
+要不我给您看几个和我们合作过的家长的真实反馈？`,
+                tags: ['竞品', '差异化', '信任建立'],
+                favorite: true,
+                copyCount: 145,
+                createdAt: '2024-01-28'
+            },
+            {
+                id: '7',
+                category: 'close',
+                title: '临门一脚逼单话术',
+                scenario: '客户意向明确，需要推动签约',
+                content: `好的，方案您都看过了，还有什么问题需要我再详细说明的吗？
+
+（如果没有问题）
+那太好了！我们这边流程是这样的：
+
+📝 签约流程：
+1. 签订服务合同
+2. 支付定金启动服务
+3. 建服务群，启动规划
+
+⏰ 时间节点提醒：
+• XX学校早申截止：X月X日
+• 建议启动时间：本周内
+
+🎯 我这边可以给您的优惠：
+• 早签优惠：立减XX元
+• 赠送：XX服务（价值XX元）
+• 优惠截止：本月底
+
+您看今天方便签约吗？合同我这边准备好了，您签个字就行，后面的事情全部交给我们。
+
+（如果客户还在犹豫）
+这样，您还有什么顾虑的，直接跟我说，我来解决。咱们的目标是一致的——让孩子拿到理想的offer！`,
+                tags: ['逼单', '签约', '优惠'],
+                favorite: true,
+                copyCount: 167,
+                createdAt: '2024-02-01'
+            },
+            {
+                id: '8',
+                category: 'close',
+                title: '名额稀缺逼单',
+                scenario: '利用稀缺性促成签约',
+                content: `XX家长，有个情况我得跟您同步一下——
+
+我们今年英国方向的招生名额快满了，目前只剩X个位置。原因是我这边每个学生投入的精力比较多，为了保证服务质量，我今年严格控制了接单量。
+
+您孩子的情况我评估过了，很有希望冲刺XX学校，但需要尽快启动。
+
+现在的情况是：
+• 另外有2个学生也在走流程，可能会用掉剩下的名额
+• 如果您确定要做，建议今天把定金交了，把名额锁定
+
+定金不多，主要是表示您的诚意，名额帮您保留。后续如果您改变主意，定金是可以退的。
+
+您看怎么样？要不我把付款码发给您，您先锁定名额？`,
+                tags: ['稀缺', '名额', '定金'],
+                favorite: false,
+                copyCount: 98,
+                createdAt: '2024-02-05'
+            },
+            {
+                id: '9',
+                category: 'follow',
+                title: '签约后跟进 - 启动服务',
+                scenario: '签约后第一周的服务启动跟进',
+                content: `XX家长，您好！合同签了，我们正式成为合作伙伴了 🎉
+
+我先和您同步一下接下来的安排：
+
+📅 本周计划：
+• 周X：建立专属服务群
+• 周X：安排孩子和顾问进行首次沟通
+• 周X：启动背景调研和资料收集
+
+📋 需要您配合准备的资料：
+1. 孩子的成绩单（近2-3年）
+2. 获奖证书、活动照片
+3. 英语成绩（如有）
+4. 推荐信老师的联系方式
+
+💡 温馨提示：
+整个过程我们会一步步带着您走，您不用太担心，随时有问题随时群里沟通。
+
+对了，孩子周末有时间吗？我们安排一次初步的咨询沟通，让顾问老师了解一下孩子的想法，也让孩子对整个申请过程有个概念。`,
+                tags: ['签约后', '服务启动', '资料清单'],
+                favorite: false,
+                copyCount: 134,
+                createdAt: '2024-02-08'
+            },
+            {
+                id: '10',
+                category: 'follow',
+                title: '长期跟进 - 节日问候',
+                scenario: '重要节日期间的客户维护',
+                content: `XX家长，新年好！🎊
+
+祝您和家人新年快乐，万事如意！
+
+新的一年，孩子的留学规划这边我们也在持续推进中。最近的进展是：
+• 文书初稿已完成，正在外籍顾问打磨阶段
+• 推荐信已和老师沟通好
+• 下周安排模拟面试
+
+有什么问题您随时联系我，新的一年，我们一起努力，帮孩子拿到心仪的offer！
+
+对了，过年期间如果您和孩子有空，可以让孩子看看这些材料（附件），提前了解一下面试可能会问到的问题。
+
+再次祝您新年快乐！🧧`,
+                tags: ['节日问候', '长期维护', '进展同步'],
+                favorite: false,
+                copyCount: 87,
+                createdAt: '2024-02-10'
+            },
+            {
+                id: '11',
+                category: 'follow',
+                title: '失联客户激活话术',
+                scenario: '长时间未联系的客户重新激活',
+                content: `XX家长，好久不见！最近怎么样？😊
+
+最近正好整理资料，看到之前和您沟通的记录，想着给您发个消息。
+
+有两个消息想和您分享一下：
+
+📢 好消息1：
+英国最近出了新的签证政策，对留学生更友好了，具体是...（简述利好）
+
+📢 好消息2：
+我们最近有一个XX学校的宣讲会，校长亲自来介绍学校情况，我这边可以帮您安排线上参会名额。
+
+不知道孩子现在情况怎么样了？留学的事还在考虑吗？
+
+如果还在规划中，咱们可以约个时间聊聊，我帮您梳理一下最新情况，看看有没有新的方案适合孩子。
+
+您看这周方便吗？`,
+                tags: ['客户激活', '长期跟进', '政策利好'],
+                favorite: true,
+                copyCount: 112,
+                createdAt: '2024-02-15'
+            }
+        ];
+
+        // ===== State =====
+        let scripts = [];
+        let currentFilter = 'all';
+        let searchQuery = '';
+
+        // ===== Initialize =====
+        document.addEventListener('DOMContentLoaded', () => {
+            loadScripts();
+            renderScripts();
+            updateStats();
+            setupEventListeners();
+            
+            // Nav scroll effect
+            window.addEventListener('scroll', () => {
+                const nav = document.getElementById('navbar');
+                if (window.scrollY > 10) {
+                    nav.classList.add('scrolled');
+                } else {
+                    nav.classList.remove('scrolled');
+                }
+            });
+        });
+
+        // ===== Load Scripts =====
+        function loadScripts() {
+            const saved = localStorage.getItem('scriptsLibrary');
+            if (saved) {
+                scripts = JSON.parse(saved);
+            } else {
+                scripts = [...defaultScripts];
+                saveToStorage();
+            }
+        }
+
+        // ===== Save to Storage =====
+        function saveToStorage() {
+            localStorage.setItem('scriptsLibrary', JSON.stringify(scripts));
+        }
+
+        // ===== Render Scripts =====
+        function renderScripts() {
+            const grid = document.getElementById('scriptsGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            let filtered = scripts.filter(script => {
+                // Category filter
+                if (currentFilter === 'favorite') {
+                    if (!script.favorite) return false;
+                } else if (currentFilter !== 'all') {
+                    if (script.category !== currentFilter) return false;
+                }
+                
+                // Search filter
+                if (searchQuery) {
+                    const query = searchQuery.toLowerCase();
+                    return (
+                        script.title.toLowerCase().includes(query) ||
+                        script.content.toLowerCase().includes(query) ||
+                        script.scenario?.toLowerCase().includes(query) ||
+                        script.tags?.some(tag => tag.toLowerCase().includes(query))
+                    );
+                }
+                
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            
+            grid.innerHTML = filtered.map(script => {
+                const config = categoryConfig[script.category];
+                return `
+                    <div class="script-card" data-id="${script.id}">
+                        <div class="script-card-header">
+                            <span class="script-category-badge ${config.badge}">${config.name}</span>
+                            <div class="script-title-area">
+                                <div class="script-title">
+                                    ${script.favorite ? '<span class="star">⭐</span>' : ''}
+                                    ${script.title}
+                                </div>
+                                ${script.scenario ? `<div class="script-scenario">${script.scenario}</div>` : ''}
+                            </div>
+                            <div class="script-actions">
+                                <button class="script-action-btn" onclick="toggleFavorite('${script.id}')" title="${script.favorite ? '取消收藏' : '收藏'}">
+                                    ${script.favorite ? '⭐' : '☆'}
+                                </button>
+                                <button class="script-action-btn" onclick="editScript('${script.id}')" title="编辑">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </button>
+                                <button class="script-action-btn danger" onclick="deleteScript('${script.id}')" title="删除">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="script-card-body">
+                            <div class="script-content">${script.content}</div>
+                            ${script.tags && script.tags.length > 0 ? `
+                                <div class="script-tags">
+                                    ${script.tags.map(tag => `<span class="script-tag">${tag}</span>`).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div class="script-card-footer">
+                            <span class="script-meta">
+                                ${script.createdAt ? `创建于 ${script.createdAt}` : ''} 
+                                ${script.copyCount ? `· 复制 ${script.copyCount} 次` : ''}
+                            </span>
+                            <button class="copy-btn" onclick="copyScript('${script.id}')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                                复制
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ===== Update Stats =====
+        function updateStats() {
+            const totalCount = scripts.length;
+            const favoriteCount = scripts.filter(s => s.favorite).length;
+            const categoryCount = Object.keys(categoryConfig).length;
+            const copyCount = scripts.reduce((sum, s) => sum + (s.copyCount || 0), 0);
+
+            document.getElementById('totalCount').textContent = totalCount;
+            document.getElementById('favoriteCount').textContent = favoriteCount;
+            document.getElementById('categoryCount').textContent = categoryCount;
+            document.getElementById('copyCount').textContent = copyCount;
+
+            // Update filter counts
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                const cat = tab.dataset.category;
+                let count = 0;
+                if (cat === 'all') {
+                    count = scripts.length;
+                } else if (cat === 'favorite') {
+                    count = scripts.filter(s => s.favorite).length;
+                } else {
+                    count = scripts.filter(s => s.category === cat).length;
+                }
+                const countSpan = tab.querySelector('.count');
+                if (countSpan) {
+                    countSpan.textContent = count;
+                } else {
+                    tab.innerHTML += `<span class="count">${count}</span>`;
+                }
+            });
+        }
+
+        // ===== Setup Event Listeners =====
+        function setupEventListeners() {
+            // Filter tabs
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentFilter = tab.dataset.category;
+                    renderScripts();
+                });
+            });
+
+            // Search
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                searchQuery = e.target.value;
+                renderScripts();
+            });
+
+            // Close modal on overlay click
+            document.getElementById('modalOverlay').addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) {
+                    closeModal();
+                }
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+                if (e.ctrlKey && e.key === 'n') {
+                    e.preventDefault();
+                    openModal();
+                }
+            });
+        }
+
+        // ===== Modal Functions =====
+        function openModal() {
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('modalTitle').textContent = '添加话术';
+            document.getElementById('editId').value = '';
+            document.getElementById('scriptCategory').value = 'icebreak';
+            document.getElementById('scriptTitle').value = '';
+            document.getElementById('scriptScenario').value = '';
+            document.getElementById('scriptContent').value = '';
+            document.getElementById('scriptTags').value = '';
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        function editScript(id) {
+            const script = scripts.find(s => s.id === id);
+            if (!script) return;
+
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('modalTitle').textContent = '编辑话术';
+            document.getElementById('editId').value = id;
+            document.getElementById('scriptCategory').value = script.category;
+            document.getElementById('scriptTitle').value = script.title;
+            document.getElementById('scriptScenario').value = script.scenario || '';
+            document.getElementById('scriptContent').value = script.content;
+            document.getElementById('scriptTags').value = script.tags ? script.tags.join(', ') : '';
+        }
+
+        function saveScript() {
+            const editId = document.getElementById('editId').value;
+            const category = document.getElementById('scriptCategory').value;
+            const title = document.getElementById('scriptTitle').value.trim();
+            const scenario = document.getElementById('scriptScenario').value.trim();
+            const content = document.getElementById('scriptContent').value.trim();
+            const tagsInput = document.getElementById('scriptTags').value.trim();
+            const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];
+
+            if (!title || !content) {
+                showToast('请填写话术标题和内容', 'error');
+                return;
+            }
+
+            if (editId) {
+                // Update existing
+                const index = scripts.findIndex(s => s.id === editId);
+                if (index !== -1) {
+                    scripts[index] = {
+                        ...scripts[index],
+                        category,
+                        title,
+                        scenario,
+                        content,
+                        tags
+                    };
+                }
+                showToast('话术更新成功', 'success');
+            } else {
+                // Add new
+                const newScript = {
+                    id: Date.now().toString(),
+                    category,
+                    title,
+                    scenario,
+                    content,
+                    tags,
+                    favorite: false,
+                    copyCount: 0,
+                    createdAt: new Date().toISOString().split('T')[0]
+                };
+                scripts.unshift(newScript);
+                showToast('话术添加成功', 'success');
+            }
+
+            saveToStorage();
+            renderScripts();
+            updateStats();
+            closeModal();
+        }
+
+        function deleteScript(id) {
+            if (!confirm('确定要删除这条话术吗？')) return;
+            
+            scripts = scripts.filter(s => s.id !== id);
+            saveToStorage();
+            renderScripts();
+            updateStats();
+            showToast('话术已删除', 'success');
+        }
+
+        function toggleFavorite(id) {
+            const script = scripts.find(s => s.id === id);
+            if (script) {
+                script.favorite = !script.favorite;
+                saveToStorage();
+                renderScripts();
+                updateStats();
+                showToast(script.favorite ? '已收藏' : '已取消收藏', 'success');
+            }
+        }
+
+        function copyScript(id) {
+            const script = scripts.find(s => s.id === id);
+            if (script) {
+                navigator.clipboard.writeText(script.content).then(() => {
+                    script.copyCount = (script.copyCount || 0) + 1;
+                    saveToStorage();
+                    updateStats();
+                    
+                    // Visual feedback
+                    const card = document.querySelector(`.script-card[data-id="${id}"]`);
+                    const btn = card.querySelector('.copy-btn');
+                    btn.classList.add('copied');
+                    btn.innerHTML = `
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        已复制
+                    `;
+                    
+                    setTimeout(() => {
+                        btn.classList.remove('copied');
+                        btn.innerHTML = `
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                            复制
+                        `;
+                    }, 2000);
+                }).catch(() => {
+                    showToast('复制失败，请手动复制', 'error');
+                });
+            }
+        }
+
+        // ===== Export/Import =====
+        function exportData() {
+            const data = JSON.stringify(scripts, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `scripts-library-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('数据导出成功', 'success');
+        }
+
+        function importData() {
+            document.getElementById('importFile').click();
+        }
+
+        function handleImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (Array.isArray(imported)) {
+                        const importCount = imported.length;
+                        
+                        // Merge with existing, avoiding duplicates by id
+                        const existingIds = new Set(scripts.map(s => s.id));
+                        const newScripts = imported.filter(s => !existingIds.has(s.id));
+                        
+                        // Assign new IDs to avoid conflicts
+                        newScripts.forEach(s => {
+                            s.id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
+                        });
+                        
+                        scripts = [...newScripts, ...scripts];
+                        saveToStorage();
+                        renderScripts();
+                        updateStats();
+                        showToast(`成功导入 ${importCount} 条话术`, 'success');
+                    } else {
+                        showToast('文件格式不正确', 'error');
+                    }
+                } catch (err) {
+                    showToast('文件解析失败', 'error');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = ''; // Reset file input
+        }
+
+        // ===== Toast =====
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
